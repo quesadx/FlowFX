@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.PrincipalController">
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin></VBox>
+   </center>
+   <top>
+      <HBox alignment="TOP_CENTER" fillHeight="false" prefHeight="40.0" BorderPane.alignment="TOP_CENTER">
+         <children>
+            <HBox alignment="TOP_CENTER" fillHeight="false" maxWidth="1.7976931348623157E308" prefHeight="20.0" styleClass="jfx-container" HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="200.0" styleClass="jfx-container-rounded-bottom">
+               <children>
+                  <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" styleClass="rounded-image" />
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" fillHeight="false" maxWidth="1.7976931348623157E308" prefHeight="20.0" styleClass="jfx-container" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </top>
+   <bottom>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" styleClass="jfx-container-rounded">
+               <children>
+                  <MFXButton prefHeight="40.0" prefWidth="40.0" text="X" />
+                  <MFXButton prefHeight="40.0" prefWidth="40.0" text="X" />
+                  <MFXButton prefHeight="40.0" prefWidth="40.0" text="X" />
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="4.0" />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
+</BorderPane>

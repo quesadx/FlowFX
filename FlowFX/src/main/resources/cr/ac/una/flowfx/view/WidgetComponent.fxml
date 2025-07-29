@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" styleClass="jfx-container-rounded" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox fx:id="hbHandle" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="jfx-container-drag-handle">
+         <children>
+            <Label style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-weight: bold;" text="⋮⋮⋮" />
+         </children>
+      </HBox>
+      <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="175.0" style="-fx-padding: 20;">
+         <children>
+            <Label text="Widget Content" />
+         </children>
+      </VBox>
+   </children>
+</VBox>
