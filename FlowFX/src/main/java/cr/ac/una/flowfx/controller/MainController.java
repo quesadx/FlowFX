@@ -34,30 +34,31 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private TilePane tpWorkplace;
 
-    // Drag-related fields
-    private Widget draggedWidget;
-    private double dragOffsetX;
-    private double dragOffsetY;
-    private double initialX;
-    private double initialY;
-    private int draggedIndex;
-    private Timeline wiggleTimeline;
-
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        //tpWorkplace.setPrefTileWidth(200);    // Preferred width
+        //tpWorkplace.setPrefTileHeight(150);   // Preferred height
     }    
 
     @Override
     public void initialize() {
-        // Fill the TilePane with Widget blocks
-        for (int i = 0; i < 5; i++) {
-            Widget widget = new Widget();
-            tpWorkplace.getChildren().add(widget);
-        }
+        
+        Widget widget = new Widget(300, 500);
+        tpWorkplace.getChildren().add(widget);
+
+        widget = new Widget(200, 300);
+        tpWorkplace.getChildren().add(widget);
+
+        widget = new Widget(200, 500);
+        tpWorkplace.getChildren().add(widget);
+
+    }
+
+    public void addDefaultWidgetContent(Widget widget) {
+        
     }
     
 }

@@ -1,34 +1,71 @@
 
 * {
+
+    /* General Colors */
     -fx-bone-color: #e4e6ea;
     -fx-darker-bone-color: #dcdfe2;
+    -fx-lighter-purple-color: #ddd9ff;
+    -fx-light-purple-color: #bbb1fd;
+    -fx-purple-color: #9a7dfd;
+    -fx-darker-purple-color: #7a4dfd;
+
+    /* Button Colors */
+    -fx-util-button-color: #7a4dfd;
+
+    /* Home Button Colors */
+    -fx-home-button-color: #f7f7f7;
+    -fx-home-button-color-hover: #6bff8c;
+    -fx-home-button-color-pressed: #5aff7a;
+    -fx-home-button-color-disabled: #d0f7e0;
+
+    /* Settings Button Colors */
+    -fx-settings-button-color: #f7f7f7;
+    -fx-settings-button-color-hover: #ffb06b;
+    -fx-settings-button-color-pressed: #ffa05a;
+    -fx-settings-button-color-disabled: #ffe0d0;
+
+    /* Util Button Colors */
+    -fx-util-button-color: #f7f7f7;
+    -fx-util-button-color-hover: #6b8cff;
+    -fx-util-button-color-pressed: #5a7aff;
+    -fx-util-button-color-disabled: #d0e0ff;
+
+    /* Settings button Colors */
+    -fx-settings-button-color: #f7f7f7;
+    -fx-settings-button-color-hover: #ff6b8c;
+    -fx-settings-button-color-pressed: #ff5a7a;
+    -fx-settings-button-color-disabled: #ffd0e0;
+
+    
+
+
+
 }
 
+/* General Styles */
+
 .jfx-container {
+    -fx-background-color: -fx-darker-bone-color;
+
+}
+
+.jfx-sub-container {
     -fx-background-color: -fx-bone-color;
-    /* -fx-border-color: transparent; */
-    -fx-border-width: 0;
-    -fx-padding: 0;
+    -fx-background-radius: 12;
 }
 
 .jfx-container-rounded {
-    -fx-background-color: -fx-bone-color;
-    -fx-border-width: 0;
-    -fx-padding: 0;
+    -fx-background-color: -fx-darker-bone-color;
     -fx-background-radius: 12;
 }
 
 .jfx-container-rounded-bottom {
-    -fx-background-color: -fx-bone-color;
-    -fx-border-width: 0;
-    -fx-padding: 0;
+    -fx-background-color: -fx-darker-bone-color;
     -fx-background-radius: 0 0 12 12;
 }
 
 .jfx-container-drag-handle {
     -fx-background-color: -fx-darker-bone-color;
-    -fx-border-width: 0;
-    -fx-padding: 0;
     -fx-background-radius: 12 12 0 0;
     -fx-cursor: hand;
 }
@@ -39,21 +76,94 @@
 
 .jfx-container-rounded {
     -fx-background-color: -fx-bone-color;
-    -fx-border-width: 0;
-    -fx-padding: 0;
     -fx-background-radius: 12;
-    transition: -fx-effect 0.5s ease;
 }
 
 .rounded-image {
     -fx-background-radius: 12; 
 }
 
-.grid-pane {
-    -fx-background-color: -fx-darker-bone-color;
+
+
+
+
+
+
+
+
+/* Button Styles */
+
+/* Home Button */
+
+.mfx-button.jfx-btn-home {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-home-button-color;
+    -fx-background-radius: 12 12 12 12;
 }
 
-.grid-cell {
-    -fx-background-color: -fx-darker-bone-color;
+.mfx-button.jfx-btn-home:pressed {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-home-button-color;
+    -fx-background-radius: 12 12 12 12;
 }
+
+.mfx-button.jfx-btn-home:hover {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-home-button-color;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.mfx-button.jfx-btn-home > ImageView {
+    -fx-image: url("../resources/icons/lucide--home.png");
+}
+
+/* Util Button */
+.mfx-button.jfx-btn-util {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-util-button-color;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.mfx-button.jfx-btn-util:pressed {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-util-button-color;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.mfx-button.jfx-btn-util:hover {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-util-button-color;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.mfx-button.jfx-btn-util > ImageView {
+    -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
+}
+
+/* Settings Button */
+
+.mfx-button.jfx-btn-settings {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-settings-button-color;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.mfx-button.jfx-btn-settings:pressed {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-util-button-color;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.mfx-button.jfx-btn-settings:hover {
+    -mfx-button-type: RAISED;
+    -fx-background-color: -fx-util-button-color;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.mfx-button.jfx-btn-settings > ImageView {
+    -fx-image: url("../resources/icons/lucide--settings.png");
+}
+
+
+
 

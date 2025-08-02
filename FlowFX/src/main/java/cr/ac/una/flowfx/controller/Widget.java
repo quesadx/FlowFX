@@ -10,8 +10,10 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -22,6 +24,10 @@ public class Widget extends Pane implements Initializable {
     
     @FXML
     private HBox hbHandle;
+    @FXML
+    private VBox vboxContainer;
+    @FXML
+    private VBox vbWidget;
 
     /**
      * Initializes the controller class.
@@ -31,6 +37,7 @@ public class Widget extends Pane implements Initializable {
         if (hbHandle != null) {
             hbHandle.setStyle("-fx-cursor: hand;");
         }
+
     }
     
     public Widget(){
@@ -43,10 +50,15 @@ public class Widget extends Pane implements Initializable {
             this.getChildren().add(root);
         } catch (IOException exception) {
             throw new RuntimeException(
-                "Failed to load Widget FXML.",
+                "Failed to load Widget FXML. Check the file path and ensure it exists.",
                 exception
             );
         }
+    }
+
+    public Widget(double width, double height) {
+        this();
+        this.vbWidget.setPrefSize(width, height);
     }
 
     public HBox getHbHandle() {
@@ -56,5 +68,17 @@ public class Widget extends Pane implements Initializable {
     public void setHbHandle(HBox hbHandle) {
         this.hbHandle = hbHandle;
     }
-    
+
+    public VBox getVboxContainer() {
+        return vboxContainer;
+    }
+
+    public void setVboxContainer(VBox vboxContainer) {
+        this.vboxContainer = vboxContainer;
+    }
+
+    public void setContainerChildren(Node child) {
+        this.vboxContainer.getChildren().clear();
+        this.vboxContainer.getChildren().add(child);
+    }
 }
