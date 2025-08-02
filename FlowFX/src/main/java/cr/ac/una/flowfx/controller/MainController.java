@@ -19,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -45,6 +46,7 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private MFXButton btnLogIn;
 
+
     /**
      * Initializes the controller class.
      */
@@ -56,11 +58,8 @@ public class MainController extends Controller implements Initializable {
     @Override
     public void initialize() {
         vbCover.setEffect(new javafx.scene.effect.GaussianBlur());
-        
-        Widget widget = new Widget();
-        gpDashboard.add(widget, 0, 0);
-        widget = new Widget();
-        gpDashboard.add(widget , 1, 0);
+        //imgBackground.fitHeightProperty().bind(root.heightProperty());
+        //imgBackground.fitWidthProperty().bind(root.widthProperty());
     }
 
 
@@ -72,8 +71,6 @@ public class MainController extends Controller implements Initializable {
     private void onActionBtnLogIn(ActionEvent event) {
         vbLogInDisplay.setVisible(false);
         vbLogInDisplay.setManaged(false);
-        //vbCover.setVisible(false);
-
         vbCover.setEffect(null);
     }
     

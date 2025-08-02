@@ -54,25 +54,23 @@
         ),
         -fx-bg-primary;
     
-    -fx-background-radius: 8;
     -fx-background-insets: 0, 0;
     -fx-background-size: 10px 10px;
-    
-    
+ 
 }
 
 .container--sub {
     -fx-background-color: white;
-    -fx-background-radius: 8;
+    -fx-background-radius: 12;
     
     -fx-border-color:-fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 8;
+    -fx-border-radius: 12;
 
 }
 
 .container--rounded-bottom {
-    -fx-background-radius: 0 0 8 8;
+    -fx-background-radius: 0 0 12 12;
 }
 
 .container--drag-handle {
@@ -90,13 +88,13 @@
 .main-window {
     -fx-border-color: -fx-notch-primary;
     -fx-border-width: 4;
-    -fx-border-radius: 8;
+    -fx-border-radius: 12;
 }
 
 /* Notch Styles */
 .notch-centered {
     -fx-background-color: -fx-notch-primary; 
-    -fx-background-radius: 0 0 8 8;
+    -fx-background-radius: 0;
 }
 
 .notch {
@@ -110,9 +108,9 @@
 /* Home Button */
 .mfx-button.button.button--home {
     -fx-background-color: -fx-btn-home;
-    -fx-background-radius: 8;
+    -fx-background-radius: 12;
     -fx-border-color: derive(-fx-btn-home, -10%);
-    -fx-border-radius: 8;
+    -fx-border-radius: 12;
 }
 
 .mfx-button.button.button--home:hover {
@@ -130,9 +128,9 @@
 /* Util Button */
 .mfx-button.button.button--util {
     -fx-background-color: -fx-btn-util;
-    -fx-background-radius: 8;
+    -fx-background-radius: 12;
     -fx-border-color: derive(-fx-btn-util, -10%);
-    -fx-border-radius: 8;
+    -fx-border-radius: 12;
     -fx-text-fill: white;
 
 }
@@ -152,9 +150,9 @@
 /* Settings Button */
 .mfx-button.button.button--settings {
     -fx-background-color: -fx-btn-settings;
-    -fx-background-radius: 8;
+    -fx-background-radius: 12;
     -fx-border-color: derive(-fx-btn-settings, -10%);
-    -fx-border-radius: 8;
+    -fx-border-radius: 12;
     -fx-text-fill: white;
 
 }
@@ -174,10 +172,9 @@
 /* Manage Button */
 .mfx-button.button.button--manage {
     -fx-background-color: -fx-btn-manage;
-    -fx-background-radius: 8;
+    -fx-background-radius: 12;
     -fx-border-color: derive(-fx-btn-manage, -10%);
-    -fx-border-radius: 8;
-    -fx-text-fill: white;
+    -fx-border-radius: 12;
 
 }
 
@@ -191,6 +188,46 @@
 
 .mfx-button.button.button--manage:disabled {
     -fx-background-color: derive(-fx-btn-manage, 50%);
+}
+
+/* Edit Button */
+.mfx-button.button.button--edit {
+    -fx-background-color: -fx-btn-base;
+    -fx-background-radius: 12;
+    -fx-border-color: derive(-fx-btn-base, -10%);
+    -fx-border-radius: 12;
+}
+
+.mfx-button.button.button--edit:hover {
+    -fx-background-color: derive(-fx-btn-base, 10%);
+}
+
+.mfx-button.button.button--edit:pressed {
+    -fx-background-color: derive(-fx-btn-base, -10%);
+}
+
+.mfx-button.button.button--edit:disabled {
+    -fx-background-color: derive(-fx-btn-base, 50%);
+}
+
+/* Expand Button */
+.mfx-button.button.button--expand {
+    -fx-background-color: -fx-btn-base;
+    -fx-background-radius: 12;
+    -fx-border-color: derive(-fx-btn-base, -10%);
+    -fx-border-radius: 12;
+}
+
+.mfx-button.button.button--expand:hover {
+    -fx-background-color: derive(-fx-btn-base, 10%);
+}
+
+.mfx-button.button.button--expand:pressed {
+    -fx-background-color: derive(-fx-btn-base, -10%);
+}
+
+.mfx-button.button.button--expand:disabled {
+    -fx-background-color: derive(-fx-btn-base, 50%);
 }
 
 
@@ -209,6 +246,14 @@
 
 .button--manage > ImageView {
     -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
+}
+
+.button--edit > ImageView {
+    -fx-image: url("../resources/icons/lucide--edit.png");
+}
+
+.mfx-button.button.button--expand > ImageView {
+    -fx-image: url("../resources/icons/lucide--expand.png");
 }
 
 /* Labels */
@@ -252,9 +297,9 @@
 .mfx-text-field {
   -mfx-main: white;
   -fx-background-color: white;
-  -fx-background-radius: 8;
+  -fx-background-radius: 12;
   -fx-border-color: white;
-  -fx-border-radius: 8;
+  -fx-border-radius: 12;
   -fx-padding: 5;
 }
 
