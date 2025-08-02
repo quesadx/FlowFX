@@ -1,4 +1,5 @@
 
+/* Base Theme Variables */
 * {
     /* Theme Colors */
     -fx-bg-primary: #ffffff;
@@ -26,10 +27,20 @@
     -fx-shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+
 @font-face {
-    font-family: 'Fredoka';
-    src: url('../resources/font/Fredoka-VariableFont_wdth\,wght.ttf');
-    -fx-font-family: 'Fredoka';
+    font-family: 'Organo';
+    src: url('/cr/ac/una/flowfx/resources/font/Organo.ttf');
+}
+
+@font-face {
+    font-family: 'Typo_Round_Bold_Demo';
+    src: url('/cr/ac/una/flowfx/resources/font/Typo_Round_Bold_Demo.otf');
+}
+
+/* Base Styles for All Components */
+.root, .mfx-button, .mfx-text-field, .label, .jfx-title {
+    -fx-font-family: 'Typo_Round_Bold_Demo';
 }
 
 /* Container Styles */
@@ -102,8 +113,6 @@
     -fx-background-radius: 8;
     -fx-border-color: derive(-fx-btn-home, -10%);
     -fx-border-radius: 8;
-    -fx-text-fill: white;
-    -fx-font-family: 'Fredoka';
 }
 
 .mfx-button.button.button--home:hover {
@@ -125,7 +134,6 @@
     -fx-border-color: derive(-fx-btn-util, -10%);
     -fx-border-radius: 8;
     -fx-text-fill: white;
-    -fx-font-family: 'Fredoka';
 
 }
 
@@ -148,7 +156,6 @@
     -fx-border-color: derive(-fx-btn-settings, -10%);
     -fx-border-radius: 8;
     -fx-text-fill: white;
-    -fx-font-family: 'Fredoka';
 
 }
 
@@ -171,7 +178,7 @@
     -fx-border-color: derive(-fx-btn-manage, -10%);
     -fx-border-radius: 8;
     -fx-text-fill: white;
-    -fx-font-family: 'Fredoka';
+
 }
 
 .mfx-button.button.button--manage:hover {
@@ -205,35 +212,30 @@
 }
 
 /* Labels */
-
-.title-label {
-    -fx-font-family: 'Fredoka';
-    -fx-font-weight: 700;
-    -fx-font-size: 42px;
-}
-
-.subtitle-label {
-    -fx-font-family: 'Fredoka';
-    -fx-font-size: 16px;
-}
-
-.label-bold {
-    -fx-font-family: 'Fredoka';
-    -fx-font-weight: 700;
-    -fx-font-size: 16px;
-}
-
-.label-hyperlink {
-    -fx-text-fill: -fx-accent-primary;
-    -fx-font-family: 'Fredoka';
+.jfx-label {
+    -fx-font-family: 'Typo_Round_Bold_Demo';
+    -fx-font-weight: bold;
     -fx-font-size: 14px;
 }
 
-.label-hyperlink:hover {
+.jfx-hyperlink {
+    -fx-text-fill: -fx-accent-primary;
+    -fx-font-family: 'Typo_Round_Bold_Demo';
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.jfx-title {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 60px;
+}
+
+
+.jfx-hyperlink:hover {
     -fx-text-fill: derive(-fx-accent-primary, 50%);
 }
 
-.label-hyperlink:visited {
+.jfx-hyperlink:visited {
     -fx-text-fill: -fx-accent-primary;
 }
 
@@ -244,11 +246,11 @@
     -fx-background-radius: 0;
     -fx-padding: 0.5em 0;
     -fx-border-width: 0;
-    -fx-font-family: 'Fredoka';
+    /*-fx-font-family: 'Organo';*/
 }
 
 .mfx-text-field {
-  -mfx-main: -mfx-purple;
+  -mfx-main: white;
   -fx-background-color: white;
   -fx-background-radius: 8;
   -fx-border-color: white;
@@ -266,10 +268,6 @@
   -fx-highlight-fill: #ECE0FD;
   /* Prompt text color */
   -fx-prompt-text-fill: white;
-}
-
-.mfx-text-field .text-field .text {
-  -fx-font-smoothing-type: lcd;
 }
 
 .mfx-text-field:focus-within {
