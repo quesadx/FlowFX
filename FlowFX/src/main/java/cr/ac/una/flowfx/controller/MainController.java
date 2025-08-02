@@ -6,11 +6,14 @@ package cr.ac.una.flowfx.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -18,7 +21,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 /**
@@ -32,33 +37,44 @@ public class MainController extends Controller implements Initializable {
     private AnchorPane root;
 
     @FXML
-    private TilePane tpWorkplace;
+    private GridPane gpDashboard;
+
+    @FXML
+    private VBox vbCover, vbLogInDisplay;
+
+    @FXML
+    private MFXButton btnLogIn;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //tpWorkplace.setPrefTileWidth(200);    // Preferred width
-        //tpWorkplace.setPrefTileHeight(150);   // Preferred height
+
     }    
 
     @Override
     public void initialize() {
+        vbCover.setEffect(new javafx.scene.effect.GaussianBlur());
         
-        Widget widget = new Widget(300, 500);
-        tpWorkplace.getChildren().add(widget);
-
-        widget = new Widget(200, 300);
-        tpWorkplace.getChildren().add(widget);
-
-        widget = new Widget(200, 500);
-        tpWorkplace.getChildren().add(widget);
-
+        Widget widget = new Widget();
+        gpDashboard.add(widget, 0, 0);
+        widget = new Widget();
+        gpDashboard.add(widget , 1, 0);
     }
+
 
     public void addDefaultWidgetContent(Widget widget) {
         
+    }
+
+    @FXML
+    private void onActionBtnLogIn(ActionEvent event) {
+        vbLogInDisplay.setVisible(false);
+        vbLogInDisplay.setManaged(false);
+        //vbCover.setVisible(false);
+
+        vbCover.setEffect(null);
     }
     
 }

@@ -1,168 +1,325 @@
 
 * {
-
-    /* General Colors */
-    -fx-bone-color: #e4e6ea;
-    -fx-darker-bone-color: #dcdfe2;
-    -fx-lighter-purple-color: #ddd9ff;
-    -fx-light-purple-color: #bbb1fd;
-    -fx-purple-color: #9a7dfd;
-    -fx-darker-purple-color: #7a4dfd;
-
-    /* Button Colors */
-    -fx-util-button-color: #7a4dfd;
-
-    /* Home Button Colors */
-    -fx-home-button-color: #f7f7f7;
-    -fx-home-button-color-hover: #6bff8c;
-    -fx-home-button-color-pressed: #5aff7a;
-    -fx-home-button-color-disabled: #d0f7e0;
-
-    /* Settings Button Colors */
-    -fx-settings-button-color: #f7f7f7;
-    -fx-settings-button-color-hover: #ffb06b;
-    -fx-settings-button-color-pressed: #ffa05a;
-    -fx-settings-button-color-disabled: #ffe0d0;
-
-    /* Util Button Colors */
-    -fx-util-button-color: #f7f7f7;
-    -fx-util-button-color-hover: #6b8cff;
-    -fx-util-button-color-pressed: #5a7aff;
-    -fx-util-button-color-disabled: #d0e0ff;
-
-    /* Settings button Colors */
-    -fx-settings-button-color: #f7f7f7;
-    -fx-settings-button-color-hover: #ff6b8c;
-    -fx-settings-button-color-pressed: #ff5a7a;
-    -fx-settings-button-color-disabled: #ffd0e0;
-
+    /* Theme Colors */
+    -fx-bg-primary: #ffffff;
+    -fx-bg-secondary: #7d7d7d;
+    -fx-accent-primary: #4c6afe;
+    -fx-accent-secondary: #252835;
     
+    /* Background Colors */
+    -fx-bg-primary: #e7e4de;
+    -fx-dot-color: #c5c5c5;  /* Color for the dots */
+    
+    /* Button Base Colors */
+    -fx-btn-base: #ffffff;
+    
+    /* Button Variant Colors - Soft pastels */
+    -fx-btn-home: #f8f8ff;
+    -fx-btn-util: #5874ff;
+    -fx-btn-settings: #fefefa;
+    -fx-btn-manage: #fffafa;
 
+    /* Notch Colors */
+    -fx-notch-primary: #555555;
+    
+    /* Shadow Colors */
+    -fx-shadow-color: rgba(0, 0, 0, 0.1);
+}
 
+@font-face {
+    font-family: 'Fredoka';
+    src: url('../resources/font/Fredoka-VariableFont_wdth\,wght.ttf');
+    -fx-font-family: 'Fredoka';
+}
+
+/* Container Styles */
+.container {
+    -fx-background-color: 
+        radial-gradient(
+            radius 2px,
+            -fx-dot-color 0%,
+            -fx-dot-color 20%,
+            transparent 30%
+        ),
+        -fx-bg-primary;
+    
+    -fx-background-radius: 8;
+    -fx-background-insets: 0, 0;
+    -fx-background-size: 10px 10px;
+    
+    
+}
+
+.container--sub {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    
+    -fx-border-color:-fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
 
 }
 
-/* General Styles */
-
-.jfx-container {
-    -fx-background-color: -fx-darker-bone-color;
-
+.container--rounded-bottom {
+    -fx-background-radius: 0 0 8 8;
 }
 
-.jfx-sub-container {
-    -fx-background-color: -fx-bone-color;
-    -fx-background-radius: 12;
-}
-
-.jfx-container-rounded {
-    -fx-background-color: -fx-darker-bone-color;
-    -fx-background-radius: 12;
-}
-
-.jfx-container-rounded-bottom {
-    -fx-background-color: -fx-darker-bone-color;
-    -fx-background-radius: 0 0 12 12;
-}
-
-.jfx-container-drag-handle {
-    -fx-background-color: -fx-darker-bone-color;
-    -fx-background-radius: 12 12 0 0;
+.container--drag-handle {
     -fx-cursor: hand;
 }
 
-.jfx-container-drag-handle:hover {
-    -fx-background-color: derive(-fx-darker-bone-color, -10%);
+.container--drag-handle:hover {
+    -fx-background-color: derive(-fx-bg-secondary, -10%);
 }
 
-.jfx-container-rounded {
-    -fx-background-color: -fx-bone-color;
-    -fx-background-radius: 12;
+.container--frosted {
+
 }
 
-.rounded-image {
-    -fx-background-radius: 12; 
+.main-window {
+    -fx-border-color: -fx-notch-primary;
+    -fx-border-width: 4;
+    -fx-border-radius: 8;
+}
+
+/* Notch Styles */
+.notch-centered {
+    -fx-background-color: -fx-notch-primary; 
+    -fx-background-radius: 0 0 8 8;
+}
+
+.notch {
+    -fx-background-color: -fx-notch-primary; 
 }
 
 
+/* Button Base Styles */
 
-
-
-
-
-
-
-/* Button Styles */
 
 /* Home Button */
-
-.mfx-button.jfx-btn-home {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-home-button-color;
-    -fx-background-radius: 12 12 12 12;
+.mfx-button.button.button--home {
+    -fx-background-color: -fx-btn-home;
+    -fx-background-radius: 8;
+    -fx-border-color: derive(-fx-btn-home, -10%);
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-family: 'Fredoka';
 }
 
-.mfx-button.jfx-btn-home:pressed {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-home-button-color;
-    -fx-background-radius: 12 12 12 12;
+.mfx-button.button.button--home:hover {
+    -fx-background-color: derive(-fx-btn-home, 10%);
 }
 
-.mfx-button.jfx-btn-home:hover {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-home-button-color;
-    -fx-background-radius: 12 12 12 12;
+.mfx-button.button.button--home:pressed {
+    -fx-background-color: derive(-fx-btn-home, -10%);
 }
 
-.mfx-button.jfx-btn-home > ImageView {
-    -fx-image: url("../resources/icons/lucide--home.png");
+.mfx-button.button.button--home:disabled {
+    -fx-background-color: derive(-fx-btn-home, 50%);
 }
 
 /* Util Button */
-.mfx-button.jfx-btn-util {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-util-button-color;
-    -fx-background-radius: 12 12 12 12;
+.mfx-button.button.button--util {
+    -fx-background-color: -fx-btn-util;
+    -fx-background-radius: 8;
+    -fx-border-color: derive(-fx-btn-util, -10%);
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-family: 'Fredoka';
+
 }
 
-.mfx-button.jfx-btn-util:pressed {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-util-button-color;
-    -fx-background-radius: 12 12 12 12;
+.mfx-button.button.button--util:hover {
+    -fx-background-color: derive(-fx-btn-util, 10%);
 }
 
-.mfx-button.jfx-btn-util:hover {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-util-button-color;
-    -fx-background-radius: 12 12 12 12;
+.mfx-button.button.button--util:pressed {
+    -fx-background-color: derive(-fx-btn-util, -10%);
 }
 
-.mfx-button.jfx-btn-util > ImageView {
-    -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
+.mfx-button.button.button--util:disabled {
+    -fx-background-color: derive(-fx-btn-util, 50%);
 }
 
 /* Settings Button */
+.mfx-button.button.button--settings {
+    -fx-background-color: -fx-btn-settings;
+    -fx-background-radius: 8;
+    -fx-border-color: derive(-fx-btn-settings, -10%);
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-family: 'Fredoka';
 
-.mfx-button.jfx-btn-settings {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-settings-button-color;
-    -fx-background-radius: 12 12 12 12;
 }
 
-.mfx-button.jfx-btn-settings:pressed {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-util-button-color;
-    -fx-background-radius: 12 12 12 12;
+.mfx-button.button.button--settings:hover {
+    -fx-background-color: derive(-fx-btn-settings, 10%);
 }
 
-.mfx-button.jfx-btn-settings:hover {
-    -mfx-button-type: RAISED;
-    -fx-background-color: -fx-util-button-color;
-    -fx-background-radius: 12 12 12 12;
+.mfx-button.button.button--settings:pressed {
+    -fx-background-color: derive(-fx-btn-settings, -10%);
 }
 
-.mfx-button.jfx-btn-settings > ImageView {
+.mfx-button.button.button--settings:disabled {
+    -fx-background-color: derive(-fx-btn-settings, 50%);
+}
+
+/* Manage Button */
+.mfx-button.button.button--manage {
+    -fx-background-color: -fx-btn-manage;
+    -fx-background-radius: 8;
+    -fx-border-color: derive(-fx-btn-manage, -10%);
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-family: 'Fredoka';
+}
+
+.mfx-button.button.button--manage:hover {
+    -fx-background-color: derive(-fx-btn-manage, 10%);
+}
+
+.mfx-button.button.button--manage:pressed {
+    -fx-background-color: derive(-fx-btn-manage, -10%);
+}
+
+.mfx-button.button.button--manage:disabled {
+    -fx-background-color: derive(-fx-btn-manage, 50%);
+}
+
+
+/* Icons */
+.button--home > ImageView {
+    -fx-image: url("../resources/icons/lucide--home.png");
+}
+
+.button--util > ImageView {
+    -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
+}
+
+.button--settings > ImageView {
     -fx-image: url("../resources/icons/lucide--settings.png");
 }
+
+.button--manage > ImageView {
+    -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
+}
+
+/* Labels */
+
+.title-label {
+    -fx-font-family: 'Fredoka';
+    -fx-font-weight: 700;
+    -fx-font-size: 42px;
+}
+
+.subtitle-label {
+    -fx-font-family: 'Fredoka';
+    -fx-font-size: 16px;
+}
+
+.label-bold {
+    -fx-font-family: 'Fredoka';
+    -fx-font-weight: 700;
+    -fx-font-size: 16px;
+}
+
+.label-hyperlink {
+    -fx-text-fill: -fx-accent-primary;
+    -fx-font-family: 'Fredoka';
+    -fx-font-size: 14px;
+}
+
+.label-hyperlink:hover {
+    -fx-text-fill: derive(-fx-accent-primary, 50%);
+}
+
+.label-hyperlink:visited {
+    -fx-text-fill: -fx-accent-primary;
+}
+
+/* Text Fields */
+.text-field {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.5em 0;
+    -fx-border-width: 0;
+    -fx-font-family: 'Fredoka';
+}
+
+.mfx-text-field {
+  -mfx-main: -mfx-purple;
+  -fx-background-color: white;
+  -fx-background-radius: 8;
+  -fx-border-color: white;
+  -fx-border-radius: 8;
+  -fx-padding: 5;
+}
+
+.mfx-text-field:readonly,
+.mfx-text-field:readonly .text-field {
+  -fx-cursor: default;
+}
+
+.mfx-text-field .text-field {
+  /* Selected text highlight */
+  -fx-highlight-fill: #ECE0FD;
+  /* Prompt text color */
+  -fx-prompt-text-fill: white;
+}
+
+.mfx-text-field .text-field .text {
+  -fx-font-smoothing-type: lcd;
+}
+
+.mfx-text-field:focus-within {
+  -fx-background-insets: 2;
+  -fx-border-color: white;
+  -fx-border-width: 1.5;
+  -fx-border-insets: -0.5;
+}
+
+.mfx-text-field .floating-text {
+  -fx-text-fill: white;
+}
+
+.mfx-text-field:floating .floating-text {
+  -fx-background-color: white;
+}
+
+.mfx-text-field:focus-within .floating-text {
+  -fx-text-fill: white;
+}
+
+.mfx-text-field .measure-unit {
+  -fx-text-fill: white;
+}
+
+.mfx-text-field .text-field {
+  -fx-text-box-border: transparent;
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+
+.mfx-text-field .text-field:focused {
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+}
+
+.mfx-text-field:disabled {
+  -fx-border-color: rgba(0, 0, 0, 0.1);
+}
+
+.mfx-text-field:disabled .floating-text {
+  -fx-text-fill: white;
+}
+
+.mfx-text-field:disabled .text-field {
+  -fx-text-inner-color: white;
+}
+
+
 
 
 

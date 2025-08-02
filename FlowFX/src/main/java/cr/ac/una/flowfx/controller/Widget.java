@@ -54,6 +54,8 @@ public class Widget extends Pane implements Initializable {
                 exception
             );
         }
+
+        this.vbWidget.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow widget to grow
     }
 
     public Widget(double width, double height) {

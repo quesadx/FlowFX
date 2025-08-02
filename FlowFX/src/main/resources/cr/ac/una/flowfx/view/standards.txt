@@ -3,3 +3,5 @@ Minimo 4 de espacio entre elementos internos a su externo
 
 12 redondeo
 4 margin + 4 padding
+
+spacing 12/24/4
