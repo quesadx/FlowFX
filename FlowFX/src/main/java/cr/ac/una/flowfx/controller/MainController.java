@@ -65,8 +65,6 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private PieChart PieChartProjects;
     @FXML
-    private MFXButton btnProjects;
-    @FXML
     private VBox hBoxCentral;
     private ScrollPane scrollPaneProjects;
     private VBox vboxProjects;
@@ -87,14 +85,6 @@ public class MainController extends Controller implements Initializable {
         projectList.add(new ProjectDto("Proyecto Alpha", "2024-01-01", "2024-06-30", "Activo", "Sponsor A"));
         projectList.add(new ProjectDto("Proyecto Beta", "2023-05-15", "2023-12-31", "Finalizado", "Sponsor B"));
         projectList.add(new ProjectDto("Proyecto Gamma", "2024-03-10", "2024-09-15", "En progreso", "Sponsor C"));
-        projectList.add(new ProjectDto("Proyecto Delta", "2024-04-01", "2024-10-01", "Activo", "Sponsor D"));
-        projectList.add(new ProjectDto("Proyecto Epsilon", "2024-05-01", "2024-11-01", "Activo", "Sponsor E"));
-        projectList.add(new ProjectDto("Proyecto Alpha", "2024-01-01", "2024-06-30", "Activo", "Sponsor A"));
-        projectList.add(new ProjectDto("Proyecto Beta", "2023-05-15", "2023-12-31", "Finalizado", "Sponsor B"));
-        projectList.add(new ProjectDto("Proyecto Gamma", "2024-03-10", "2024-09-15", "En progreso", "Sponsor C"));
-        projectList.add(new ProjectDto("Proyecto Delta", "2024-04-01", "2024-10-01", "Activo", "Sponsor D"));
-        projectList.add(new ProjectDto("Proyecto Epsilon", "2024-05-01", "2024-11-01", "Activo", "Sponsor E"));
-
         loadProjects(projectList);
 
     }    
@@ -114,11 +104,11 @@ public class MainController extends Controller implements Initializable {
         AnimationManager.hidePopup(vbLogInDisplay, vbCover);
         //vbLogInDisplay.setVisible(false);
         //vbLogInDisplay.setManaged(false);
-    }
 
-    @FXML
-    private void onActionBtnProjects(ActionEvent event) {
-        
+        //PrincipalController principalController = (PrincipalController) FlowController.getInstance().getController("PrincipalView");
+        //principalController.btnProjects.setDisable(true);
+        //principalController.btnHome.setDisable(false);
+        //principalController.btnSettings.setDisable(false);
     }
 
     public void loadProjects(ArrayList<ProjectDto> projectList) {
@@ -129,7 +119,6 @@ public class MainController extends Controller implements Initializable {
             VBox.setVgrow(projectNode, Priority.NEVER);
         }
     }
-
 
     public Node projectContainer(ProjectDto project){
         HBox hBox = new HBox(40);
@@ -173,13 +162,6 @@ public class MainController extends Controller implements Initializable {
             scrollProjects.setVvalue(point.getY() / scrollProjects.getContent().getBoundsInLocal().getHeight());
         }
     }
-
-    @FXML
-    private void onActionBtnManageProjects(ActionEvent event) {
-        FlowController.getInstance().goView("ProjectManagementView");
-    }
-
-
 
     public static class ProjectDto {
         private String name;

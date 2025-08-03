@@ -33,6 +33,8 @@ public class ProjectManagementController extends Controller implements Initializ
     @FXML
     private MFXButton btnReturn;
 
+    // TODO: CENTER HE ELEMENTS ON THE MAIN VBOX ################################################
+
     /**
      * Initializes the controller class.
      */
@@ -57,11 +59,6 @@ public class ProjectManagementController extends Controller implements Initializ
             AnimationManager.showPopup(vbProjectCreationDisplay, vbCover, btnReturn);
         });
         tpProjects.getChildren().add(addProject);
-    }
-
-    @FXML
-    private void onActionBtnReturn(ActionEvent event) {
-        FlowController.getInstance().goView("MainView");
     }
 
     @FXML

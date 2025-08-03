@@ -2,29 +2,19 @@
 /* Base Theme Variables */
 * {
     /* Theme Colors */
-    -fx-bg-primary: #ffffff;
-    -fx-bg-secondary: #7d7d7d;
-    -fx-accent-primary: #4c6afe;
+        -fx-bg-primary: #f1efe9;
+    -fx-bg-secondary: #e9e9e9;
+    -fx-accent-primary: #5c77ff;
     -fx-accent-secondary: #252835;
+    -fx-bg-filler: #f8f8f8fd; /* Filler background color */
     
     /* Background Colors */
-    -fx-bg-primary: #e7e4de;
-    -fx-dot-color: #c5c5c5;  /* Color for the dots */
-    
-    /* Button Base Colors */
-    -fx-btn-base: #ffffff;
-    
-    /* Button Variant Colors - Soft pastels */
-    -fx-btn-home: #f8f8ff;
-    -fx-btn-util: #5874ff;
-    -fx-btn-settings: #fefefa;
-    -fx-btn-manage: #fffafa;
 
-    /* Notch Colors */
-    -fx-notch-primary: #555555;
-    
-    /* Shadow Colors */
-    -fx-shadow-color: rgba(0, 0, 0, 0.1);
+
+    /* Button Base Color */
+    -fx-btn-base: #ffffff;
+    -fx-btn-base-pressed: #91a3ff;
+
 }
 
 
@@ -32,7 +22,6 @@
     font-family: 'Organo';
     src: url('/cr/ac/una/flowfx/resources/font/Organo.ttf');
 }
-
 @font-face {
     font-family: 'Outfit-Bold';
     src: url('/cr/ac/una/flowfx/resources/font/Outfit-VariableFont_wght.ttf');
@@ -45,21 +34,13 @@
 
 /* Container Styles */
 .container {
-    -fx-background-color: 
-        radial-gradient(
-            radius 2px,
-            -fx-dot-color 0%,
-            -fx-dot-color 20%,
-            transparent 30%
-        ),
-        -fx-bg-primary;
-    
-    -fx-background-insets: 0, 0;
-    -fx-background-size: 10px 10px;
- 
+    -fx-background-color: -fx-bg-primary;
+    -fx-background-radius: 12;
+    -fx-border-color:-fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
 }
-
-.container--sub {
+.container-sub {
     -fx-background-color: white;
     -fx-background-radius: 12;
     
@@ -68,279 +49,90 @@
     -fx-border-radius: 12;
 
 }
-
-.container--rounded-bottom {
-    -fx-background-radius: 0 0 12 12;
+.filler {
+    -fx-background-color: -fx-bg-filler;
 }
-
-.container--drag-handle {
-    -fx-cursor: hand;
-}
-
-.container--drag-handle:hover {
-    -fx-background-color: derive(-fx-bg-secondary, -10%);
-}
-
-.container--frosted {
-
-}
-
-.main-window {
-    -fx-border-color: -fx-notch-primary;
-    -fx-border-width: 4;
-    -fx-border-radius: 12;
-}
-
-/* Notch Styles */
-.notch-centered {
-    -fx-background-color: -fx-notch-primary; 
-    -fx-background-radius: 0;
-}
-
-.notch {
-    -fx-background-color: -fx-notch-primary; 
-}
-
-
-/* Button Base Styles */
-
-
-/* Home Button */
-.mfx-button.button.button--home {
-    -fx-background-color: -fx-btn-home;
+.filler-rounded {
+    -fx-background-color: -fx-bg-filler;
     -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-home, -10%);
-    -fx-border-radius: 12;
+    /* Shadow */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+}
+.handle {
+
+}
+.handle:focused {
+
 }
 
-.mfx-button.button.button--home:hover {
-    -fx-background-color: derive(-fx-btn-home, 10%);
-}
+/* ############################## Button Base Styles ############################## */
 
-.mfx-button.button.button--home:pressed {
-    -fx-background-color: derive(-fx-btn-home, -10%);
-}
-
-.mfx-button.button.button--home:disabled {
-    -fx-background-color: derive(-fx-btn-home, 50%);
-}
-
-/* Util Button */
-.mfx-button.button.button--util {
-    -fx-background-color: -fx-btn-util;
+.mfx-button {
+    -fx-background-color: -fx-btn-base;
     -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-util, -10%);
+}
+.mfx-button:hover {
+    -fx-background-color: derive(-fx-btn-base, -10%);
+    -fx-background-radius: 12;
+}
+.mfx-button:pressed {
+    -fx-background-color: -fx-btn-base-pressed;
+    -fx-background-radius: 12;
+}
+.mfx-button:focused {
+    -fx-background-color: -fx-btn-base-pressed;
+    -fx-background-radius: 12;
+}
+.mfx-button.jfx-button {
+    -fx-background-color: #4c6afe;
+    -fx-background-radius: 12;
+    -fx-border-color: derive(-fx-accent-primary, -10%);
+    -fx-border-width: 1;
     -fx-border-radius: 12;
     -fx-text-fill: white;
-
+    -fx-font-size: 14px;
 }
 
-.mfx-button.button.button--util:hover {
-    -fx-background-color: derive(-fx-btn-util, 10%);
-}
-
-.mfx-button.button.button--util:pressed {
-    -fx-background-color: derive(-fx-btn-util, -10%);
-}
-
-.mfx-button.button.button--util:disabled {
-    -fx-background-color: derive(-fx-btn-util, 50%);
-}
-
-/* Settings Button */
-.mfx-button.button.button--settings {
-    -fx-background-color: -fx-btn-settings;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-settings, -10%);
-    -fx-border-radius: 12;
-    -fx-text-fill: white;
-
-}
-
-.mfx-button.button.button--settings:hover {
-    -fx-background-color: derive(-fx-btn-settings, 10%);
-}
-
-.mfx-button.button.button--settings:pressed {
-    -fx-background-color: derive(-fx-btn-settings, -10%);
-}
-
-.mfx-button.button.button--settings:disabled {
-    -fx-background-color: derive(-fx-btn-settings, 50%);
-}
-
-/* Manage Button */
-.mfx-button.button.button--manage {
-    -fx-background-color: -fx-btn-manage;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-manage, -10%);
-    -fx-border-radius: 12;
-
-}
-
-.mfx-button.button.button--manage:hover {
-    -fx-background-color: derive(-fx-btn-manage, 10%);
-}
-
-.mfx-button.button.button--manage:pressed {
-    -fx-background-color: derive(-fx-btn-manage, -10%);
-}
-
-.mfx-button.button.button--manage:disabled {
-    -fx-background-color: derive(-fx-btn-manage, 50%);
-}
-
-/* Edit Button */
-.mfx-button.button.button--edit {
-    -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-base, -10%);
-    -fx-border-radius: 12;
-}
-
-.mfx-button.button.button--edit:hover {
-    -fx-background-color: derive(-fx-btn-base, 10%);
-}
-
-.mfx-button.button.button--edit:pressed {
-    -fx-background-color: derive(-fx-btn-base, -10%);
-}
-
-.mfx-button.button.button--edit:disabled {
-    -fx-background-color: derive(-fx-btn-base, 50%);
-}
-
-/* Expand Button */
-.mfx-button.button.button--expand {
-    -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-base, -10%);
-    -fx-border-radius: 12;
-}
-
-.mfx-button.button.button--expand:hover {
-    -fx-background-color: derive(-fx-btn-base, 10%);
-}
-
-.mfx-button.button.button--expand:pressed {
-    -fx-background-color: derive(-fx-btn-base, -10%);
-}
-
-.mfx-button.button.button--expand:disabled {
-    -fx-background-color: derive(-fx-btn-base, 50%);
-}
-
-/* Return Button */
-
-.mfx-button.button.button--return {
-    -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-base, -10%);
-    -fx-border-radius: 12;
-}
-
-.mfx-button.button.button--return:hover {
-    -fx-background-color: derive(-fx-btn-base, 10%);
-}
-
-.mfx-button.button.button--return:pressed {
-    -fx-background-color: derive(-fx-btn-base, -10%);
-}
-
-.mfx-button.button.button--return:disabled {
-    -fx-background-color: derive(-fx-btn-base, 50%);
-}
-
-/* Add Button */
-.mfx-button.button.button--add {
-    -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-base, -10%);
-    -fx-border-radius: 12;
-}
-
-.mfx-button.button.button--add:hover {
-    -fx-background-color: derive(-fx-btn-base, 10%);
-}
-
-.mfx-button.button.button--add:pressed {
-    -fx-background-color: derive(-fx-btn-base, -10%);
-}
-
-.mfx-button.button.button--add:disabled {
-    -fx-background-color: derive(-fx-btn-base, 50%);
-}
 
 /* Icons */
-.button--home > ImageView {
+.jfx-home > ImageView {
     -fx-image: url("../resources/icons/lucide--home.png");
 }
-
-.mfx-button.button.button--return > ImageView {
-    -fx-image: url("../resources/icons/lucide--arrow-left.png");
-}
-
-.button--util > ImageView {
-    -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
-}
-
-.button--settings > ImageView {
+.jfx-settings > ImageView {
     -fx-image: url("../resources/icons/lucide--settings.png");
 }
-
-.button--manage > ImageView {
-    -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
+.jfx-projects > ImageView {
+    -fx-image: url("../resources/icons/lucide--folder-search.png");
 }
-
-.button--edit > ImageView {
-    -fx-image: url("../resources/icons/lucide--edit.png");
+.jfx-maximize > ImageView {
+    -fx-image: url("../resources/icons/lucide--maximize.png");
 }
-
-.mfx-button.button.button--expand > ImageView {
-    -fx-image: url("../resources/icons/lucide--expand.png");
+.jfx-minimize > ImageView {
+    -fx-image: url("../resources/icons/lucide--minimize.png");
 }
-
-.mfx-button.button.button--add > ImageView {
-    -fx-image: url("../resources/icons/lucide--grid-2x2-plus.png");
+.jfx-close > ImageView {
+    -fx-image: url("../resources/icons/lucide--x.png");
 }
-
-/* Labels */
+/* ############################## Labels Base Styles ############################## */
 .jfx-label {
     -fx-font-family: 'Outfit-Bold';
     -fx-font-size: 14px;
 }
-
 .jfx-hyperlink {
     -fx-text-fill: -fx-accent-primary;
     -fx-font-family: 'Outfit-Bold';
     -fx-font-weight: bold;
     -fx-font-size: 14px;
 }
-
 .jfx-title {
     -fx-font-family: 'Organo';
-    -fx-font-size: 60px;
+    -fx-font-size: 68px;
 }
-
-
 .jfx-hyperlink:hover {
     -fx-text-fill: derive(-fx-accent-primary, 50%);
 }
 
-.jfx-hyperlink:visited {
-    -fx-text-fill: -fx-accent-primary;
-}
-
-/* Text Fields */
-.text-field {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-padding: 0.5em 0;
-    -fx-border-width: 0;
-    /*-fx-font-family: 'Organo';*/
-}
-
+/* ############################## TextField Base Styles ############################## */
 .mfx-text-field {
   -mfx-main: white;
   -fx-background-color: white;
@@ -349,62 +141,48 @@
   -fx-border-radius: 12;
   -fx-padding: 5;
 }
-
 .mfx-text-field:readonly,
 .mfx-text-field:readonly .text-field {
   -fx-cursor: default;
 }
-
 .mfx-text-field .text-field {
-  /* Selected text highlight */
   -fx-highlight-fill: #ECE0FD;
-  /* Prompt text color */
   -fx-prompt-text-fill: white;
 }
-
 .mfx-text-field:focus-within {
   -fx-background-insets: 2;
   -fx-border-color: white;
   -fx-border-width: 1.5;
   -fx-border-insets: -0.5;
 }
-
 .mfx-text-field .floating-text {
   -fx-text-fill: white;
 }
-
 .mfx-text-field:floating .floating-text {
   -fx-background-color: white;
 }
-
 .mfx-text-field:focus-within .floating-text {
   -fx-text-fill: white;
 }
-
 .mfx-text-field .measure-unit {
   -fx-text-fill: white;
 }
-
 .mfx-text-field .text-field {
   -fx-text-box-border: transparent;
   -fx-background-color: transparent;
   -fx-background-insets: 0;
   -fx-padding: 0;
 }
-
 .mfx-text-field .text-field:focused {
   -fx-focus-color: transparent;
   -fx-faint-focus-color: transparent;
 }
-
 .mfx-text-field:disabled {
   -fx-border-color: rgba(0, 0, 0, 0.1);
 }
-
 .mfx-text-field:disabled .floating-text {
   -fx-text-fill: white;
 }
-
 .mfx-text-field:disabled .text-field {
   -fx-text-inner-color: white;
 }

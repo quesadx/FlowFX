@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="root" prefHeight="631.0" prefWidth="875.0" styleClass="container" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.ProjectManagementController">
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="631.0" prefWidth="875.0" styleClass="container" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.ProjectManagementController">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -22,15 +22,7 @@
                <children>
                   <VBox alignment="TOP_CENTER" spacing="4.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER_LEFT">
-                           <children>
-                              <MFXButton fx:id="btnReturn" onAction="#onActionBtnReturn" styleClass="button--return" text="">
-                                 <graphic>
-                                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-                                 </graphic>
-                              </MFXButton>
-                           </children>
-                        </HBox>
+                        <HBox alignment="CENTER_LEFT" />
                         <TilePane fx:id="tpProjects" alignment="TOP_CENTER" hgap="4.0" prefColumns="2" tileAlignment="TOP_CENTER" vgap="4.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
