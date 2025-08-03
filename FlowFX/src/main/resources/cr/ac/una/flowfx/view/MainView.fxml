@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="root" prefHeight="768.0" prefWidth="1024.0" styleClass="container" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.MainController">
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="768.0" prefWidth="1024.0" styleClass="container" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.MainController">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -79,7 +79,7 @@
                               <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton styleClass="button--manage" text="">
+                        <MFXButton onAction="#onActionBtnManageProjects" styleClass="button--manage" text="">
                            <graphic>
                               <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>

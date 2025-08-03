@@ -7,6 +7,7 @@ package cr.ac.una.flowfx.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
@@ -52,12 +53,8 @@ public class ProjectManagementController extends Controller implements Initializ
 
         AddProject addProject = new AddProject();
         addProject.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow add project to grow
-        addProject.getBtnAddProject().setOnAction(event -> {
-            vbCover.setEffect(new javafx.scene.effect.GaussianBlur());
-            vbProjectCreationDisplay.setVisible(true);
-            vbProjectCreationDisplay.setManaged(true);
-            btnReturn.setDisable(true);
-
+        addProject.getBtnAddProject().setOnAction(e -> {
+            AnimationManager.showPopup(vbProjectCreationDisplay, vbCover, btnReturn);
         });
         tpProjects.getChildren().add(addProject);
     }
@@ -69,12 +66,7 @@ public class ProjectManagementController extends Controller implements Initializ
 
     @FXML
     private void onActionBtnReturnProjectCreation(ActionEvent event) {
-        vbCover.setEffect(null);
-
-        vbProjectCreationDisplay.setVisible(false);
-        vbProjectCreationDisplay.setManaged(false);
-
-        btnReturn.setDisable(false);
+        AnimationManager.hidePopup(vbProjectCreationDisplay, vbCover, btnReturn);
     }
 
 

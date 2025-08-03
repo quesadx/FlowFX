@@ -12,6 +12,8 @@ import java.util.ResourceBundle;
 import javax.security.auth.callback.Callback;
 
 import cr.ac.una.flowfx.controller.MainController.ProjectDto;
+import cr.ac.una.flowfx.util.AnimationManager;
+import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -76,11 +78,8 @@ public class MainController extends Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-    }    
-
-    @Override
-    public void initialize() {
-        vbCover.setEffect(new javafx.scene.effect.GaussianBlur());       
+        vbCover.setEffect(new javafx.scene.effect.GaussianBlur());    
+        AnimationManager.showPopup(vbLogInDisplay, vbCover);   
         //imgBackground.fitHeightProperty().bind(root.heightProperty());
         //imgBackground.fitWidthProperty().bind(root.widthProperty());
         setupProjectScrollPane();
@@ -97,6 +96,12 @@ public class MainController extends Controller implements Initializable {
         projectList.add(new ProjectDto("Proyecto Epsilon", "2024-05-01", "2024-11-01", "Activo", "Sponsor E"));
 
         loadProjects(projectList);
+
+    }    
+
+    @Override
+    public void initialize() {
+
     }
 
 
@@ -106,9 +111,9 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void onActionBtnLogIn(ActionEvent event) {
-        vbLogInDisplay.setVisible(false);
-        vbLogInDisplay.setManaged(false);
-        vbCover.setEffect(null);
+        AnimationManager.hidePopup(vbLogInDisplay, vbCover);
+        //vbLogInDisplay.setVisible(false);
+        //vbLogInDisplay.setManaged(false);
     }
 
     @FXML
@@ -158,6 +163,24 @@ public class MainController extends Controller implements Initializable {
         hBoxCentral.getChildren().add(scrollPaneProjects);
         HBox.setHgrow(scrollPaneProjects, Priority.ALWAYS);
     }
+
+    @FXML
+    private void OnMouseClickedScrollProjects(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            Node source = (Node) event.getSource();
+            Bounds bounds = source.getBoundsInParent();
+            Point2D point = new Point2D(bounds.getMinX(), bounds.getMinY());
+            scrollProjects.setVvalue(point.getY() / scrollProjects.getContent().getBoundsInLocal().getHeight());
+        }
+    }
+
+    @FXML
+    private void onActionBtnManageProjects(ActionEvent event) {
+        FlowController.getInstance().goView("ProjectManagementView");
+    }
+
+
+
     public static class ProjectDto {
         private String name;
         private String startDate;
