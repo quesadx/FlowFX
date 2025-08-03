@@ -17,10 +17,8 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -51,17 +49,16 @@ public class Notification implements Serializable {
     @Column(name = "MESSAGE")
     private String message;
     @Column(name = "SENT_AT")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date sentAt;
+    private LocalDateTime sentAt;
     @Basic(optional = false)
     @Column(name = "STATUS")
     private Character status;
     @JoinColumn(name = "PROJECT_ID", referencedColumnName = "PROJECT_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Project projectId;
+    private Project project;
     @JoinColumn(name = "ACTIVITY_ID", referencedColumnName = "ACTIVITY_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private ProjectActivity activityId;
+    private ProjectActivity activity;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "notification", fetch = FetchType.LAZY)
     private List<NotificationRecipient> notificationRecipientList;
 
@@ -103,11 +100,11 @@ public class Notification implements Serializable {
         this.message = message;
     }
 
-    public Date getSentAt() {
+    public LocalDateTime getSentAt() {
         return sentAt;
     }
 
-    public void setSentAt(Date sentAt) {
+    public void setSentAt(LocalDateTime sentAt) {
         this.sentAt = sentAt;
     }
 
@@ -119,20 +116,20 @@ public class Notification implements Serializable {
         this.status = status;
     }
 
-    public Project getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(Project projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public ProjectActivity getActivityId() {
-        return activityId;
+    public ProjectActivity getActivity() {
+        return activity;
     }
 
-    public void setActivityId(ProjectActivity activityId) {
-        this.activityId = activityId;
+    public void setActivity(ProjectActivity activity) {
+        this.activity = activity;
     }
 
     public List<NotificationRecipient> getNotificationRecipientList() {

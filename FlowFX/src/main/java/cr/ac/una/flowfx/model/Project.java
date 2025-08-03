@@ -30,8 +30,6 @@ import java.util.List;
     @NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p"),
     @NamedQuery(name = "Project.findByProjectId", query = "SELECT p FROM Project p WHERE p.projectId = :projectId"),
     @NamedQuery(name = "Project.findByProjectName", query = "SELECT p FROM Project p WHERE p.projectName = :projectName"),
-    @NamedQuery(name = "Project.findBySponsorName", query = "SELECT p FROM Project p WHERE p.sponsorName = :sponsorName"),
-    @NamedQuery(name = "Project.findBySponsorEmail", query = "SELECT p FROM Project p WHERE p.sponsorEmail = :sponsorEmail"),
     @NamedQuery(name = "Project.findByPlannedStartDate", query = "SELECT p FROM Project p WHERE p.plannedStartDate = :plannedStartDate"),
     @NamedQuery(name = "Project.findByPlannedEndDate", query = "SELECT p FROM Project p WHERE p.plannedEndDate = :plannedEndDate"),
     @NamedQuery(name = "Project.findByActualStartDate", query = "SELECT p FROM Project p WHERE p.actualStartDate = :actualStartDate"),
@@ -51,11 +49,6 @@ public class Project implements Serializable {
     @Column(name = "PROJECT_NAME")
     private String projectName;
     @Basic(optional = false)
-    @Column(name = "SPONSOR_NAME")
-    private String sponsorName;
-    @Column(name = "SPONSOR_EMAIL")
-    private String sponsorEmail;
-    @Basic(optional = false)
     @Column(name = "PLANNED_START_DATE")
     private LocalDateTime plannedStartDate;
     @Basic(optional = false)
@@ -72,7 +65,7 @@ public class Project implements Serializable {
     private LocalDateTime createdAt;
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
     private List<Notification> notificationList;
     
     // Líder de usuario (rol funcional)
@@ -86,13 +79,13 @@ public class Project implements Serializable {
     private Admin techLeader;
     
     // Patrocinador
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "SPONSOR_ID")
     private Admin sponsor;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectTracking> projectTrackingList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectActivity> projectActivityList;
 
     public Project() {
@@ -102,10 +95,9 @@ public class Project implements Serializable {
         this.projectId = projectId;
     }
 
-    public Project(Long projectId, String projectName, String sponsorName, LocalDateTime plannedStartDate, LocalDateTime plannedEndDate, Character status) {
+    public Project(Long projectId, String projectName, LocalDateTime plannedStartDate, LocalDateTime plannedEndDate, Character status) {
         this.projectId = projectId;
         this.projectName = projectName;
-        this.sponsorName = sponsorName;
         this.plannedStartDate = plannedStartDate;
         this.plannedEndDate = plannedEndDate;
         this.status = status;
@@ -125,22 +117,6 @@ public class Project implements Serializable {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
-    }
-
-    public String getSponsorName() {
-        return sponsorName;
-    }
-
-    public void setSponsorName(String sponsorName) {
-        this.sponsorName = sponsorName;
-    }
-
-    public String getSponsorEmail() {
-        return sponsorEmail;
-    }
-
-    public void setSponsorEmail(String sponsorEmail) {
-        this.sponsorEmail = sponsorEmail;
     }
 
     public LocalDateTime getPlannedStartDate() {

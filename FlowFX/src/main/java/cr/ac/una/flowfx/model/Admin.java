@@ -65,12 +65,15 @@ public class Admin implements Serializable {
     private LocalDateTime createdAt;
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "leaderUserId", fetch = FetchType.LAZY)
-    private List<Project> projectList;
-    @OneToMany(mappedBy = "sponsorId", fetch = FetchType.LAZY)
-    private List<Project> projectList1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "techLeaderId", fetch = FetchType.LAZY)
-    private List<Project> projectList2;
+    // Proyectos donde este admin es LÍDER
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "leader", fetch = FetchType.LAZY)
+    private List<Project> ledProjects;
+    // Proyectos donde este admin es PATROCINADOR
+    @OneToMany(mappedBy = "sponsor", fetch = FetchType.LAZY)
+    private List<Project> sponsoredProjects;
+    // Proyectos donde este admin es LÍDER TÉCNICO
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "techLeader", fetch = FetchType.LAZY)
+    private List<Project> techLedProjects;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<ProjectTracking> projectTrackingList;
 
@@ -163,28 +166,28 @@ public class Admin implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public List<Project> getProjectList() {
-        return projectList;
+    public List<Project> getLedProjects() {
+        return ledProjects;
     }
 
-    public void setProjectList(List<Project> projectList) {
-        this.projectList = projectList;
+    public void setLedProjects(List<Project> ledProjects) {
+        this.ledProjects = ledProjects;
     }
 
-    public List<Project> getProjectList1() {
-        return projectList1;
+    public List<Project> getSponsoredProjects() {
+        return sponsoredProjects;
     }
 
-    public void setProjectList1(List<Project> projectList1) {
-        this.projectList1 = projectList1;
+    public void setSponsoredProjects(List<Project> sponsoredProjects) {
+        this.sponsoredProjects = sponsoredProjects;
     }
 
-    public List<Project> getProjectList2() {
-        return projectList2;
+    public List<Project> getTechLedProjects() {
+        return techLedProjects;
     }
 
-    public void setProjectList2(List<Project> projectList2) {
-        this.projectList2 = projectList2;
+    public void setTechLedProjects(List<Project> techLedProjects) {
+        this.techLedProjects = techLedProjects;
     }
 
     public List<ProjectTracking> getProjectTrackingList() {

@@ -14,11 +14,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -46,20 +43,18 @@ public class ProjectTracking implements Serializable {
     private String observations;
     @Basic(optional = false)
     @Column(name = "TRACKING_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date trackingDate;
+    private LocalDateTime trackingDate;
     @Basic(optional = false)
     @Column(name = "PROGRESS_PERCENTAGE")
-    private BigDecimal progressPercentage;
+    private double progressPercentage;
     @Column(name = "CREATED_AT")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
     @JoinColumn(name = "CREATED_BY", referencedColumnName = "ADMIN_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Admin createdBy;
     @JoinColumn(name = "PROJECT_ID", referencedColumnName = "PROJECT_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Project projectId;
+    private Project project;
 
     public ProjectTracking() {
     }
@@ -68,7 +63,7 @@ public class ProjectTracking implements Serializable {
         this.trackingId = trackingId;
     }
 
-    public ProjectTracking(Long trackingId, String observations, Date trackingDate, BigDecimal progressPercentage) {
+    public ProjectTracking(Long trackingId, String observations, LocalDateTime trackingDate, double progressPercentage) {
         this.trackingId = trackingId;
         this.observations = observations;
         this.trackingDate = trackingDate;
@@ -91,27 +86,27 @@ public class ProjectTracking implements Serializable {
         this.observations = observations;
     }
 
-    public Date getTrackingDate() {
+    public LocalDateTime getTrackingDate() {
         return trackingDate;
     }
 
-    public void setTrackingDate(Date trackingDate) {
+    public void setTrackingDate(LocalDateTime trackingDate) {
         this.trackingDate = trackingDate;
     }
 
-    public BigDecimal getProgressPercentage() {
+    public double getProgressPercentage() {
         return progressPercentage;
     }
 
-    public void setProgressPercentage(BigDecimal progressPercentage) {
+    public void setProgressPercentage(double progressPercentage) {
         this.progressPercentage = progressPercentage;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -123,12 +118,12 @@ public class ProjectTracking implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Project getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(Project projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override

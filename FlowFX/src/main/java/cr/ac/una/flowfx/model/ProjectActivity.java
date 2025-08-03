@@ -16,11 +16,9 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -61,32 +59,26 @@ public class ProjectActivity implements Serializable {
     private Character status;
     @Basic(optional = false)
     @Column(name = "PLANNED_START_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date plannedStartDate;
+    private LocalDateTime plannedStartDate;
     @Basic(optional = false)
     @Column(name = "PLANNED_END_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date plannedEndDate;
+    private LocalDateTime plannedEndDate;
     @Column(name = "ACTUAL_START_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date actualStartDate;
+    private LocalDateTime actualStartDate;
     @Column(name = "ACTUAL_END_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date actualEndDate;
+    private LocalDateTime actualEndDate;
     @Basic(optional = false)
     @Column(name = "EXECUTION_ORDER")
     private BigInteger executionOrder;
     @Column(name = "CREATED_AT")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "UPDATED_AT")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "activityId", fetch = FetchType.LAZY)
+    private LocalDateTime updatedAt;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "activity", fetch = FetchType.LAZY)
     private List<Notification> notificationList;
     @JoinColumn(name = "PROJECT_ID", referencedColumnName = "PROJECT_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Project projectId;
+    private Project project;
 
     public ProjectActivity() {
     }
@@ -95,7 +87,7 @@ public class ProjectActivity implements Serializable {
         this.activityId = activityId;
     }
 
-    public ProjectActivity(Long activityId, String description, String responsible, Character status, Date plannedStartDate, Date plannedEndDate, BigInteger executionOrder) {
+    public ProjectActivity(Long activityId, String description, String responsible, Character status, LocalDateTime plannedStartDate, LocalDateTime plannedEndDate, BigInteger executionOrder) {
         this.activityId = activityId;
         this.description = description;
         this.responsible = responsible;
@@ -137,35 +129,35 @@ public class ProjectActivity implements Serializable {
         this.status = status;
     }
 
-    public Date getPlannedStartDate() {
+    public LocalDateTime getPlannedStartDate() {
         return plannedStartDate;
     }
 
-    public void setPlannedStartDate(Date plannedStartDate) {
+    public void setPlannedStartDate(LocalDateTime plannedStartDate) {
         this.plannedStartDate = plannedStartDate;
     }
 
-    public Date getPlannedEndDate() {
+    public LocalDateTime getPlannedEndDate() {
         return plannedEndDate;
     }
 
-    public void setPlannedEndDate(Date plannedEndDate) {
+    public void setPlannedEndDate(LocalDateTime plannedEndDate) {
         this.plannedEndDate = plannedEndDate;
     }
 
-    public Date getActualStartDate() {
+    public LocalDateTime getActualStartDate() {
         return actualStartDate;
     }
 
-    public void setActualStartDate(Date actualStartDate) {
+    public void setActualStartDate(LocalDateTime actualStartDate) {
         this.actualStartDate = actualStartDate;
     }
 
-    public Date getActualEndDate() {
+    public LocalDateTime getActualEndDate() {
         return actualEndDate;
     }
 
-    public void setActualEndDate(Date actualEndDate) {
+    public void setActualEndDate(LocalDateTime actualEndDate) {
         this.actualEndDate = actualEndDate;
     }
 
@@ -177,19 +169,19 @@ public class ProjectActivity implements Serializable {
         this.executionOrder = executionOrder;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -201,12 +193,12 @@ public class ProjectActivity implements Serializable {
         this.notificationList = notificationList;
     }
 
-    public Project getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(Project projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override
