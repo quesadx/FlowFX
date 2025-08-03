@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbBoard" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="400.0" styleClass="container--sub" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbBoard" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" spacing="4.0" styleClass="container--sub" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT">
          <children>
@@ -24,17 +24,14 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding>
             </HBox>
-            <MFXButton text="">
+            <MFXButton styleClass="button--edit" text="">
                <graphic>
                   <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
             </MFXButton>
          </children>
-         <padding>
-            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-         </padding>
       </HBox>
-      <VBox alignment="CENTER" styleClass="container--sub">
+      <VBox alignment="TOP_CENTER" minHeight="-Infinity" styleClass="container--sub" VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
@@ -55,7 +52,7 @@
                <children>
                   <HBox alignment="CENTER">
                      <children>
-                        <Label text="DESCRIPCION" />
+                        <Label text="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" wrapText="true" />
                      </children>
                      <padding>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -68,6 +65,11 @@
             </HBox>
          </children>
       </VBox>
+      <MFXButton maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="button--expand" text="" VBox.vgrow="ALWAYS">
+         <graphic>
+            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </MFXButton>
    </children>
    <padding>
       <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

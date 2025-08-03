@@ -4,7 +4,6 @@ import cr.ac.una.flowfx.util.FlowController;
 import javafx.application.Application;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -17,12 +16,12 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         // Load custom font
         Font.loadFont(getClass().getResourceAsStream("/cr/ac/una/flowfx/resources/font/Organo.ttf"), 10);
-        Font.loadFont(getClass().getResourceAsStream("/cr/ac/una/flowfx/resources/font/Typo_Round_Bold_Demo.ttf"), 10);
+        Font.loadFont(getClass().getResourceAsStream("/cr/ac/una/flowfx/resources/font/Outfit-VariableFont_wght.ttf"), 10);
 
-        stage.initStyle(StageStyle.UNDECORATED);
+        //stage.initStyle(StageStyle.UNDECORATED);
         FlowController.getInstance().InitializeFlow(stage, null);
         FlowController.getInstance().goMain();
-        FlowController.getInstance().goView("MainView");
+        FlowController.getInstance().goView("ProjectManagementView");
     }
 
 

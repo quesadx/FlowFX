@@ -34,13 +34,13 @@
 }
 
 @font-face {
-    font-family: 'Typo_Round_Bold_Demo';
-    src: url('/cr/ac/una/flowfx/resources/font/Typo_Round_Bold_Demo.otf');
+    font-family: 'Outfit-Bold';
+    src: url('/cr/ac/una/flowfx/resources/font/Outfit-VariableFont_wght.ttf');
 }
 
 /* Base Styles for All Components */
 .root, .mfx-button, .mfx-text-field, .label, .jfx-title {
-    -fx-font-family: 'Typo_Round_Bold_Demo';
+    -fx-font-family: 'Outfit-Bold';
 }
 
 /* Container Styles */
@@ -230,10 +230,54 @@
     -fx-background-color: derive(-fx-btn-base, 50%);
 }
 
+/* Return Button */
+
+.mfx-button.button.button--return {
+    -fx-background-color: -fx-btn-base;
+    -fx-background-radius: 12;
+    -fx-border-color: derive(-fx-btn-base, -10%);
+    -fx-border-radius: 12;
+}
+
+.mfx-button.button.button--return:hover {
+    -fx-background-color: derive(-fx-btn-base, 10%);
+}
+
+.mfx-button.button.button--return:pressed {
+    -fx-background-color: derive(-fx-btn-base, -10%);
+}
+
+.mfx-button.button.button--return:disabled {
+    -fx-background-color: derive(-fx-btn-base, 50%);
+}
+
+/* Add Button */
+.mfx-button.button.button--add {
+    -fx-background-color: -fx-btn-base;
+    -fx-background-radius: 12;
+    -fx-border-color: derive(-fx-btn-base, -10%);
+    -fx-border-radius: 12;
+}
+
+.mfx-button.button.button--add:hover {
+    -fx-background-color: derive(-fx-btn-base, 10%);
+}
+
+.mfx-button.button.button--add:pressed {
+    -fx-background-color: derive(-fx-btn-base, -10%);
+}
+
+.mfx-button.button.button--add:disabled {
+    -fx-background-color: derive(-fx-btn-base, 50%);
+}
 
 /* Icons */
 .button--home > ImageView {
     -fx-image: url("../resources/icons/lucide--home.png");
+}
+
+.mfx-button.button.button--return > ImageView {
+    -fx-image: url("../resources/icons/lucide--arrow-left.png");
 }
 
 .button--util > ImageView {
@@ -256,16 +300,19 @@
     -fx-image: url("../resources/icons/lucide--expand.png");
 }
 
+.mfx-button.button.button--add > ImageView {
+    -fx-image: url("../resources/icons/lucide--grid-2x2-plus.png");
+}
+
 /* Labels */
 .jfx-label {
-    -fx-font-family: 'Typo_Round_Bold_Demo';
-    -fx-font-weight: bold;
+    -fx-font-family: 'Outfit-Bold';
     -fx-font-size: 14px;
 }
 
 .jfx-hyperlink {
     -fx-text-fill: -fx-accent-primary;
-    -fx-font-family: 'Typo_Round_Bold_Demo';
+    -fx-font-family: 'Outfit-Bold';
     -fx-font-weight: bold;
     -fx-font-size: 14px;
 }

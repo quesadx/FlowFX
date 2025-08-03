@@ -7,6 +7,8 @@ package cr.ac.una.flowfx.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,15 +22,14 @@ import javafx.scene.layout.VBox;
  *
  * @author quesadx
  */
-public class Board extends Pane implements Initializable {
+public class AddProject extends Pane implements Initializable {
     
     /**
      * Initializes the controller class.
      */
 
      @FXML
-     private VBox vbBoard;
-
+     private MFXButton btnAddProject;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -38,9 +39,9 @@ public class Board extends Pane implements Initializable {
 
     }
     
-    public Board(){
+    public AddProject(){
         FXMLLoader fxmlLoader = new FXMLLoader(
-            getClass().getResource("/cr/ac/una/flowfx/view/BoardComponent.fxml")
+            getClass().getResource("/cr/ac/una/flowfx/view/AddProjectComponent.fxml")
         );
         fxmlLoader.setController(this);
         try {
@@ -48,12 +49,16 @@ public class Board extends Pane implements Initializable {
             this.getChildren().add(root);
         } catch (IOException exception) {
             throw new RuntimeException(
-                "Failed to load Board FXML. Check the file path and ensure it exists.",
+                "Failed to load AddProject FXML. Check the file path and ensure it exists.",
                 exception
             );
         }
 
-        this.vbBoard.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow widget to grow
+        //this.vbBoard.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow widget to grow
+    }
+
+    public MFXButton getBtnAddProject() {
+        return btnAddProject;
     }
 
 }
