@@ -35,18 +35,36 @@
 /* Container Styles */
 .container {
     -fx-background-color: -fx-bg-primary;
-    -fx-background-radius: 12;
+    -fx-background-radius: 24;
     -fx-border-color:-fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 12;
+    -fx-border-radius: 24;
 }
 .container-sub {
     -fx-background-color: white;
-    -fx-background-radius: 12;
+    -fx-background-radius: 24;
     
     -fx-border-color:-fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 12;
+    -fx-border-radius: 24;
+
+}
+.container-sub-rounded-top {
+    -fx-background-color: white;
+    -fx-background-radius: 24 24 12 12;
+    
+    -fx-border-color:-fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24 24 12 12;
+
+}
+.container-sub-rounded-bottom {
+    -fx-background-color: white;
+    -fx-background-radius: 12 12 24 24;
+    
+    -fx-border-color:-fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 12 12 24 24;
 
 }
 .filler {
@@ -54,7 +72,7 @@
 }
 .filler-rounded {
     -fx-background-color: -fx-bg-filler;
-    -fx-background-radius: 12;
+    -fx-background-radius: 24;
     /* Shadow */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
 }
@@ -69,26 +87,26 @@
 
 .mfx-button {
     -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
+    -fx-background-radius: 24;
 }
 .mfx-button:hover {
     -fx-background-color: derive(-fx-btn-base, -10%);
-    -fx-background-radius: 12;
+    -fx-background-radius: 24;
 }
 .mfx-button:pressed {
     -fx-background-color: -fx-btn-base-pressed;
-    -fx-background-radius: 12;
+    -fx-background-radius: 24;
 }
 .mfx-button:focused {
     -fx-background-color: -fx-btn-base-pressed;
-    -fx-background-radius: 12;
+    -fx-background-radius: 24;
 }
 .mfx-button.jfx-button {
     -fx-background-color: #4c6afe;
-    -fx-background-radius: 12;
+    -fx-background-radius: 24;
     -fx-border-color: derive(-fx-accent-primary, -10%);
     -fx-border-width: 1;
-    -fx-border-radius: 12;
+    -fx-border-radius: 24;
     -fx-text-fill: white;
     -fx-font-size: 14px;
 }
@@ -128,6 +146,10 @@
     -fx-font-family: 'Organo';
     -fx-font-size: 68px;
 }
+.jfx-title-small {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 36px;
+}
 .jfx-hyperlink:hover {
     -fx-text-fill: derive(-fx-accent-primary, 50%);
 }
@@ -136,9 +158,9 @@
 .mfx-text-field {
   -mfx-main: white;
   -fx-background-color: white;
-  -fx-background-radius: 12;
+  -fx-background-radius: 24;
   -fx-border-color: white;
-  -fx-border-radius: 12;
+  -fx-border-radius: 24;
   -fx-padding: 5;
 }
 .mfx-text-field:readonly,
