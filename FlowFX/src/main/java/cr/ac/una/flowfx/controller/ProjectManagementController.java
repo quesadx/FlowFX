@@ -56,14 +56,14 @@ public class ProjectManagementController extends Controller implements Initializ
         AddProject addProject = new AddProject();
         addProject.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow add project to grow
         addProject.getBtnAddProject().setOnAction(e -> {
-            AnimationManager.showPopup(vbProjectCreationDisplay, vbCover, btnReturn);
+            AnimationManager.showPopup(vbProjectCreationDisplay, vbCover);
         });
         tpProjects.getChildren().add(addProject);
     }
 
     @FXML
     private void onActionBtnReturnProjectCreation(ActionEvent event) {
-        AnimationManager.hidePopup(vbProjectCreationDisplay, vbCover, btnReturn);
+        AnimationManager.hidePopup(vbProjectCreationDisplay, vbCover);
     }
 
 

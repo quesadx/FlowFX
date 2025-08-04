@@ -98,7 +98,7 @@
     -fx-background-radius: 24;
 }
 .mfx-button:focused {
-    -fx-background-color: -fx-btn-base-pressed;
+    -fx-background-color: -fx-btn-base;
     -fx-background-radius: 24;
 }
 .mfx-button.jfx-button {
@@ -130,6 +130,15 @@
 }
 .jfx-close > ImageView {
     -fx-image: url("../resources/icons/lucide--x.png");
+}
+.jfx-expand > ImageView {
+    -fx-image: url("../resources/icons/lucide--fullscreen.png");
+}
+.jfx-edit > ImageView {
+    -fx-image: url("../resources/icons/lucide--edit.png");
+}
+.jfx-add > ImageView {
+    -fx-image: url("../resources/icons/lucide--circle-plus.png");
 }
 /* ############################## Labels Base Styles ############################## */
 .jfx-label {

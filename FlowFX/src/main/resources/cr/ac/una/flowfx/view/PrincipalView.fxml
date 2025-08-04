@@ -69,7 +69,7 @@
                               <ImageView fx:id="imgHome" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                            <padding>
-                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="4.0" />
                            </padding>
                         </MFXButton>
                         <MFXButton fx:id="btnProjects" onAction="#onActionBtnProjects" styleClass="jfx-projects" text="">

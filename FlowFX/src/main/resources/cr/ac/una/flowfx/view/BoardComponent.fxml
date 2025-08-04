@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbBoard" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" spacing="4.0" styleClass="container--sub" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbBoard" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" spacing="4.0" styleClass="filler-rounded" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER_LEFT">
+      <HBox alignment="CENTER_LEFT" styleClass="container-sub">
          <children>
             <HBox alignment="CENTER" styleClass="container--sub">
                <children>
@@ -24,14 +24,20 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding>
             </HBox>
-            <MFXButton styleClass="button--edit" text="">
+            <MFXButton styleClass="jfx-edit" text="">
                <graphic>
                   <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </padding>
             </MFXButton>
          </children>
+         <padding>
+            <Insets bottom="4.0" left="8.0" right="8.0" top="4.0" />
+         </padding>
       </HBox>
-      <VBox alignment="TOP_CENTER" minHeight="-Infinity" styleClass="container--sub" VBox.vgrow="ALWAYS">
+      <VBox alignment="TOP_CENTER" minHeight="-Infinity" styleClass="container-sub" VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
@@ -43,9 +49,17 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </padding>
                   </HBox>
+                  <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label />
+                     </children>
+                     <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </padding>
+                  </HBox>
                </children>
                <padding>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </padding>
             </HBox>
             <HBox alignment="CENTER_LEFT">
@@ -55,7 +69,7 @@
                         <Label text="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" wrapText="true" />
                      </children>
                      <padding>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="8.0" />
                      </padding>
                   </HBox>
                </children>
@@ -65,10 +79,13 @@
             </HBox>
          </children>
       </VBox>
-      <MFXButton maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="button--expand" text="" VBox.vgrow="ALWAYS">
+      <MFXButton maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="jfx-expand" text="" VBox.vgrow="ALWAYS">
          <graphic>
             <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
          </graphic>
+         <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </padding>
       </MFXButton>
    </children>
    <padding>
