@@ -29,7 +29,7 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     private BorderPane root;
     @FXML
-    public MFXButton btnSettings;
+    public MFXButton btnAdminSignUp;
     @FXML
     public MFXButton btnHome;
     @FXML
@@ -92,7 +92,7 @@ public class PrincipalController extends Controller implements Initializable {
         
         // Set initial visual state without navigation
         btnHome.setStyle("-fx-background-color: #4c6afe;");
-        btnSettings.setStyle("-fx-background-color: #ffffff;");
+        btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
         btnProjects.setStyle("-fx-background-color: #ffffff;");
         imgHome.setEffect(new ColorAdjust(0, -1, 1, 0));
         
@@ -105,7 +105,7 @@ public class PrincipalController extends Controller implements Initializable {
         });
 
         //btnProjects.setDisable(true);
-        //btnSettings.setDisable(true);
+        //btnAdminSignUp.setDisable(true);
         //btnHome.setDisable(true);
     }    
 
@@ -115,8 +115,8 @@ public class PrincipalController extends Controller implements Initializable {
     }
 
     @FXML
-    private void onActionBtnSettings(ActionEvent event) {
-        btnSettings.setStyle("-fx-background-color: #4c6afe;");
+    private void onActionBtnAdminSignUp(ActionEvent event) {
+        btnAdminSignUp.setStyle("-fx-background-color: #4c6afe;");
         btnHome.setStyle("-fx-background-color: #ffffff;");
         btnProjects.setStyle("-fx-background-color: #ffffff;");
 
@@ -125,13 +125,13 @@ public class PrincipalController extends Controller implements Initializable {
         imgHome.setEffect(null);
         imgProjects.setEffect(null);
 
-        // FlowController.getInstance().goView("SettingsView");
+        FlowController.getInstance().goView("AdminSignUpView");
     }
 
     @FXML
     private void onActionBtnHome(ActionEvent event) {
         btnHome.setStyle("-fx-background-color: #4c6afe;");
-        btnSettings.setStyle("-fx-background-color: #ffffff;");
+        btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
         btnProjects.setStyle("-fx-background-color: #ffffff;");
 
         // Make the image white (by default is a black png)
@@ -145,7 +145,7 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     private void onActionBtnProjects(ActionEvent event) {
         btnProjects.setStyle("-fx-background-color: #4c6afe;");
-        btnSettings.setStyle("-fx-background-color: #ffffff;");
+        btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
         btnHome.setStyle("-fx-background-color: #ffffff;");
 
         // Make the image white (by default is a black png)

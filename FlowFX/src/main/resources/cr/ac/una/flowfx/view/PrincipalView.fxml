@@ -56,7 +56,7 @@
                   </VBox>
                   <VBox spacing="4.0" styleClass="container-sub-rounded-bottom">
                      <children>
-                        <MFXButton fx:id="btnSettings" onAction="#onActionBtnSettings" styleClass="jfx-settings" text="">
+                        <MFXButton fx:id="btnAdminSignUp" onAction="#onActionBtnAdminSignUp" styleClass="jfx-settings" text="">
                            <graphic>
                               <ImageView fx:id="imgSettings" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
