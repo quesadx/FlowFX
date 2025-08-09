@@ -16,7 +16,6 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 
 /**
  *
@@ -29,8 +28,7 @@ import java.time.LocalDateTime;
     @NamedQuery(name = "NotificationRecipient.findByNotificationId", query = "SELECT n FROM NotificationRecipient n WHERE n.notificationRecipientPK.notificationId = :notificationId"),
     @NamedQuery(name = "NotificationRecipient.findByEmail", query = "SELECT n FROM NotificationRecipient n WHERE n.notificationRecipientPK.email = :email"),
     @NamedQuery(name = "NotificationRecipient.findByName", query = "SELECT n FROM NotificationRecipient n WHERE n.name = :name"),
-    @NamedQuery(name = "NotificationRecipient.findByRole", query = "SELECT n FROM NotificationRecipient n WHERE n.role = :role"),
-    @NamedQuery(name = "NotificationRecipient.findByCreatedAt", query = "SELECT n FROM NotificationRecipient n WHERE n.createdAt = :createdAt")})
+    @NamedQuery(name = "NotificationRecipient.findByRole", query = "SELECT n FROM NotificationRecipient n WHERE n.role = :role")})
 public class NotificationRecipient implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,8 +40,6 @@ public class NotificationRecipient implements Serializable {
     @Basic(optional = false)
     @Column(name = "ROLE")
     private String role;
-    @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
     @JoinColumn(name = "NOTIFICATION_ID", referencedColumnName = "NOTIFICATION_ID", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Notification notification;
@@ -87,14 +83,6 @@ public class NotificationRecipient implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Notification getNotification() {

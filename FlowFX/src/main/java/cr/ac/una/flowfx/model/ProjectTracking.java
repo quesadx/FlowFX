@@ -14,8 +14,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *
@@ -37,44 +40,46 @@ public class ProjectTracking implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "TRACKING_ID")
-    private Long trackingId;
+    private BigDecimal trackingId;
     @Basic(optional = false)
     @Column(name = "OBSERVATIONS")
     private String observations;
     @Basic(optional = false)
     @Column(name = "TRACKING_DATE")
-    private LocalDateTime trackingDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date trackingDate;
     @Basic(optional = false)
     @Column(name = "PROGRESS_PERCENTAGE")
-    private double progressPercentage;
+    private BigDecimal progressPercentage;
     @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
-    @JoinColumn(name = "CREATED_BY", referencedColumnName = "ADMIN_ID")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    @JoinColumn(name = "CREATED_BY", referencedColumnName = "PER_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Admin createdBy;
+    private Person createdBy;
     @JoinColumn(name = "PROJECT_ID", referencedColumnName = "PROJECT_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Project project;
+    private Project projectId;
 
     public ProjectTracking() {
     }
 
-    public ProjectTracking(Long trackingId) {
+    public ProjectTracking(BigDecimal trackingId) {
         this.trackingId = trackingId;
     }
 
-    public ProjectTracking(Long trackingId, String observations, LocalDateTime trackingDate, double progressPercentage) {
+    public ProjectTracking(BigDecimal trackingId, String observations, Date trackingDate, BigDecimal progressPercentage) {
         this.trackingId = trackingId;
         this.observations = observations;
         this.trackingDate = trackingDate;
         this.progressPercentage = progressPercentage;
     }
 
-    public Long getTrackingId() {
+    public BigDecimal getTrackingId() {
         return trackingId;
     }
 
-    public void setTrackingId(Long trackingId) {
+    public void setTrackingId(BigDecimal trackingId) {
         this.trackingId = trackingId;
     }
 
@@ -86,44 +91,44 @@ public class ProjectTracking implements Serializable {
         this.observations = observations;
     }
 
-    public LocalDateTime getTrackingDate() {
+    public Date getTrackingDate() {
         return trackingDate;
     }
 
-    public void setTrackingDate(LocalDateTime trackingDate) {
+    public void setTrackingDate(Date trackingDate) {
         this.trackingDate = trackingDate;
     }
 
-    public double getProgressPercentage() {
+    public BigDecimal getProgressPercentage() {
         return progressPercentage;
     }
 
-    public void setProgressPercentage(double progressPercentage) {
+    public void setProgressPercentage(BigDecimal progressPercentage) {
         this.progressPercentage = progressPercentage;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Admin getCreatedBy() {
+    public Person getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Admin createdBy) {
+    public void setCreatedBy(Person createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Project getProject() {
-        return project;
+    public Project getProjectId() {
+        return projectId;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProjectId(Project projectId) {
+        this.projectId = projectId;
     }
 
     @Override

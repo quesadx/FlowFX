@@ -16,8 +16,11 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,58 +47,57 @@ public class Project implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "PROJECT_ID")
-    private Long projectId;
+    private BigDecimal projectId;
     @Basic(optional = false)
     @Column(name = "PROJECT_NAME")
     private String projectName;
     @Basic(optional = false)
     @Column(name = "PLANNED_START_DATE")
-    private LocalDateTime plannedStartDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date plannedStartDate;
     @Basic(optional = false)
     @Column(name = "PLANNED_END_DATE")
-    private LocalDateTime plannedEndDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date plannedEndDate;
     @Column(name = "ACTUAL_START_DATE")
-    private LocalDateTime actualStartDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date actualStartDate;
     @Column(name = "ACTUAL_END_DATE")
-    private LocalDateTime actualEndDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date actualEndDate;
     @Basic(optional = false)
     @Column(name = "STATUS")
     private Character status;
     @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
     @Column(name = "UPDATED_AT")
-    private LocalDateTime updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
     private List<Notification> notificationList;
-    
-    // Líder de usuario (rol funcional)
-    @ManyToOne
-    @JoinColumn(name = "LEADER_USER_ID")
-    private Admin leader;
-    
-    // Líder técnico
-    @ManyToOne
-    @JoinColumn(name = "TECH_LEADER_ID")
-    private Admin techLeader;
-    
-    // Patrocinador
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "SPONSOR_ID")
-    private Admin sponsor;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
+    @JoinColumn(name = "LEADER_USER_ID", referencedColumnName = "PER_ID")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Person leaderUserId;
+    @JoinColumn(name = "TECH_LEADER_ID", referencedColumnName = "PER_ID")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Person techLeaderId;
+    @JoinColumn(name = "SPONSOR_ID", referencedColumnName = "PER_ID")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Person sponsorId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
     private List<ProjectTracking> projectTrackingList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
     private List<ProjectActivity> projectActivityList;
 
     public Project() {
     }
 
-    public Project(Long projectId) {
+    public Project(BigDecimal projectId) {
         this.projectId = projectId;
     }
 
-    public Project(Long projectId, String projectName, LocalDateTime plannedStartDate, LocalDateTime plannedEndDate, Character status) {
+    public Project(BigDecimal projectId, String projectName, Date plannedStartDate, Date plannedEndDate, Character status) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.plannedStartDate = plannedStartDate;
@@ -103,11 +105,11 @@ public class Project implements Serializable {
         this.status = status;
     }
 
-    public Long getProjectId() {
+    public BigDecimal getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(BigDecimal projectId) {
         this.projectId = projectId;
     }
 
@@ -119,35 +121,35 @@ public class Project implements Serializable {
         this.projectName = projectName;
     }
 
-    public LocalDateTime getPlannedStartDate() {
+    public Date getPlannedStartDate() {
         return plannedStartDate;
     }
 
-    public void setPlannedStartDate(LocalDateTime plannedStartDate) {
+    public void setPlannedStartDate(Date plannedStartDate) {
         this.plannedStartDate = plannedStartDate;
     }
 
-    public LocalDateTime getPlannedEndDate() {
+    public Date getPlannedEndDate() {
         return plannedEndDate;
     }
 
-    public void setPlannedEndDate(LocalDateTime plannedEndDate) {
+    public void setPlannedEndDate(Date plannedEndDate) {
         this.plannedEndDate = plannedEndDate;
     }
 
-    public LocalDateTime getActualStartDate() {
+    public Date getActualStartDate() {
         return actualStartDate;
     }
 
-    public void setActualStartDate(LocalDateTime actualStartDate) {
+    public void setActualStartDate(Date actualStartDate) {
         this.actualStartDate = actualStartDate;
     }
 
-    public LocalDateTime getActualEndDate() {
+    public Date getActualEndDate() {
         return actualEndDate;
     }
 
-    public void setActualEndDate(LocalDateTime actualEndDate) {
+    public void setActualEndDate(Date actualEndDate) {
         this.actualEndDate = actualEndDate;
     }
 
@@ -159,19 +161,19 @@ public class Project implements Serializable {
         this.status = status;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -183,28 +185,28 @@ public class Project implements Serializable {
         this.notificationList = notificationList;
     }
 
-    public Admin getLeader() {
-        return leader;
+    public Person getLeaderUserId() {
+        return leaderUserId;
     }
 
-    public void setLeader(Admin leader) {
-        this.leader = leader;
+    public void setLeaderUserId(Person leaderUserId) {
+        this.leaderUserId = leaderUserId;
     }
 
-    public Admin getSponsor() {
-        return sponsor;
+    public Person getTechLeaderId() {
+        return techLeaderId;
     }
 
-    public void setSponsor(Admin sponsor) {
-        this.sponsor = sponsor;
+    public void setTechLeaderId(Person techLeaderId) {
+        this.techLeaderId = techLeaderId;
     }
 
-    public Admin getTechLeader() {
-        return techLeader;
+    public Person getSponsorId() {
+        return sponsorId;
     }
 
-    public void setTechLeader(Admin techLeader) {
-        this.techLeader = techLeader;
+    public void setSponsorId(Person sponsorId) {
+        this.sponsorId = sponsorId;
     }
 
     public List<ProjectTracking> getProjectTrackingList() {

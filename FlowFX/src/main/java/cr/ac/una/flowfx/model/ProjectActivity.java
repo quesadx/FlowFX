@@ -16,9 +16,12 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +34,6 @@ import java.util.List;
     @NamedQuery(name = "ProjectActivity.findAll", query = "SELECT p FROM ProjectActivity p"),
     @NamedQuery(name = "ProjectActivity.findByActivityId", query = "SELECT p FROM ProjectActivity p WHERE p.activityId = :activityId"),
     @NamedQuery(name = "ProjectActivity.findByDescription", query = "SELECT p FROM ProjectActivity p WHERE p.description = :description"),
-    @NamedQuery(name = "ProjectActivity.findByResponsible", query = "SELECT p FROM ProjectActivity p WHERE p.responsible = :responsible"),
     @NamedQuery(name = "ProjectActivity.findByStatus", query = "SELECT p FROM ProjectActivity p WHERE p.status = :status"),
     @NamedQuery(name = "ProjectActivity.findByPlannedStartDate", query = "SELECT p FROM ProjectActivity p WHERE p.plannedStartDate = :plannedStartDate"),
     @NamedQuery(name = "ProjectActivity.findByPlannedEndDate", query = "SELECT p FROM ProjectActivity p WHERE p.plannedEndDate = :plannedEndDate"),
@@ -47,61 +49,69 @@ public class ProjectActivity implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "ACTIVITY_ID")
-    private Long activityId;
+    private BigDecimal activityId;
     @Basic(optional = false)
     @Column(name = "DESCRIPTION")
     private String description;
-    @Basic(optional = false)
-    @Column(name = "RESPONSIBLE")
-    private String responsible;
     @Basic(optional = false)
     @Column(name = "STATUS")
     private Character status;
     @Basic(optional = false)
     @Column(name = "PLANNED_START_DATE")
-    private LocalDateTime plannedStartDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date plannedStartDate;
     @Basic(optional = false)
     @Column(name = "PLANNED_END_DATE")
-    private LocalDateTime plannedEndDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date plannedEndDate;
     @Column(name = "ACTUAL_START_DATE")
-    private LocalDateTime actualStartDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date actualStartDate;
     @Column(name = "ACTUAL_END_DATE")
-    private LocalDateTime actualEndDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date actualEndDate;
     @Basic(optional = false)
     @Column(name = "EXECUTION_ORDER")
     private BigInteger executionOrder;
     @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
     @Column(name = "UPDATED_AT")
-    private LocalDateTime updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "activity", fetch = FetchType.LAZY)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "activityId", fetch = FetchType.LAZY)
     private List<Notification> notificationList;
+    @JoinColumn(name = "RESPONSIBLE_ID", referencedColumnName = "PER_ID")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Person responsibleId;
+    @JoinColumn(name = "CREATED_BY", referencedColumnName = "PER_ID")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Person createdBy;
     @JoinColumn(name = "PROJECT_ID", referencedColumnName = "PROJECT_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Project project;
+    private Project projectId;
 
     public ProjectActivity() {
     }
 
-    public ProjectActivity(Long activityId) {
+    public ProjectActivity(BigDecimal activityId) {
         this.activityId = activityId;
     }
 
-    public ProjectActivity(Long activityId, String description, String responsible, Character status, LocalDateTime plannedStartDate, LocalDateTime plannedEndDate, BigInteger executionOrder) {
+    public ProjectActivity(BigDecimal activityId, String description, Character status, Date plannedStartDate, Date plannedEndDate, BigInteger executionOrder) {
         this.activityId = activityId;
         this.description = description;
-        this.responsible = responsible;
         this.status = status;
         this.plannedStartDate = plannedStartDate;
         this.plannedEndDate = plannedEndDate;
         this.executionOrder = executionOrder;
     }
 
-    public Long getActivityId() {
+    public BigDecimal getActivityId() {
         return activityId;
     }
 
-    public void setActivityId(Long activityId) {
+    public void setActivityId(BigDecimal activityId) {
         this.activityId = activityId;
     }
 
@@ -113,14 +123,6 @@ public class ProjectActivity implements Serializable {
         this.description = description;
     }
 
-    public String getResponsible() {
-        return responsible;
-    }
-
-    public void setResponsible(String responsible) {
-        this.responsible = responsible;
-    }
-
     public Character getStatus() {
         return status;
     }
@@ -129,35 +131,35 @@ public class ProjectActivity implements Serializable {
         this.status = status;
     }
 
-    public LocalDateTime getPlannedStartDate() {
+    public Date getPlannedStartDate() {
         return plannedStartDate;
     }
 
-    public void setPlannedStartDate(LocalDateTime plannedStartDate) {
+    public void setPlannedStartDate(Date plannedStartDate) {
         this.plannedStartDate = plannedStartDate;
     }
 
-    public LocalDateTime getPlannedEndDate() {
+    public Date getPlannedEndDate() {
         return plannedEndDate;
     }
 
-    public void setPlannedEndDate(LocalDateTime plannedEndDate) {
+    public void setPlannedEndDate(Date plannedEndDate) {
         this.plannedEndDate = plannedEndDate;
     }
 
-    public LocalDateTime getActualStartDate() {
+    public Date getActualStartDate() {
         return actualStartDate;
     }
 
-    public void setActualStartDate(LocalDateTime actualStartDate) {
+    public void setActualStartDate(Date actualStartDate) {
         this.actualStartDate = actualStartDate;
     }
 
-    public LocalDateTime getActualEndDate() {
+    public Date getActualEndDate() {
         return actualEndDate;
     }
 
-    public void setActualEndDate(LocalDateTime actualEndDate) {
+    public void setActualEndDate(Date actualEndDate) {
         this.actualEndDate = actualEndDate;
     }
 
@@ -169,19 +171,19 @@ public class ProjectActivity implements Serializable {
         this.executionOrder = executionOrder;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -193,12 +195,28 @@ public class ProjectActivity implements Serializable {
         this.notificationList = notificationList;
     }
 
-    public Project getProject() {
-        return project;
+    public Person getResponsibleId() {
+        return responsibleId;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setResponsibleId(Person responsibleId) {
+        this.responsibleId = responsibleId;
+    }
+
+    public Person getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Person createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Project getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Project projectId) {
+        this.projectId = projectId;
     }
 
     @Override
