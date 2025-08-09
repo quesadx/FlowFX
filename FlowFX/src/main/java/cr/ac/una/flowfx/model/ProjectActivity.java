@@ -19,8 +19,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +30,7 @@ import java.util.List;
 @Table(name = "PROJECT_ACTIVITY")
 @NamedQueries({
     @NamedQuery(name = "ProjectActivity.findAll", query = "SELECT p FROM ProjectActivity p"),
-    @NamedQuery(name = "ProjectActivity.findByActivityId", query = "SELECT p FROM ProjectActivity p WHERE p.activityId = :activityId"),
+    @NamedQuery(name = "ProjectActivity.findById", query = "SELECT p FROM ProjectActivity p WHERE p.id = :id"),
     @NamedQuery(name = "ProjectActivity.findByDescription", query = "SELECT p FROM ProjectActivity p WHERE p.description = :description"),
     @NamedQuery(name = "ProjectActivity.findByStatus", query = "SELECT p FROM ProjectActivity p WHERE p.status = :status"),
     @NamedQuery(name = "ProjectActivity.findByPlannedStartDate", query = "SELECT p FROM ProjectActivity p WHERE p.plannedStartDate = :plannedStartDate"),
@@ -49,7 +47,7 @@ public class ProjectActivity implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "ACTIVITY_ID")
-    private BigDecimal activityId;
+    private Long id;
     @Basic(optional = false)
     @Column(name = "DESCRIPTION")
     private String description;
@@ -72,7 +70,7 @@ public class ProjectActivity implements Serializable {
     private Date actualEndDate;
     @Basic(optional = false)
     @Column(name = "EXECUTION_ORDER")
-    private BigInteger executionOrder;
+    private Integer executionOrder;
     @Column(name = "CREATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -94,12 +92,12 @@ public class ProjectActivity implements Serializable {
     public ProjectActivity() {
     }
 
-    public ProjectActivity(BigDecimal activityId) {
-        this.activityId = activityId;
+    public ProjectActivity(Long id) {
+        this.id = id;
     }
 
-    public ProjectActivity(BigDecimal activityId, String description, Character status, Date plannedStartDate, Date plannedEndDate, BigInteger executionOrder) {
-        this.activityId = activityId;
+    public ProjectActivity(Long id, String description, Character status, Date plannedStartDate, Date plannedEndDate, Integer executionOrder) {
+        this.id = id;
         this.description = description;
         this.status = status;
         this.plannedStartDate = plannedStartDate;
@@ -107,12 +105,12 @@ public class ProjectActivity implements Serializable {
         this.executionOrder = executionOrder;
     }
 
-    public BigDecimal getActivityId() {
-        return activityId;
+    public Long getId() {
+        return id;
     }
 
-    public void setActivityId(BigDecimal activityId) {
-        this.activityId = activityId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -163,11 +161,11 @@ public class ProjectActivity implements Serializable {
         this.actualEndDate = actualEndDate;
     }
 
-    public BigInteger getExecutionOrder() {
+    public Integer getExecutionOrder() {
         return executionOrder;
     }
 
-    public void setExecutionOrder(BigInteger executionOrder) {
+    public void setExecutionOrder(Integer executionOrder) {
         this.executionOrder = executionOrder;
     }
 
@@ -222,7 +220,7 @@ public class ProjectActivity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (activityId != null ? activityId.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -233,7 +231,7 @@ public class ProjectActivity implements Serializable {
             return false;
         }
         ProjectActivity other = (ProjectActivity) object;
-        if ((this.activityId == null && other.activityId != null) || (this.activityId != null && !this.activityId.equals(other.activityId))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -241,7 +239,7 @@ public class ProjectActivity implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.flowfx.model.ProjectActivity[ activityId=" + activityId + " ]";
+    return "cr.ac.una.flowfx.model.ProjectActivity[ id=" + id + " ]";
     }
     
 }

@@ -15,7 +15,6 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.math.BigInteger;
 
 /**
  *
@@ -25,7 +24,7 @@ import java.math.BigInteger;
 @Table(name = "NOTIFICATION_RECIPIENT")
 @NamedQueries({
     @NamedQuery(name = "NotificationRecipient.findAll", query = "SELECT n FROM NotificationRecipient n"),
-    @NamedQuery(name = "NotificationRecipient.findByNotificationId", query = "SELECT n FROM NotificationRecipient n WHERE n.notificationRecipientPK.notificationId = :notificationId"),
+    @NamedQuery(name = "NotificationRecipient.findById", query = "SELECT n FROM NotificationRecipient n WHERE n.notificationRecipientPK.id = :id"),
     @NamedQuery(name = "NotificationRecipient.findByEmail", query = "SELECT n FROM NotificationRecipient n WHERE n.notificationRecipientPK.email = :email"),
     @NamedQuery(name = "NotificationRecipient.findByName", query = "SELECT n FROM NotificationRecipient n WHERE n.name = :name"),
     @NamedQuery(name = "NotificationRecipient.findByRole", query = "SELECT n FROM NotificationRecipient n WHERE n.role = :role")})
@@ -57,7 +56,7 @@ public class NotificationRecipient implements Serializable {
         this.role = role;
     }
 
-    public NotificationRecipient(BigInteger notificationId, String email) {
+    public NotificationRecipient(Long notificationId, String email) {
         this.notificationRecipientPK = new NotificationRecipientPK(notificationId, email);
     }
 

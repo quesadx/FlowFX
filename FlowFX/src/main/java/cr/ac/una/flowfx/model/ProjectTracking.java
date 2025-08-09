@@ -17,7 +17,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -28,7 +27,7 @@ import java.util.Date;
 @Table(name = "PROJECT_TRACKING")
 @NamedQueries({
     @NamedQuery(name = "ProjectTracking.findAll", query = "SELECT p FROM ProjectTracking p"),
-    @NamedQuery(name = "ProjectTracking.findByTrackingId", query = "SELECT p FROM ProjectTracking p WHERE p.trackingId = :trackingId"),
+    @NamedQuery(name = "ProjectTracking.findById", query = "SELECT p FROM ProjectTracking p WHERE p.id = :id"),
     @NamedQuery(name = "ProjectTracking.findByObservations", query = "SELECT p FROM ProjectTracking p WHERE p.observations = :observations"),
     @NamedQuery(name = "ProjectTracking.findByTrackingDate", query = "SELECT p FROM ProjectTracking p WHERE p.trackingDate = :trackingDate"),
     @NamedQuery(name = "ProjectTracking.findByProgressPercentage", query = "SELECT p FROM ProjectTracking p WHERE p.progressPercentage = :progressPercentage"),
@@ -40,7 +39,7 @@ public class ProjectTracking implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "TRACKING_ID")
-    private BigDecimal trackingId;
+    private Long id;
     @Basic(optional = false)
     @Column(name = "OBSERVATIONS")
     private String observations;
@@ -50,7 +49,7 @@ public class ProjectTracking implements Serializable {
     private Date trackingDate;
     @Basic(optional = false)
     @Column(name = "PROGRESS_PERCENTAGE")
-    private BigDecimal progressPercentage;
+    private Integer progressPercentage;
     @Column(name = "CREATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -64,23 +63,23 @@ public class ProjectTracking implements Serializable {
     public ProjectTracking() {
     }
 
-    public ProjectTracking(BigDecimal trackingId) {
-        this.trackingId = trackingId;
+    public ProjectTracking(Long id) {
+        this.id = id;
     }
 
-    public ProjectTracking(BigDecimal trackingId, String observations, Date trackingDate, BigDecimal progressPercentage) {
-        this.trackingId = trackingId;
+    public ProjectTracking(Long id, String observations, Date trackingDate, Integer progressPercentage) {
+        this.id = id;
         this.observations = observations;
         this.trackingDate = trackingDate;
         this.progressPercentage = progressPercentage;
     }
 
-    public BigDecimal getTrackingId() {
-        return trackingId;
+    public Long getId() {
+        return id;
     }
 
-    public void setTrackingId(BigDecimal trackingId) {
-        this.trackingId = trackingId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getObservations() {
@@ -99,11 +98,11 @@ public class ProjectTracking implements Serializable {
         this.trackingDate = trackingDate;
     }
 
-    public BigDecimal getProgressPercentage() {
+    public Integer getProgressPercentage() {
         return progressPercentage;
     }
 
-    public void setProgressPercentage(BigDecimal progressPercentage) {
+    public void setProgressPercentage(Integer progressPercentage) {
         this.progressPercentage = progressPercentage;
     }
 
@@ -134,7 +133,7 @@ public class ProjectTracking implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (trackingId != null ? trackingId.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -145,7 +144,7 @@ public class ProjectTracking implements Serializable {
             return false;
         }
         ProjectTracking other = (ProjectTracking) object;
-        if ((this.trackingId == null && other.trackingId != null) || (this.trackingId != null && !this.trackingId.equals(other.trackingId))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -153,7 +152,7 @@ public class ProjectTracking implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.flowfx.model.ProjectTracking[ trackingId=" + trackingId + " ]";
+    return "cr.ac.una.flowfx.model.ProjectTracking[ id=" + id + " ]";
     }
     
 }

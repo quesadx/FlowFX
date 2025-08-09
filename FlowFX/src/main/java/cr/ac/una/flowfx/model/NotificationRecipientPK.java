@@ -8,7 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 
 /**
  *
@@ -19,7 +19,7 @@ public class NotificationRecipientPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "NOTIFICATION_ID")
-    private BigInteger notificationId;
+    private Long id;
     @Basic(optional = false)
     @Column(name = "EMAIL")
     private String email;
@@ -27,17 +27,17 @@ public class NotificationRecipientPK implements Serializable {
     public NotificationRecipientPK() {
     }
 
-    public NotificationRecipientPK(BigInteger notificationId, String email) {
-        this.notificationId = notificationId;
+    public NotificationRecipientPK(Long id, String email) {
+        this.id = id;
         this.email = email;
     }
 
-    public BigInteger getNotificationId() {
-        return notificationId;
+    public Long getId() {
+        return id;
     }
 
-    public void setNotificationId(BigInteger notificationId) {
-        this.notificationId = notificationId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -51,7 +51,7 @@ public class NotificationRecipientPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (notificationId != null ? notificationId.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         hash += (email != null ? email.hashCode() : 0);
         return hash;
     }
@@ -63,7 +63,7 @@ public class NotificationRecipientPK implements Serializable {
             return false;
         }
         NotificationRecipientPK other = (NotificationRecipientPK) object;
-        if ((this.notificationId == null && other.notificationId != null) || (this.notificationId != null && !this.notificationId.equals(other.notificationId))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         if ((this.email == null && other.email != null) || (this.email != null && !this.email.equals(other.email))) {
@@ -74,7 +74,7 @@ public class NotificationRecipientPK implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.flowfx.model.NotificationRecipientPK[ notificationId=" + notificationId + ", email=" + email + " ]";
+    return "cr.ac.una.flowfx.model.NotificationRecipientPK[ id=" + id + ", email=" + email + " ]";
     }
     
 }

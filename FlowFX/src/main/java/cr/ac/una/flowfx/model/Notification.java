@@ -19,7 +19,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +30,7 @@ import java.util.List;
 @Table(name = "NOTIFICATION")
 @NamedQueries({
     @NamedQuery(name = "Notification.findAll", query = "SELECT n FROM Notification n"),
-    @NamedQuery(name = "Notification.findByNotificationId", query = "SELECT n FROM Notification n WHERE n.notificationId = :notificationId"),
+    @NamedQuery(name = "Notification.findById", query = "SELECT n FROM Notification n WHERE n.id = :id"),
     @NamedQuery(name = "Notification.findBySubject", query = "SELECT n FROM Notification n WHERE n.subject = :subject"),
     @NamedQuery(name = "Notification.findByMessage", query = "SELECT n FROM Notification n WHERE n.message = :message"),
     @NamedQuery(name = "Notification.findBySentAt", query = "SELECT n FROM Notification n WHERE n.sentAt = :sentAt"),
@@ -44,7 +43,7 @@ public class Notification implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "NOTIFICATION_ID")
-    private BigDecimal notificationId;
+    private Long id;
     @Basic(optional = false)
     @Column(name = "SUBJECT")
     private String subject;
@@ -67,29 +66,29 @@ public class Notification implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ProjectActivity activityId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "notification", fetch = FetchType.LAZY)
-    private List<NotificationRecipient> notificationRecipientList;
+    private List<NotificationRecipient> recipientList;
 
     public Notification() {
     }
 
-    public Notification(BigDecimal notificationId) {
-        this.notificationId = notificationId;
+    public Notification(Long id) {
+        this.id = id;
     }
 
-    public Notification(BigDecimal notificationId, String subject, String message, Character status, String eventType) {
-        this.notificationId = notificationId;
+    public Notification(Long id, String subject, String message, Character status, String eventType) {
+        this.id = id;
         this.subject = subject;
         this.message = message;
         this.status = status;
         this.eventType = eventType;
     }
 
-    public BigDecimal getNotificationId() {
-        return notificationId;
+    public Long getId() {
+        return id;
     }
 
-    public void setNotificationId(BigDecimal notificationId) {
-        this.notificationId = notificationId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSubject() {
@@ -148,18 +147,18 @@ public class Notification implements Serializable {
         this.activityId = activityId;
     }
 
-    public List<NotificationRecipient> getNotificationRecipientList() {
-        return notificationRecipientList;
+    public List<NotificationRecipient> getRecipientList() {
+        return recipientList;
     }
 
-    public void setNotificationRecipientList(List<NotificationRecipient> notificationRecipientList) {
-        this.notificationRecipientList = notificationRecipientList;
+    public void setRecipientList(List<NotificationRecipient> recipientList) {
+        this.recipientList = recipientList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (notificationId != null ? notificationId.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -170,7 +169,7 @@ public class Notification implements Serializable {
             return false;
         }
         Notification other = (Notification) object;
-        if ((this.notificationId == null && other.notificationId != null) || (this.notificationId != null && !this.notificationId.equals(other.notificationId))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -178,7 +177,7 @@ public class Notification implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.flowfx.model.Notification[ notificationId=" + notificationId + " ]";
+    return "cr.ac.una.flowfx.model.Notification[ id=" + id + " ]";
     }
     
 }

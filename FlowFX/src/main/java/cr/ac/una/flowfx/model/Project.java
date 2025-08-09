@@ -19,7 +19,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -31,8 +30,8 @@ import java.util.List;
 @Table(name = "PROJECT")
 @NamedQueries({
     @NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p"),
-    @NamedQuery(name = "Project.findByProjectId", query = "SELECT p FROM Project p WHERE p.projectId = :projectId"),
-    @NamedQuery(name = "Project.findByProjectName", query = "SELECT p FROM Project p WHERE p.projectName = :projectName"),
+    @NamedQuery(name = "Project.findById", query = "SELECT p FROM Project p WHERE p.id = :id"),
+    @NamedQuery(name = "Project.findByName", query = "SELECT p FROM Project p WHERE p.name= :name"),
     @NamedQuery(name = "Project.findByPlannedStartDate", query = "SELECT p FROM Project p WHERE p.plannedStartDate = :plannedStartDate"),
     @NamedQuery(name = "Project.findByPlannedEndDate", query = "SELECT p FROM Project p WHERE p.plannedEndDate = :plannedEndDate"),
     @NamedQuery(name = "Project.findByActualStartDate", query = "SELECT p FROM Project p WHERE p.actualStartDate = :actualStartDate"),
@@ -47,10 +46,10 @@ public class Project implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "PROJECT_ID")
-    private BigDecimal projectId;
+    private Long id;
     @Basic(optional = false)
     @Column(name = "PROJECT_NAME")
-    private String projectName;
+    private String name;
     @Basic(optional = false)
     @Column(name = "PLANNED_START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -86,39 +85,39 @@ public class Project implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person sponsorId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
-    private List<ProjectTracking> projectTrackingList;
+    private List<ProjectTracking> trackingList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
-    private List<ProjectActivity> projectActivityList;
+    private List<ProjectActivity> activityList;
 
     public Project() {
     }
 
-    public Project(BigDecimal projectId) {
-        this.projectId = projectId;
+    public Project(Long id) {
+        this.id = id;
     }
 
-    public Project(BigDecimal projectId, String projectName, Date plannedStartDate, Date plannedEndDate, Character status) {
-        this.projectId = projectId;
-        this.projectName = projectName;
+    public Project(Long id, String name, Date plannedStartDate, Date plannedEndDate, Character status) {
+        this.id = id;
+        this.name = name;
         this.plannedStartDate = plannedStartDate;
         this.plannedEndDate = plannedEndDate;
         this.status = status;
     }
 
-    public BigDecimal getProjectId() {
-        return projectId;
+    public Long getId() {
+        return id;
     }
 
-    public void setProjectId(BigDecimal projectId) {
-        this.projectId = projectId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public String getName() {
+        return name;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getPlannedStartDate() {
@@ -209,26 +208,26 @@ public class Project implements Serializable {
         this.sponsorId = sponsorId;
     }
 
-    public List<ProjectTracking> getProjectTrackingList() {
-        return projectTrackingList;
+    public List<ProjectTracking> getTrackingList() {
+        return trackingList;
     }
 
-    public void setProjectTrackingList(List<ProjectTracking> projectTrackingList) {
-        this.projectTrackingList = projectTrackingList;
+    public void setTrackingList(List<ProjectTracking> trackingList) {
+        this.trackingList = trackingList;
     }
 
-    public List<ProjectActivity> getProjectActivityList() {
-        return projectActivityList;
+    public List<ProjectActivity> getActivityList() {
+        return activityList;
     }
 
-    public void setProjectActivityList(List<ProjectActivity> projectActivityList) {
-        this.projectActivityList = projectActivityList;
+    public void setActivityList(List<ProjectActivity> activityList) {
+        this.activityList = activityList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (projectId != null ? projectId.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -239,7 +238,7 @@ public class Project implements Serializable {
             return false;
         }
         Project other = (Project) object;
-        if ((this.projectId == null && other.projectId != null) || (this.projectId != null && !this.projectId.equals(other.projectId))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -247,7 +246,7 @@ public class Project implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.flowfx.model.Project[ projectId=" + projectId + " ]";
+    return "cr.ac.una.flowfx.model.Project[ id=" + id + " ]";
     }
     
 }
