@@ -8,9 +8,10 @@
    <children>
       <HBox fx:id="hbHandle" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="container">
          <children>
-            <Label style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-weight: bold;" text="⋮⋮⋮" />
+            <Label style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-weight: bold;" text="	7	7	7" />
          </children>
       </HBox>
-   <VBox fx:id="vboxContainer" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-padding: 4;" />
+      <VBox fx:id="vboxContainer" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-padding: 20;" />
    </children>
 </VBox>
+

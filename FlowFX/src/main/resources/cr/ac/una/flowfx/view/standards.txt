@@ -1,7 +1,24 @@
-height 20
-Minimo 4 de espacio entre elementos internos a su externo
+FlowFX UI spacing/padding standards (inspired by PrincipalView)
 
-12 redondeo
-4 margin + 4 padding
+Core spacings
+- Container to container gaps (VBox/HBox spacing): 4.0 unless otherwise annotated.
+- Section spacers (medium breaks): 12.0.
+- Large spacers (rare, for visual separation like link rows): 24.0.
+- TilePane gaps: hgap 4.0, vgap 4.0.
+- Side rails/margins around main content: 4.0.
 
-spacing 12/24/4
+Padding
+- Buttons (all MFXButton variants): 8.0 on all sides (top/right/bottom/left).
+- Icon-only control buttons (window controls, edit, expand, return): 8.0 on all sides.
+- Container-sub inner padding (cards, rows): 4.0 on all sides.
+- Label/Icon wrappers inside input rows: 4.0 on all sides.
+
+Notes
+- Keep the flat/minimal style; do not introduce extra padding beyond the rules above.
+- For hover/pressed/focused states in CSS, always restate radius and any borders explicitly.
+- If a view needs different spacing, annotate the exception inline in FXML and here.
+
+Audit 2025-08-09
+- Enforced 8px padding on primary/action buttons across views.
+- Normalized a stray spacing (10 -> 12) in MainView header actions.
+- Aligned WidgetComponent content padding 20 -> 4 to match container-sub inner padding rule.
