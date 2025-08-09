@@ -1,33 +1,53 @@
 
-/* Base Theme Variables */
+/* ========================================
+   BASE THEME VARIABLES
+   ======================================== */
 * {
-    /* Theme Colors */
-    -fx-bg-primary: #ffffff;
-    -fx-bg-secondary: #7d7d7d;
-    -fx-accent-primary: #4c6afe;
-    -fx-accent-secondary: #252835;
+    /* Primary Color Palette */
+    -fx-primary: #5c77ff;
+    -fx-primary-light: #91a3ff;
+    -fx-primary-dark: #4c6afe;
+    -fx-secondary: #252835;
     
     /* Background Colors */
-    -fx-bg-primary: #e7e4de;
-    -fx-dot-color: #c5c5c5;  /* Color for the dots */
+    -fx-bg-primary: #f1efe9;
+    -fx-bg-secondary: #e9e9e9;
+    -fx-bg-filler: #f8f8f8fd;
+    -fx-surface: #ffffff;
+    -fx-surface-variant: #f5f5f5;
+    -fx-surface-hover: #f0f0f0;
     
-    /* Button Base Colors */
+    /* Button Colors */
     -fx-btn-base: #ffffff;
+    -fx-btn-base-pressed: #91a3ff;
     
-    /* Button Variant Colors - Soft pastels */
-    -fx-btn-home: #f8f8ff;
-    -fx-btn-util: #5874ff;
-    -fx-btn-settings: #fefefa;
-    -fx-btn-manage: #fffafa;
-
-    /* Notch Colors */
-    -fx-notch-primary: #555555;
+    /* Semantic Color System */
+    -fx-red: #fcc6c6;
+    -fx-red-border: #d15a5a;
+    -fx-yellow: #f9eacc;
+    -fx-yellow-border: #a19140;
+    -fx-purple: #d4cdff;
+    -fx-purple-border: #9656ad;
+    -fx-blue: #cae5ff;
+    -fx-blue-border: #a6c8ff;
+    -fx-green: #a8e6aa;
+    -fx-green-border: #8bff8b;
     
-    /* Shadow Colors */
-    -fx-shadow-color: rgba(0, 0, 0, 0.1);
+    /* Text Colors */
+    -fx-text-primary: #252835;
+    -fx-text-secondary: #6b7280;
+    -fx-text-inverse: #ffffff;
+    
+    /* Border and Effects */
+    -fx-border-default: #e9e9e9;
+    -fx-border-focus: #5c77ff;
+    -fx-shadow-light: rgba(0, 0, 0, 0.1);
+    -fx-shadow-medium: rgba(0, 0, 0, 0.15);
 }
 
-
+/* ========================================
+   FONT DEFINITIONS
+   ======================================== */
 @font-face {
     font-family: 'Organo';
     src: url('/cr/ac/una/flowfx/resources/font/Organo.ttf');
@@ -38,375 +58,547 @@
     src: url('/cr/ac/una/flowfx/resources/font/Outfit-VariableFont_wght.ttf');
 }
 
-/* Base Styles for All Components */
+/* ========================================
+   BASE COMPONENT STYLES
+   ======================================== */
 .root, .mfx-button, .mfx-text-field, .label, .jfx-title {
     -fx-font-family: 'Outfit-Bold';
 }
 
-/* Container Styles */
+/* ========================================
+   CONTAINER COMPONENTS
+   ======================================== */
 .container {
-    -fx-background-color: 
-        radial-gradient(
-            radius 2px,
-            -fx-dot-color 0%,
-            -fx-dot-color 20%,
-            transparent 30%
-        ),
-        -fx-bg-primary;
-    
-    -fx-background-insets: 0, 0;
-    -fx-background-size: 10px 10px;
- 
-}
-
-.container--sub {
-    -fx-background-color: white;
-    -fx-background-radius: 12;
-    
-    -fx-border-color:-fx-bg-secondary;
+    -fx-background-color: -fx-bg-primary;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 12;
-
+    -fx-border-radius: 24;
 }
 
-.container--rounded-bottom {
-    -fx-background-radius: 0 0 12 12;
+.container-sub {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
 }
 
-.container--drag-handle {
+.container-sub--purple {
+    -fx-background-color: -fx-purple;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--red {
+    -fx-background-color: -fx-red;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--yellow {
+    -fx-background-color: -fx-yellow;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--blue {
+    -fx-background-color: -fx-blue;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub-rounded-top {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24 24 12 12;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24 24 12 12;
+}
+
+.container-sub-rounded-bottom {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12 12 24 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 12 12 24 24;
+}
+
+.filler {
+    -fx-background-color: -fx-bg-filler;
+}
+
+.filler-rounded {
+    -fx-background-color: -fx-bg-filler;
+    -fx-background-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+}
+
+.handle {
     -fx-cursor: hand;
 }
 
-.container--drag-handle:hover {
-    -fx-background-color: derive(-fx-bg-secondary, -10%);
+.handle:focused {
+    -fx-effect: dropshadow(gaussian, -fx-border-focus, 2, 0, 0, 0);
 }
 
-.container--frosted {
-
-}
-
-.main-window {
-    -fx-border-color: -fx-notch-primary;
-    -fx-border-width: 4;
-    -fx-border-radius: 12;
-}
-
-/* Notch Styles */
-.notch-centered {
-    -fx-background-color: -fx-notch-primary; 
-    -fx-background-radius: 0;
-}
-
-.notch {
-    -fx-background-color: -fx-notch-primary; 
-}
-
-
-/* Button Base Styles */
-
-
-/* Home Button */
-.mfx-button.button.button--home {
-    -fx-background-color: -fx-btn-home;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-home, -10%);
-    -fx-border-radius: 12;
-}
-
-.mfx-button.button.button--home:hover {
-    -fx-background-color: derive(-fx-btn-home, 10%);
-}
-
-.mfx-button.button.button--home:pressed {
-    -fx-background-color: derive(-fx-btn-home, -10%);
-}
-
-.mfx-button.button.button--home:disabled {
-    -fx-background-color: derive(-fx-btn-home, 50%);
-}
-
-/* Util Button */
-.mfx-button.button.button--util {
-    -fx-background-color: -fx-btn-util;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-util, -10%);
-    -fx-border-radius: 12;
-    -fx-text-fill: white;
-
-}
-
-.mfx-button.button.button--util:hover {
-    -fx-background-color: derive(-fx-btn-util, 10%);
-}
-
-.mfx-button.button.button--util:pressed {
-    -fx-background-color: derive(-fx-btn-util, -10%);
-}
-
-.mfx-button.button.button--util:disabled {
-    -fx-background-color: derive(-fx-btn-util, 50%);
-}
-
-/* Settings Button */
-.mfx-button.button.button--settings {
-    -fx-background-color: -fx-btn-settings;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-settings, -10%);
-    -fx-border-radius: 12;
-    -fx-text-fill: white;
-
-}
-
-.mfx-button.button.button--settings:hover {
-    -fx-background-color: derive(-fx-btn-settings, 10%);
-}
-
-.mfx-button.button.button--settings:pressed {
-    -fx-background-color: derive(-fx-btn-settings, -10%);
-}
-
-.mfx-button.button.button--settings:disabled {
-    -fx-background-color: derive(-fx-btn-settings, 50%);
-}
-
-/* Manage Button */
-.mfx-button.button.button--manage {
-    -fx-background-color: -fx-btn-manage;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-manage, -10%);
-    -fx-border-radius: 12;
-
-}
-
-.mfx-button.button.button--manage:hover {
-    -fx-background-color: derive(-fx-btn-manage, 10%);
-}
-
-.mfx-button.button.button--manage:pressed {
-    -fx-background-color: derive(-fx-btn-manage, -10%);
-}
-
-.mfx-button.button.button--manage:disabled {
-    -fx-background-color: derive(-fx-btn-manage, 50%);
-}
-
-/* Edit Button */
-.mfx-button.button.button--edit {
+/* ========================================
+   MATERIALFX BUTTON COMPONENTS
+   ======================================== */
+.mfx-button {
     -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-base, -10%);
-    -fx-border-radius: 12;
+    -fx-background-radius: 24;
 }
 
-.mfx-button.button.button--edit:hover {
-    -fx-background-color: derive(-fx-btn-base, 10%);
-}
-
-.mfx-button.button.button--edit:pressed {
+.mfx-button:hover {
     -fx-background-color: derive(-fx-btn-base, -10%);
+    -fx-background-radius: 24;
 }
 
-.mfx-button.button.button--edit:disabled {
-    -fx-background-color: derive(-fx-btn-base, 50%);
+.mfx-button:pressed {
+    -fx-background-color: -fx-btn-base-pressed;
+    -fx-background-radius: 24;
 }
 
-/* Expand Button */
-.mfx-button.button.button--expand {
+.mfx-button:focused {
     -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-base, -10%);
-    -fx-border-radius: 12;
+    -fx-background-radius: 24;
 }
 
-.mfx-button.button.button--expand:hover {
-    -fx-background-color: derive(-fx-btn-base, 10%);
-}
-
-.mfx-button.button.button--expand:pressed {
-    -fx-background-color: derive(-fx-btn-base, -10%);
-}
-
-.mfx-button.button.button--expand:disabled {
-    -fx-background-color: derive(-fx-btn-base, 50%);
-}
-
-/* Return Button */
-
-.mfx-button.button.button--return {
-    -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-base, -10%);
-    -fx-border-radius: 12;
-}
-
-.mfx-button.button.button--return:hover {
-    -fx-background-color: derive(-fx-btn-base, 10%);
-}
-
-.mfx-button.button.button--return:pressed {
-    -fx-background-color: derive(-fx-btn-base, -10%);
-}
-
-.mfx-button.button.button--return:disabled {
-    -fx-background-color: derive(-fx-btn-base, 50%);
-}
-
-/* Add Button */
-.mfx-button.button.button--add {
-    -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 12;
-    -fx-border-color: derive(-fx-btn-base, -10%);
-    -fx-border-radius: 12;
-}
-
-.mfx-button.button.button--add:hover {
-    -fx-background-color: derive(-fx-btn-base, 10%);
-}
-
-.mfx-button.button.button--add:pressed {
-    -fx-background-color: derive(-fx-btn-base, -10%);
-}
-
-.mfx-button.button.button--add:disabled {
-    -fx-background-color: derive(-fx-btn-base, 50%);
-}
-
-/* Icons */
-.button--home > ImageView {
-    -fx-image: url("../resources/icons/lucide--home.png");
-}
-
-.mfx-button.button.button--return > ImageView {
-    -fx-image: url("../resources/icons/lucide--arrow-left.png");
-}
-
-.button--util > ImageView {
-    -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
-}
-
-.button--settings > ImageView {
-    -fx-image: url("../resources/icons/lucide--settings.png");
-}
-
-.button--manage > ImageView {
-    -fx-image: url("../resources/icons/lucide--file-spreadsheet.png");
-}
-
-.button--edit > ImageView {
-    -fx-image: url("../resources/icons/lucide--edit.png");
-}
-
-.mfx-button.button.button--expand > ImageView {
-    -fx-image: url("../resources/icons/lucide--expand.png");
-}
-
-.mfx-button.button.button--add > ImageView {
-    -fx-image: url("../resources/icons/lucide--grid-2x2-plus.png");
-}
-
-/* Labels */
-.jfx-label {
-    -fx-font-family: 'Outfit-Bold';
+.mfx-button.jfx-button {
+    -fx-background-color: #4c6afe;
+    -fx-background-radius: 24;
+    -fx-border-color: derive(-fx-primary, -10%);
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-text-fill: -fx-text-inverse;
     -fx-font-size: 14px;
 }
 
-.jfx-hyperlink {
-    -fx-text-fill: -fx-accent-primary;
-    -fx-font-family: 'Outfit-Bold';
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-}
-
-.jfx-title {
-    -fx-font-family: 'Organo';
-    -fx-font-size: 60px;
-}
-
-
-.jfx-hyperlink:hover {
-    -fx-text-fill: derive(-fx-accent-primary, 50%);
-}
-
-.jfx-hyperlink:visited {
-    -fx-text-fill: -fx-accent-primary;
-}
-
-/* Text Fields */
-.text-field {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-padding: 0.5em 0;
-    -fx-border-width: 0;
-    /*-fx-font-family: 'Organo';*/
-}
-
+/* ========================================
+   MATERIALFX TEXTFIELD COMPONENTS
+   ======================================== */
 .mfx-text-field {
-  -mfx-main: white;
-  -fx-background-color: white;
-  -fx-background-radius: 12;
-  -fx-border-color: white;
-  -fx-border-radius: 12;
-  -fx-padding: 5;
+    -mfx-main: -fx-surface;
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-surface;
+    -fx-border-radius: 24;
 }
 
 .mfx-text-field:readonly,
 .mfx-text-field:readonly .text-field {
-  -fx-cursor: default;
+    -fx-cursor: default;
 }
 
 .mfx-text-field .text-field {
-  /* Selected text highlight */
-  -fx-highlight-fill: #ECE0FD;
-  /* Prompt text color */
-  -fx-prompt-text-fill: white;
+    -fx-highlight-fill: derive(-fx-primary, 80%);
+    -fx-prompt-text-fill: -fx-text-secondary;
+    -fx-text-fill: -fx-text-primary;
+    -fx-text-box-border: transparent;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
 }
 
 .mfx-text-field:focus-within {
-  -fx-background-insets: 2;
-  -fx-border-color: white;
-  -fx-border-width: 1.5;
-  -fx-border-insets: -0.5;
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+    -fx-border-radius: 24;
 }
 
 .mfx-text-field .floating-text {
-  -fx-text-fill: white;
+    -fx-text-fill: -fx-text-secondary;
 }
 
 .mfx-text-field:floating .floating-text {
-  -fx-background-color: white;
+    -fx-background-color: -fx-surface;
+    -fx-text-fill: -fx-border-focus;
 }
 
 .mfx-text-field:focus-within .floating-text {
-  -fx-text-fill: white;
+    -fx-text-fill: -fx-border-focus;
 }
 
 .mfx-text-field .measure-unit {
-  -fx-text-fill: white;
-}
-
-.mfx-text-field .text-field {
-  -fx-text-box-border: transparent;
-  -fx-background-color: transparent;
-  -fx-background-insets: 0;
-  -fx-padding: 0;
+    -fx-text-fill: -fx-text-secondary;
 }
 
 .mfx-text-field .text-field:focused {
-  -fx-focus-color: transparent;
-  -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 .mfx-text-field:disabled {
-  -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-color: -fx-border-default;
+    -fx-background-color: -fx-surface-variant;
 }
 
 .mfx-text-field:disabled .floating-text {
-  -fx-text-fill: white;
+    -fx-text-fill: -fx-text-secondary;
 }
 
 .mfx-text-field:disabled .text-field {
-  -fx-text-inner-color: white;
+    -fx-text-inner-color: -fx-text-secondary;
+}
+
+/* ========================================
+   MATERIALFX LISTVIEW COMPONENTS
+   ======================================== */
+.mfx-list-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.mfx-list-view .virtual-flow {
+    -fx-background-color: transparent;
+    -fx-background-radius: 24;
+}
+
+.mfx-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: transparent;
+}
+
+.mfx-list-view .list-cell:selected {
+    -fx-background-color: -fx-primary;
+    -fx-background-radius: 18;
+    -fx-text-fill: -fx-text-inverse;
+}
+
+.mfx-list-view .list-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+    -fx-background-radius: 18;
+}
+
+.mfx-list-view .list-cell:focused {
+    -fx-background-color: derive(-fx-primary, 20%);
+    -fx-background-radius: 18;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* ========================================
+   MATERIALFX TABLEVIEW COMPONENTS
+   ======================================== */
+.mfx-table-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.mfx-table-view .column-header {
+    -fx-background-color: -fx-surface-variant;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 0 0 1 0;
+    -fx-font-weight: bold;
+}
+
+.mfx-table-view .column-header:hover {
+    -fx-background-color: derive(-fx-surface-variant, -5%);
+}
+
+.mfx-table-view .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 0 0 1 0;
+}
+
+.mfx-table-view .table-row-cell:selected {
+    -fx-background-color: derive(-fx-primary, 80%);
+    -fx-text-fill: -fx-text-primary;
+}
+
+.mfx-table-view .table-row-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.mfx-table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-text-fill: inherit;
+}
+
+/* ========================================
+   MATERIALFX CHECKBOX COMPONENTS
+   ======================================== */
+.mfx-check-box {
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 14px;
+}
+
+.mfx-check-box .box {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.mfx-check-box:hover .box {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.mfx-check-box:selected .box {
+    -fx-background-color: -fx-border-focus;
+    -fx-border-color: -fx-border-focus;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.mfx-check-box:disabled .box {
+    -fx-background-color: -fx-surface-variant;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* ========================================
+   MATERIALFX COMBOBOX COMPONENTS
+   ======================================== */
+.mfx-combo-box {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.mfx-combo-box:hover {
+    -fx-border-color: -fx-border-focus;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+}
+
+.mfx-combo-box:focused {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+}
+
+.mfx-combo-box .arrow {
+    -fx-background-color: -fx-text-secondary;
+}
+
+.mfx-combo-box:disabled {
+    -fx-background-color: -fx-surface-variant;
+    -fx-border-color: -fx-border-default;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+}
+
+/* ========================================
+   MATERIALFX SCROLLPANE COMPONENTS
+   ======================================== */
+.mfx-scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.mfx-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.mfx-scroll-pane .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.mfx-scroll-pane .scroll-bar .track {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-radius: 12;
+}
+
+.mfx-scroll-pane .scroll-bar .thumb {
+    -fx-background-color: -fx-text-secondary;
+    -fx-background-radius: 12;
+}
+
+.mfx-scroll-pane .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 12;
+}
+
+/* ========================================
+   MATERIALFX SLIDER COMPONENTS
+   ======================================== */
+.mfx-slider .track {
+    -fx-background-color: -fx-border-default;
+    -fx-background-radius: 12;
+}
+
+.mfx-slider .thumb {
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 12;
+}
+
+.mfx-slider .colored-track {
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 12;
+}
+
+.mfx-slider:disabled .track {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-radius: 12;
+}
+
+.mfx-slider:disabled .thumb {
+    -fx-background-color: -fx-text-secondary;
+    -fx-background-radius: 12;
+}
+
+/* ========================================
+   MATERIALFX PROGRESSBAR COMPONENTS
+   ======================================== */
+.mfx-progress-bar {
+    -fx-background-radius: 12;
+    -fx-background-color: -fx-border-default;
+}
+
+.mfx-progress-bar .track {
+    -fx-background-color: -fx-border-default;
+    -fx-background-radius: 12;
+}
+
+.mfx-progress-bar .bar {
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+}
+
+/* ========================================
+   ICON DEFINITIONS
+   ======================================== */
+.jfx-home > ImageView { -fx-image: url("../resources/icons/lucide--home.png"); }
+.jfx-settings > ImageView { -fx-image: url("../resources/icons/lucide--settings.png"); }
+.jfx-projects > ImageView { -fx-image: url("../resources/icons/lucide--folder-search.png"); }
+.jfx-maximize > ImageView { -fx-image: url("../resources/icons/lucide--maximize.png"); }
+.jfx-minimize > ImageView { -fx-image: url("../resources/icons/lucide--minimize.png"); }
+.jfx-close > ImageView { -fx-image: url("../resources/icons/lucide--x.png"); }
+.jfx-expand > ImageView { -fx-image: url("../resources/icons/lucide--fullscreen.png"); }
+.jfx-edit > ImageView { -fx-image: url("../resources/icons/lucide--edit.png"); }
+.jfx-add > ImageView { -fx-image: url("../resources/icons/lucide--circle-plus.png"); }
+.jfx-return > ImageView { -fx-image: url("../resources/icons/lucide--arrow-left.png"); }
+
+/* ========================================
+   TYPOGRAPHY COMPONENTS
+   ======================================== */
+.jfx-label {
+    -fx-font-family: 'Outfit-Bold';
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.jfx-hyperlink {
+    -fx-text-fill: -fx-primary;
+    -fx-font-family: 'Outfit-Bold';
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.jfx-hyperlink:hover {
+    -fx-text-fill: derive(-fx-primary, 20%);
+    -fx-underline: true;
+}
+
+.jfx-title {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 68px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.jfx-title-small {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 36px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.jfx-title-tiny {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* Colored Title Variants */
+.jfx-title-tiny--purple {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-purple-border;
+}
+
+.jfx-title-tiny--red {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-red-border;
+}
+
+.jfx-title-tiny--yellow {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-yellow-border;
+}
+
+.jfx-title-tiny--blue {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-blue-border;
+}
+
+.jfx-title-tiny--white {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-text-inverse;
+}
+
+/* ========================================
+   TAG COMPONENTS
+   ======================================== */
+.jfx-red-number-tag,
+.jfx-yellow-number-tag,
+.jfx-purple-number-tag,
+.jfx-blue-number-tag {
+    -fx-font-family: 'Organo';
+    -fx-background-color: -fx-surface;
+    -fx-font-size: 14px;
+    -fx-border-radius: 24;
+    -fx-background-radius: 24;
+    -fx-alignment: center;
+    -fx-border-width: 2;
+}
+
+.jfx-red-number-tag {
+    -fx-border-color: -fx-red-border;
+    -fx-text-fill: -fx-red-border;
+}
+
+.jfx-yellow-number-tag {
+    -fx-border-color: -fx-yellow-border;
+    -fx-text-fill: -fx-yellow-border;
+}
+
+.jfx-purple-number-tag {
+    -fx-border-color: -fx-purple-border;
+    -fx-text-fill: -fx-purple-border;
+}
+
+.jfx-blue-number-tag {
+    -fx-border-color: -fx-blue-border;
+    -fx-text-fill: -fx-blue-border;
 }
 
 

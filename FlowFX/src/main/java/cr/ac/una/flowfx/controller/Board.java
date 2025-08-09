@@ -7,6 +7,8 @@ package cr.ac.una.flowfx.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,6 +30,8 @@ public class Board extends Pane implements Initializable {
 
      @FXML
      private VBox vbBoard;
+     @FXML
+     private MFXButton btnExpandProject;
 
 
     @Override
@@ -54,6 +58,10 @@ public class Board extends Pane implements Initializable {
         }
 
         this.vbBoard.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow widget to grow
+    }
+
+    public MFXButton getBtnExpandProject() {
+        return btnExpandProject;
     }
 
 }

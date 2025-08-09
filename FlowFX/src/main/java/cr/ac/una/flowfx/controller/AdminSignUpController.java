@@ -10,7 +10,6 @@ import java.util.ResourceBundle;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import javafx.animation.Animation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,14 +22,12 @@ import javafx.scene.layout.VBox;
  *
  * @author quesadx
  */
-public class ProjectManagementController extends Controller implements Initializable {
+public class AdminSignUpController extends Controller implements Initializable {
 
     @FXML
     private AnchorPane root;
     @FXML
-    private TilePane tpProjects;
-    @FXML
-    private VBox vbCover, vbProjectCreationDisplay;
+    private VBox vbCover, vbAdminSignUpDisplay;
     @FXML
     private MFXButton btnReturn;
 
@@ -47,27 +44,15 @@ public class ProjectManagementController extends Controller implements Initializ
     @Override
     public void initialize() {
 
-        Board board;
-        for(int i = 0; i < 3; i++) {
-            board = new Board();
-            board.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow board to grow
-            board.getBtnExpandProject().setOnAction(e -> {
-                FlowController.getInstance().goView("ProjectExpandView");
-            });
-            tpProjects.getChildren().add(board);
-        }
-
-        AddProject addProject = new AddProject();
-        addProject.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow add project to grow
-        addProject.getBtnAddProject().setOnAction(e -> {
-            AnimationManager.showPopup(vbProjectCreationDisplay, vbCover);
-        });
-        tpProjects.getChildren().add(addProject);
     }
 
     @FXML
     private void onActionBtnReturnProjectCreation(ActionEvent event) {
-        AnimationManager.hidePopup(vbProjectCreationDisplay, vbCover);
+        AnimationManager.hidePopup(vbAdminSignUpDisplay, vbCover);
     }
 
+    @FXML
+    private void onActionBtnSignUpAdmin(ActionEvent event) {
+        AnimationManager.showPopup(vbAdminSignUpDisplay, vbCover);
+    }
 }

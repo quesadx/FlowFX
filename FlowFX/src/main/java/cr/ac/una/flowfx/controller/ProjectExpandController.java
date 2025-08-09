@@ -23,16 +23,14 @@ import javafx.scene.layout.VBox;
  *
  * @author quesadx
  */
-public class ProjectManagementController extends Controller implements Initializable {
+public class ProjectExpandController extends Controller implements Initializable {
 
     @FXML
     private AnchorPane root;
     @FXML
-    private TilePane tpProjects;
+    private VBox vbCover;
     @FXML
-    private VBox vbCover, vbProjectCreationDisplay;
-    @FXML
-    private MFXButton btnReturn;
+    private MFXButton btnReturnManagement;
 
     // TODO: CENTER HE ELEMENTS ON THE MAIN VBOX ################################################
 
@@ -47,27 +45,11 @@ public class ProjectManagementController extends Controller implements Initializ
     @Override
     public void initialize() {
 
-        Board board;
-        for(int i = 0; i < 3; i++) {
-            board = new Board();
-            board.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow board to grow
-            board.getBtnExpandProject().setOnAction(e -> {
-                FlowController.getInstance().goView("ProjectExpandView");
-            });
-            tpProjects.getChildren().add(board);
-        }
-
-        AddProject addProject = new AddProject();
-        addProject.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow add project to grow
-        addProject.getBtnAddProject().setOnAction(e -> {
-            AnimationManager.showPopup(vbProjectCreationDisplay, vbCover);
-        });
-        tpProjects.getChildren().add(addProject);
     }
 
     @FXML
-    private void onActionBtnReturnProjectCreation(ActionEvent event) {
-        AnimationManager.hidePopup(vbProjectCreationDisplay, vbCover);
+    private void onActionBtnReturnToManagement(ActionEvent event) {
+        FlowController.getInstance().goView("ProjectManagementView");
     }
 
 }
