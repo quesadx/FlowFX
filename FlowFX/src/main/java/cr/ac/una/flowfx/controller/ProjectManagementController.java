@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import cr.ac.una.flowfx.util.AnimationManager;
+import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.animation.Animation;
@@ -53,21 +54,25 @@ public class ProjectManagementController extends Controller implements Initializ
             board.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow board to grow
             board.getBtnExpandProject().setOnAction(e -> {
                 FlowController.getInstance().goView("ProjectExpandView");
+                Object nav = AppContext.getInstance().get("NavigationBar");
+                if (nav instanceof VBox) ((VBox) nav).setDisable(true);
             });
             tpProjects.getChildren().add(board);
         }
-
-        AddProject addProject = new AddProject();
-        addProject.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow add project to grow
-        addProject.getBtnAddProject().setOnAction(e -> {
-            AnimationManager.showPopup(vbProjectCreationDisplay, vbCover);
-        });
-        tpProjects.getChildren().add(addProject);
     }
 
     @FXML
     private void onActionBtnReturnProjectCreation(ActionEvent event) {
         AnimationManager.hidePopup(vbProjectCreationDisplay, vbCover);
+        Object nav = AppContext.getInstance().get("NavigationBar");
+        if (nav instanceof VBox) ((VBox) nav).setDisable(false);
+    }
+
+    @FXML
+    private void onActionCreateProject(ActionEvent event) {
+        AnimationManager.showPopup(vbProjectCreationDisplay, vbCover);
+        Object nav = AppContext.getInstance().get("NavigationBar");
+        if (nav instanceof VBox) ((VBox) nav).setDisable(true);
     }
 
 }

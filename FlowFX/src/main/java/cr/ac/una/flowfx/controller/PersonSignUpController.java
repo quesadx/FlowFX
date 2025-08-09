@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import cr.ac.una.flowfx.util.AnimationManager;
+import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
@@ -22,12 +23,12 @@ import javafx.scene.layout.VBox;
  *
  * @author quesadx
  */
-public class AdminSignUpController extends Controller implements Initializable {
+public class PersonSignUpController extends Controller implements Initializable {
 
     @FXML
     private AnchorPane root;
     @FXML
-    private VBox vbCover, vbAdminSignUpDisplay;
+    private VBox vbCover, vbPersonSignUpDisplay;
     @FXML
     private MFXButton btnReturn;
 
@@ -48,11 +49,15 @@ public class AdminSignUpController extends Controller implements Initializable {
 
     @FXML
     private void onActionBtnReturnProjectCreation(ActionEvent event) {
-        AnimationManager.hidePopup(vbAdminSignUpDisplay, vbCover);
+        AnimationManager.hidePopup(vbPersonSignUpDisplay, vbCover);
+        Object nav = AppContext.getInstance().get("NavigationBar");
+        if (nav instanceof VBox) ((VBox) nav).setDisable(false);
     }
 
     @FXML
-    private void onActionBtnSignUpAdmin(ActionEvent event) {
-        AnimationManager.showPopup(vbAdminSignUpDisplay, vbCover);
+    private void onActionBtnSignUpPerson(ActionEvent event) {
+        AnimationManager.showPopup(vbPersonSignUpDisplay, vbCover);
+        Object nav = AppContext.getInstance().get("NavigationBar");
+        if (nav instanceof VBox) ((VBox) nav).setDisable(true);
     }
 }

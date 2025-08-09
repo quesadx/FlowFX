@@ -12,9 +12,11 @@ import java.util.ResourceBundle;
 import javax.security.auth.callback.Callback;
 
 import cr.ac.una.flowfx.util.AnimationManager;
+import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckListView;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ScaleTransition;
@@ -68,22 +70,24 @@ public class MainController extends Controller implements Initializable {
     private DatePicker datePKDashboard;
     @FXML
     private PieChart pieChartDashboard;
+    @FXML
+    private MFXTextField txfUsername, txfUserPassword;
+
+    Boolean userLoggedIn = false;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        vbCover.setEffect(new javafx.scene.effect.GaussianBlur());    
-        AnimationManager.showPopup(vbLogInDisplay, vbCover);   
-        //imgBackground.fitHeightProperty().bind(root.heightProperty());
-        //imgBackground.fitWidthProperty().bind(root.widthProperty());
-        setupProjectScrollPane();
-        // ArrayList<ProjectDto> projectList = new ArrayList<>();
-        // loadProjects(projectList);
-
-    }    
+        System.out.println("Inicializando MainController");
+        vbCover.setEffect(new javafx.scene.effect.GaussianBlur());
+        AnimationManager.showPopup(vbLogInDisplay, vbCover);
+        // Disable navigation when user is NOT logged in
+        Object nav = AppContext.getInstance().get("NavigationBar");
+        if (nav instanceof VBox) ((VBox) nav).setDisable(!userLoggedIn);
+    }
 
     @Override
     public void initialize() {
-
+        
     }
 
     public void addDefaultWidgetContent(Widget widget) {
@@ -93,51 +97,20 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void onActionBtnLogIn(ActionEvent event) {
         AnimationManager.hidePopup(vbLogInDisplay, vbCover);
+        // TODO: Login logic
+        userLoggedIn = true;
+        Object nav = AppContext.getInstance().get("NavigationBar");
+        if (nav instanceof VBox) {
+            ((VBox) nav).setDisable(!userLoggedIn);
+        }
     }
 
-    // public void loadProjects(ArrayList<ProjectDto> projectList) {
-    //     vboxProjects.getChildren().clear();
-    //     for (ProjectDto project : projectList) {
-    //         Node projectNode = projectContainer(project);
-    //         vboxProjects.getChildren().add(projectNode);
-    //         VBox.setVgrow(projectNode, Priority.NEVER);
-    //     }
-    // }
+    @FXML
+    private void onMouseClickedLblSignUp(MouseEvent event) {
+    }
 
-    // public Node projectContainer(ProjectDto project){
-    //     VBox vBox = new VBox(10); 
-    //     vBox.setPadding(new Insets(10));
-    //     vBox.getStyleClass().add("container-sub");
-
-    //     HBox hBoxTop = new HBox(10);
-    //     Label projectName = new Label(project.getName());
-    //     Label projectStatus = new Label("Estado: " + project.getStatus());
-    //     hBoxTop.getChildren().addAll(projectName, projectStatus);
-
-    //     HBox hBoxBottom = new HBox(10);
-    //     Label projectStartDate = new Label("Inicio: " + project.getStartDate());
-    //     Label projectEndDate = new Label("Fin: " + project.getEndDate());
-    //     hBoxBottom.getChildren().addAll(projectStartDate, projectEndDate);
-
-    //     vBox.getChildren().addAll(hBoxTop, hBoxBottom);
-    //     vBox.setPrefWidth(Double.MAX_VALUE);
-
-    //     vBox.setOnMouseClicked(event->{
-    //         System.out.println("Clickeando " + project.getName());
-    //     });
-    //     return vBox;
-    // }
-
-    private void setupProjectScrollPane() {
-        vboxProjects = new VBox(10);
-        vboxProjects.setPadding(new Insets(10));
-        scrollPaneProjects = new ScrollPane(vboxProjects);
-        scrollPaneProjects.setFitToWidth(true);
-        scrollPaneProjects.getStyleClass().add("container-sub");
-
-        vBoxCentral.getChildren().clear();
-        vBoxCentral.getChildren().add(scrollPaneProjects);
-        HBox.setHgrow(scrollPaneProjects, Priority.ALWAYS);
+    @FXML
+    private void onMouseClickedLblPasswordRecovery(MouseEvent event) {
     }
 
 }

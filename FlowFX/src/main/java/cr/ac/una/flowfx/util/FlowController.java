@@ -78,9 +78,20 @@ public class FlowController {
 
     public void goMain() {
         try {
-            this.mainStage.setScene(new Scene(FXMLLoader.load(App.class.getResource("view/PrincipalView.fxml"), this.idioma)));
-            MFXThemeManager.addOn(this.mainStage.getScene(), Themes.DEFAULT, Themes.LEGACY);
-            this.mainStage.show();
+            mainStage.setScene(new Scene(FXMLLoader.load(App.class.getResource("view/PrincipalView.fxml"), idioma)));
+            MFXThemeManager.addOn(mainStage.getScene(), Themes.DEFAULT, Themes.LEGACY);
+            // Ensure app stylesheet overrides theme styles by appending it last
+            try {
+                String appCss = App.class.getResource("view/styles.css").toExternalForm();
+                if (!mainStage.getScene().getStylesheets().contains(appCss)) {
+                    mainStage.getScene().getStylesheets().add(appCss);
+                } else {
+                    // Move to end to ensure precedence
+                    mainStage.getScene().getStylesheets().remove(appCss);
+                    mainStage.getScene().getStylesheets().add(appCss);
+                }
+            } catch (Exception ignored) { }
+            mainStage.show();
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(FlowController.class.getName()).log(Level.SEVERE, "Error inicializando la vista base.", ex);
         }
@@ -101,7 +112,7 @@ public class FlowController {
         controller.initialize();
         Stage stage = controller.getStage();
         if (stage == null) {
-            stage = this.mainStage;
+            stage = mainStage;
             controller.setStage(stage);
         }
         switch (location) {
@@ -139,6 +150,16 @@ public class FlowController {
         controller.setStage(stage);
         stage.getScene().setRoot(loader.getRoot());
         MFXThemeManager.addOn(stage.getScene(), Themes.DEFAULT, Themes.LEGACY);
+        // Ensure app stylesheet overrides theme styles by appending it last
+        try {
+            String appCss = App.class.getResource("view/styles.css").toExternalForm();
+            if (!stage.getScene().getStylesheets().contains(appCss)) {
+                stage.getScene().getStylesheets().add(appCss);
+            } else {
+                stage.getScene().getStylesheets().remove(appCss);
+                stage.getScene().getStylesheets().add(appCss);
+            }
+        } catch (Exception ignored) { }
         
     }
 
@@ -157,6 +178,11 @@ public class FlowController {
         Parent root = loader.getRoot();
         Scene scene = new Scene(root);
         MFXThemeManager.addOn(scene, Themes.DEFAULT, Themes.LEGACY);
+        // Ensure app stylesheet overrides theme styles by appending it last
+        try {
+            String appCss = App.class.getResource("view/styles.css").toExternalForm();
+            scene.getStylesheets().add(appCss);
+        } catch (Exception ignored) { }
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
@@ -178,6 +204,11 @@ public class FlowController {
         Parent root = loader.getRoot();
         Scene scene = new Scene(root);
         MFXThemeManager.addOn(scene, Themes.DEFAULT, Themes.LEGACY);
+        // Ensure app stylesheet overrides theme styles by appending it last
+        try {
+            String appCss = App.class.getResource("view/styles.css").toExternalForm();
+            scene.getStylesheets().add(appCss);
+        } catch (Exception ignored) { }
         stage.setScene(scene);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(parentStage);

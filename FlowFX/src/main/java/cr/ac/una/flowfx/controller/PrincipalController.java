@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.Flow;
 
+import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,7 +48,7 @@ public class PrincipalController extends Controller implements Initializable {
     @FXML
     private MFXButton btnMinimize;
     @FXML
-    private VBox vbLateralHandlebar;
+    private VBox vbLateralHandlebar, vbNavigationBar;
 
     private static final int RESIZE_MARGIN = 8;
     private boolean resizingLeft = false;
@@ -70,6 +71,7 @@ public class PrincipalController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("Inicializando PrincipalController");
         setupWindowResizeHandlers();
         setupWindowDragHandlers();
 
@@ -103,10 +105,10 @@ public class PrincipalController extends Controller implements Initializable {
                 btnHome.requestFocus();
             }
         });
-
-        //btnProjects.setDisable(true);
-        //btnAdminSignUp.setDisable(true);
-        //btnHome.setDisable(true);
+    // Expose NavigationBar in AppContext for other controllers
+    AppContext.getInstance().set("NavigationBar", vbNavigationBar);
+    // Default to disabled until login occurs
+    vbNavigationBar.setDisable(true);
     }    
 
     @Override
@@ -125,7 +127,7 @@ public class PrincipalController extends Controller implements Initializable {
         imgHome.setEffect(null);
         imgProjects.setEffect(null);
 
-        FlowController.getInstance().goView("AdminSignUpView");
+        FlowController.getInstance().goView("PersonSignUpView");
     }
 
     @FXML

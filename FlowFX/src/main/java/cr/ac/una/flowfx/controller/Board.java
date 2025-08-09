@@ -12,8 +12,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -32,13 +31,12 @@ public class Board extends Pane implements Initializable {
      private VBox vbBoard;
      @FXML
      private MFXButton btnExpandProject;
+     @FXML
+     private Label lblTitle, lblDescription, lblStatus;
 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //if (hbHandle != null) {
-            //hbHandle.setStyle("-fx-cursor: hand;");
-        //}
 
     }
     
@@ -60,8 +58,49 @@ public class Board extends Pane implements Initializable {
         this.vbBoard.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); // Allow widget to grow
     }
 
+    public Board(double width, double height) {
+        this();
+        this.vbBoard.setPrefSize(width, height);
+    }
+
+    public void setBtnExpandProject(MFXButton btnExpandProject) {
+        this.btnExpandProject = btnExpandProject;
+    }
+
+    public Label getLblTitle() {
+        return lblTitle;
+    }
+
+    public void setLblTitle(Label lblTitle) {
+        this.lblTitle = lblTitle;
+    }
+
+    public Label getLblDescription() {
+        return lblDescription;
+    }
+
+    public void setLblDescription(Label lblDescription) {
+        this.lblDescription = lblDescription;
+    }
+
+    public Label getLblStatus() {
+        return lblStatus;
+    }
+
+    public void setLblStatus(Label lblStatus) {
+        this.lblStatus = lblStatus;
+    }
+
     public MFXButton getBtnExpandProject() {
         return btnExpandProject;
+    }
+
+    public VBox getVbBoard() {
+        return vbBoard;
+    }
+
+    public void setVbBoard(VBox vbBoard) {
+        this.vbBoard = vbBoard;
     }
 
 }

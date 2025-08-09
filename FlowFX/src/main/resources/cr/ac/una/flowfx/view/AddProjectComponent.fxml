@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" fillWidth="false" prefHeight="232.0" prefWidth="300.0" styleClass="filler-rounded" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" fillWidth="false" prefHeight="156.0" prefWidth="188.0" styleClass="container-sub" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MFXButton fx:id="btnAddProject" minHeight="-Infinity" minWidth="-Infinity" text="">
          <graphic>
@@ -16,9 +16,6 @@
             <String fx:value="jfx-add" />
             <String fx:value="container-sub" />
          </styleClass>
-         <padding>
-            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-         </padding>
       </MFXButton>
    </children>
 </VBox>

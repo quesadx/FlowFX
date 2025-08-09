@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import cr.ac.una.flowfx.util.AnimationManager;
+import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.animation.Animation;
@@ -50,6 +51,8 @@ public class ProjectExpandController extends Controller implements Initializable
     @FXML
     private void onActionBtnReturnToManagement(ActionEvent event) {
         FlowController.getInstance().goView("ProjectManagementView");
+        Object nav = AppContext.getInstance().get("NavigationBar");
+        if (nav instanceof VBox) ((VBox) nav).setDisable(false);
     }
 
 }

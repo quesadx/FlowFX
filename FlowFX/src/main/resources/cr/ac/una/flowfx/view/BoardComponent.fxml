@@ -3,97 +3,61 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbBoard" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" spacing="4.0" styleClass="filler-rounded" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbBoard" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="4.0" styleClass="container-sub" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER_LEFT" styleClass="container-sub">
-         <children>
-            <HBox alignment="CENTER" styleClass="container--sub">
-               <children>
-                  <Label text="ESTADO" />
-               </children>
-               <padding>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
-               <padding>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </padding>
-            </HBox>
-      <MFXButton styleClass="jfx-edit" text="">
-               <graphic>
-                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-               </graphic>
-               <padding>
-         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </padding>
-            </MFXButton>
-         </children>
-         <padding>
-            <Insets bottom="4.0" left="8.0" right="8.0" top="4.0" />
-         </padding>
-      </HBox>
-      <VBox alignment="TOP_CENTER" styleClass="container-sub" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <HBox alignment="CENTER">
+                  <HBox alignment="CENTER" styleClass="container--sub">
                      <children>
-                        <Label text="TITULO DEL PROYECTO" />
+                        <Label fx:id="lblStatus" styleClass="jfx-red-number-tag" text="ATRASADO" />
                      </children>
-                     <padding>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </padding>
                   </HBox>
-                  <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label />
-                     </children>
-                     <padding>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </padding>
+                  <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                   </HBox>
+               <MFXButton fx:id="btnExpandProject" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="jfx-expand" text="">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                  </MFXButton>
                </children>
-               <padding>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT">
+            <VBox alignment="TOP_CENTER">
                <children>
-                  <HBox alignment="CENTER">
+                  <HBox alignment="CENTER_LEFT">
                      <children>
-                        <Label text="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" wrapText="true" />
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Label fx:id="lblTitle" styleClass="jfx-title-tiny" text="TITULO DEL PROYECTO" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label />
+                           </children>
+                        </HBox>
                      </children>
-                     <padding>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="8.0" />
-                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" maxWidth="300.0">
+                     <children>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Label text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." wrapText="true" />
+                           </children>
+                        </HBox>
+                     </children>
                   </HBox>
                </children>
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding>
-            </HBox>
-            <ListView VBox.vgrow="ALWAYS" />
+            </VBox>
          </children>
-         <padding>
-            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-         </padding>
       </VBox>
-   <MFXButton fx:id="btnExpandProject" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="jfx-expand" text="" VBox.vgrow="ALWAYS">
-         <graphic>
-            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-         </graphic>
-         <padding>
-      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-         </padding>
-      </MFXButton>
    </children>
-   <padding>
-      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-   </padding>
 </VBox>

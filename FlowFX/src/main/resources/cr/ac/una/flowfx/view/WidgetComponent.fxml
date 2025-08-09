@@ -11,6 +11,6 @@
             <Label style="-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-weight: bold;" text="⋮⋮⋮" />
          </children>
       </HBox>
-   <VBox fx:id="vboxContainer" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-padding: 4;" />
+   <VBox fx:id="vboxContainer" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
    </children>
 </VBox>

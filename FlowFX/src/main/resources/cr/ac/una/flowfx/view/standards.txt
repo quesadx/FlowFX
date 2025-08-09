@@ -22,3 +22,7 @@ Audit 2025-08-09
 - Enforced 8px padding on primary/action buttons across views.
 - Normalized a stray spacing (10 -> 12) in MainView header actions.
 - Aligned WidgetComponent content padding 20 -> 4 to match container-sub inner padding rule.
+ - Removed all inline paddings from FXMLs (buttons, labels, containers) and centralized in CSS:
+	 - .container-sub: -fx-padding: 4
+	 - .mfx-button and .button: -fx-padding: 8
+	 - .jfx-*-number-tag: -fx-padding: 4
