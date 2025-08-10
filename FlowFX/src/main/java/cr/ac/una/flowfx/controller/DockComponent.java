@@ -1,0 +1,55 @@
+package cr.ac.una.flowfx.controller;
+
+import cr.ac.una.flowfx.util.FlowController;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
+import javafx.animation.Interpolator;
+import javafx.animation.ScaleTransition;
+
+public class DockComponent extends StackPane {
+    @FXML private StackPane root;
+    @FXML private HBox bar;
+    @FXML private MFXButton btnHome;
+    @FXML private MFXButton btnProjects;
+    @FXML private MFXButton btnAdmin;
+
+    public DockComponent() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/cr/ac/una/flowfx/view/DockComponent.fxml"));
+        loader.setController(this);
+        try {
+            StackPane content = loader.load();
+            getChildren().add(content);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load DockComponent FXML", e);
+        }
+
+        wireActions();
+        addHoverMagnification(btnHome);
+        addHoverMagnification(btnProjects);
+        addHoverMagnification(btnAdmin);
+    }
+
+    private void wireActions() {
+        btnHome.setOnAction(e -> FlowController.getInstance().goView("MainView"));
+        btnProjects.setOnAction(e -> FlowController.getInstance().goView("ProjectManagementView"));
+        btnAdmin.setOnAction(e -> FlowController.getInstance().goView("PersonSignUpView"));
+    }
+
+    private void addHoverMagnification(Node node) {
+        ScaleTransition scaleIn = new ScaleTransition(Duration.millis(190), node);
+        scaleIn.setToX(1.3);
+        scaleIn.setToY(1.3);
+        scaleIn.setInterpolator(Interpolator.SPLINE(0.17, 0.67, 0.35, 1));
+        ScaleTransition scaleOut = new ScaleTransition(Duration.millis(140), node);
+        scaleOut.setToX(1);
+        scaleOut.setToY(1);
+        scaleOut.setInterpolator(Interpolator.EASE_BOTH);
+        node.setOnMouseEntered(e -> { scaleOut.stop(); scaleIn.playFromStart(); });
+        node.setOnMouseExited(e -> { scaleIn.stop(); scaleOut.playFromStart(); });
+    }
+}

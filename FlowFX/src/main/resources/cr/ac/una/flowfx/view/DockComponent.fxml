@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane fx:id="root" alignment="BOTTOM_CENTER" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <HBox fx:id="bar" alignment="CENTER" spacing="12.0" styleClass="container-sub">
+            <children>
+                <MFXButton fx:id="btnHome" styleClass="jfx-home" text="">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                    </graphic>
+                </MFXButton>
+                <MFXButton fx:id="btnProjects" styleClass="jfx-projects" text="">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                    </graphic>
+                </MFXButton>
+                <MFXButton fx:id="btnAdmin" styleClass="jfx-settings" text="">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                    </graphic>
+                </MFXButton>
+            </children>
+            <padding>
+                <Insets topRightBottomLeft="12" />
+            </padding>
+        </HBox>
+    </children>
+</StackPane>

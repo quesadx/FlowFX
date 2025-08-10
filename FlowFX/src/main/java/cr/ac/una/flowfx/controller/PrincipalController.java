@@ -12,23 +12,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class PrincipalController extends Controller implements Initializable {
 
     @FXML private BorderPane root;
-    @FXML public MFXButton btnAdminSignUp;
-    @FXML public MFXButton btnHome;
-    @FXML public MFXButton btnProjects;
-    @FXML private ImageView imgSettings;
-    @FXML private ImageView imgHome;
-    @FXML private ImageView imgProjects;
     @FXML private MFXButton btnClose;
     @FXML private MFXButton btnMaximize;
     @FXML private MFXButton btnMinimize;
-    @FXML private VBox vbLateralHandlebar;
-    @FXML private VBox vbNavigationBar;
+    @FXML private HBox hbLateralHandlebar;
 
     private static final int RESIZE_MARGIN = 8;
     private boolean resizingLeft;
@@ -50,71 +44,28 @@ public class PrincipalController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setupWindowResizeHandlers();
         setupWindowDragHandlers();
-        vbLateralHandlebar.setOnMousePressed(event -> {
+        hbLateralHandlebar.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
         });
-        vbLateralHandlebar.setOnMouseDragged(event -> {
+        hbLateralHandlebar.setOnMouseDragged(event -> {
             Stage stage = (Stage) root.getScene().getWindow();
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
-    btnClose.setFocusTraversable(false);
-    btnMaximize.setFocusTraversable(false);
-    btnMinimize.setFocusTraversable(false);
-    // Dock replaces these buttons; keep initial styles minimal
-    btnHome.setStyle("-fx-background-color: transparent;");
-    btnAdminSignUp.setStyle("-fx-background-color: transparent;");
-    btnProjects.setStyle("-fx-background-color: transparent;");
-    imgHome.setEffect(new ColorAdjust(0, -1, 1, 0));
+        btnClose.setFocusTraversable(false);
+        btnMaximize.setFocusTraversable(false);
+        btnMinimize.setFocusTraversable(false);
         javafx.application.Platform.runLater(() -> {
             if (root.getScene() != null) {
                 FlowController.getInstance().goView("MainView");
-                btnHome.requestFocus();
             }
         });
-    // Disable the legacy left navigation since the DockOverlayManager provides navigation
-    AppContext.getInstance().set("navigationBar", vbNavigationBar);
-    vbNavigationBar.setDisable(true);
-    vbNavigationBar.setOpacity(0.25);
     }
 
     @Override
     public void initialize() {
         // no-op
-    }
-
-    @FXML
-    private void onActionBtnAdminSignUp(ActionEvent event) {
-        btnAdminSignUp.setStyle("-fx-background-color: #4c6afe;");
-        btnHome.setStyle("-fx-background-color: #ffffff;");
-        btnProjects.setStyle("-fx-background-color: #ffffff;");
-        imgSettings.setEffect(new ColorAdjust(0, -1, 1, 0));
-        imgHome.setEffect(null);
-        imgProjects.setEffect(null);
-        FlowController.getInstance().goView("PersonSignUpView");
-    }
-
-    @FXML
-    private void onActionBtnHome(ActionEvent event) {
-        btnHome.setStyle("-fx-background-color: #4c6afe;");
-        btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
-        btnProjects.setStyle("-fx-background-color: #ffffff;");
-        imgHome.setEffect(new ColorAdjust(0, -1, 1, 0));
-        imgSettings.setEffect(null);
-        imgProjects.setEffect(null);
-        FlowController.getInstance().goView("MainView");
-    }
-
-    @FXML
-    private void onActionBtnProjects(ActionEvent event) {
-        btnProjects.setStyle("-fx-background-color: #4c6afe;");
-        btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
-        btnHome.setStyle("-fx-background-color: #ffffff;");
-        imgProjects.setEffect(new ColorAdjust(0, -1, 1, 0));
-        imgSettings.setEffect(null);
-        imgHome.setEffect(null);
-        FlowController.getInstance().goView("ProjectManagementView");
     }
 
     @FXML
@@ -261,24 +212,24 @@ public class PrincipalController extends Controller implements Initializable {
     }
 
     private void setupWindowDragHandlers() {
-        vbLateralHandlebar.setOnMousePressed(event -> {
+        hbLateralHandlebar.setOnMousePressed(event -> {
             if (!(resizingLeft || resizingRight || resizingTop || resizingBottom)) {
                 Stage stage = (Stage) root.getScene().getWindow();
                 dragOffsetX = event.getScreenX() - stage.getX();
                 dragOffsetY = event.getScreenY() - stage.getY();
-                vbLateralHandlebar.setCursor(javafx.scene.Cursor.MOVE);
+                hbLateralHandlebar.setCursor(javafx.scene.Cursor.MOVE);
             }
         });
-        vbLateralHandlebar.setOnMouseDragged(event -> {
+        hbLateralHandlebar.setOnMouseDragged(event -> {
             if (!(resizingLeft || resizingRight || resizingTop || resizingBottom)) {
                 Stage stage = (Stage) root.getScene().getWindow();
                 stage.setX(event.getScreenX() - dragOffsetX);
                 stage.setY(event.getScreenY() - dragOffsetY);
             }
         });
-        vbLateralHandlebar.setOnMouseReleased(event -> {
+        hbLateralHandlebar.setOnMouseReleased(event -> {
             if (!(resizingLeft || resizingRight || resizingTop || resizingBottom)) {
-                vbLateralHandlebar.setCursor(javafx.scene.Cursor.DEFAULT);
+                hbLateralHandlebar.setCursor(javafx.scene.Cursor.DEFAULT);
             }
         });
     }

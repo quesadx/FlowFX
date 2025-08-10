@@ -1,22 +1,14 @@
 package cr.ac.una.flowfx.util;
 import javafx.animation.*;
-import java.net.URL;
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.CacheHint;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.layout.Region;
 import javafx.util.Duration;
+import cr.ac.una.flowfx.controller.DockComponent;
 
 /**
  * Global, reusable overlay that renders a macOS-like dock on top of all views.
@@ -30,9 +22,6 @@ import javafx.util.Duration;
 public final class DockOverlayManager {
     private static final double EDGE_TRIGGER_PX = 25.0; // distance from screen border to trigger
     private static final double DOCK_HEIGHT = 64.0;
-    private static final double DOCK_PADDING = 4.0;
-    private static final double ICON_SIZE = 36.0;
-    private static final double ICON_HOVER_SCALE = 1.25;
 
     private DockOverlayManager() {}
 
@@ -42,13 +31,12 @@ public final class DockOverlayManager {
         // Container that holds the dock; kept invisible/collapsed until needed
         StackPane overlayRoot = new StackPane();
         overlayRoot.setPickOnBounds(false); // let events pass through when dock hidden
-        overlayRoot.setMouseTransparent(false);
+    overlayRoot.setMouseTransparent(false);
     // Managed so StackPane lays it out to full size
     overlayRoot.setManaged(true);
         overlayRoot.setVisible(false);
         overlayRoot.setOpacity(0);
-        overlayRoot.setCache(true);
-        overlayRoot.setCacheHint(CacheHint.SPEED);
+        
 
         // Full-size sentinel pane to detect mouse near edges without blocking clicks
         Pane edgeSentinel = new Pane();
@@ -58,10 +46,12 @@ public final class DockOverlayManager {
         edgeSentinel.maxWidthProperty().bind(rootStack.widthProperty());
         edgeSentinel.maxHeightProperty().bind(rootStack.heightProperty());
 
-        // The dock bar itself
-        HBox dockBar = buildDockBar();
-        StackPane.setAlignment(dockBar, Pos.BOTTOM_CENTER);
-        StackPane.setMargin(dockBar, new Insets(0, 0, 16, 0));
+    // The dock bar itself (FXML component)
+    DockComponent dock = new DockComponent();
+    // Avoid being stretched: keep to preferred size so alignment works
+    dock.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+    StackPane.setAlignment(dock, Pos.BOTTOM_CENTER);
+    StackPane.setMargin(dock, new Insets(0, 0, 16, 0));
 
     // Ensure overlay tracks the root size
     overlayRoot.minWidthProperty().bind(rootStack.widthProperty());
@@ -71,7 +61,7 @@ public final class DockOverlayManager {
     overlayRoot.maxWidthProperty().bind(rootStack.widthProperty());
     overlayRoot.maxHeightProperty().bind(rootStack.heightProperty());
 
-    overlayRoot.getChildren().addAll(edgeSentinel, dockBar);
+    overlayRoot.getChildren().addAll(edgeSentinel, dock);
         rootStack.getChildren().add(overlayRoot);
 
     // Show/hide logic: reveal when mouse is near bottom edge; hide otherwise
@@ -80,9 +70,9 @@ public final class DockOverlayManager {
             double height = rootStack.getHeight();
             boolean nearBottom = y > height - EDGE_TRIGGER_PX;
             if (nearBottom) {
-                showOverlay(overlayRoot, dockBar);
-            } else if (!dockBar.isHover()) {
-                hideOverlay(overlayRoot, dockBar);
+                showOverlay(overlayRoot, dock);
+            } else if (!dock.isHover()) {
+                hideOverlay(overlayRoot, dock);
             }
         });
 
@@ -93,137 +83,8 @@ public final class DockOverlayManager {
 
         // Hide when focus lost (optional guard)
         stage.focusedProperty().addListener((obs, ov, nv) -> {
-            if (!nv) hideOverlay(overlayRoot, dockBar);
+            if (!nv) hideOverlay(overlayRoot, dock);
         });
-    }
-
-    private static HBox buildDockBar() {
-        HBox bar = new HBox(12);
-        bar.getStyleClass().add("container-sub--semitransparent");
-        bar.setPadding(new Insets(DOCK_PADDING));
-        bar.setAlignment(Pos.CENTER);
-        bar.setFillHeight(false);
-
-        // Frosted rounded background using a StackPane with clip and blur
-        StackPane bg = new StackPane();
-        bg.setPickOnBounds(false);
-        Rectangle clip = new Rectangle();
-        clip.arcWidthProperty().set(24);
-        clip.arcHeightProperty().set(24);
-        clip.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> bar.getWidth() + DOCK_PADDING * 2,
-            bar.widthProperty()
-        ));
-        clip.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> DOCK_HEIGHT + DOCK_PADDING * 2,
-            bar.heightProperty()
-        ));
-        bg.setClip(clip);
-        bg.setBackground(new Background(new BackgroundFill(Color.web("#ffffff", 0.35), new CornerRadii(16), Insets.EMPTY)));
-        bg.setEffect(new BoxBlur(12, 12, 2));
-        bg.setMouseTransparent(true);
-
-        // Container to layer background behind icons
-        StackPane dockContainer = new StackPane(bg, bar);
-        StackPane.setAlignment(bg, Pos.CENTER);
-
-        HBox root = new HBox(dockContainer);
-        root.setAlignment(Pos.CENTER);
-        root.setPickOnBounds(false);
-
-        // Populate with nav items migrated from PrincipalView left bar
-        bar.getChildren().addAll(
-            dockItem("Home", "/cr/ac/una/flowfx/resources/icons/lucide--home.png", () -> FlowController.getInstance().goView("MainView")),
-            dockItem("Projects", "/cr/ac/una/flowfx/resources/icons/lucide--folder-cog.png", () -> FlowController.getInstance().goView("ProjectManagementView")),
-            dockItem("Admin", "/cr/ac/una/flowfx/resources/icons/lucide--book-user.png", () -> FlowController.getInstance().goView("PersonSignUpView"))
-        );
-
-        // Wrap in container with margins
-        HBox outer = new HBox(root);
-        outer.setAlignment(Pos.CENTER);
-        outer.setMouseTransparent(false);
-        outer.setPickOnBounds(false);
-        outer.setPadding(new Insets(0));
-        outer.setMinHeight(DOCK_HEIGHT + DOCK_PADDING * 2);
-        outer.setMaxHeight(DOCK_HEIGHT + DOCK_PADDING * 2);
-        outer.setPrefHeight(DOCK_HEIGHT + DOCK_PADDING * 2);
-        return outer;
-    }
-
-    private static Node dockItem(String title, String iconPath, Runnable action) {
-        StackPane item = new StackPane();
-        item.getStyleClass().add("fx-dock-item");
-        item.setCursor(Cursor.HAND);
-
-        ImageView icon = new ImageView();
-        URL iconUrl = DockOverlayManager.class.getResource(iconPath);
-        if (iconUrl != null) {
-            icon.setImage(new Image(iconUrl.toExternalForm(), false));
-        } else {
-            // Soft fallback if resource not found; small rounded rectangle as placeholder
-            icon.setImage(new Image("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAh0B9Qf0bA0AAAAASUVORK5CYII=", false));
-        }
-        icon.setFitWidth(ICON_SIZE);
-        icon.setFitHeight(ICON_SIZE);
-        icon.setPreserveRatio(true);
-        icon.setSmooth(true);
-        icon.setCache(true);
-        icon.setCacheHint(CacheHint.SPEED);
-
-        Label label = new Label(title);
-        label.getStyleClass().add("fx-dock-label");
-        label.setTextFill(Color.WHITE);
-        label.setMouseTransparent(true);
-        label.setOpacity(0);
-        StackPane.setAlignment(label, Pos.TOP_CENTER);
-        StackPane.setMargin(label, new Insets(-18, 0, 0, 0));
-
-        item.getChildren().addAll(icon, label);
-
-        // Hover magnification and label fade
-        ScaleTransition scaleIn = new ScaleTransition(Duration.millis(160), item);
-        scaleIn.setToX(ICON_HOVER_SCALE);
-        scaleIn.setToY(ICON_HOVER_SCALE);
-        scaleIn.setInterpolator(Interpolator.SPLINE(0.17, 0.67, 0.35, 1));
-
-        ScaleTransition scaleOut = new ScaleTransition(Duration.millis(150), item);
-        scaleOut.setToX(1);
-        scaleOut.setToY(1);
-        scaleOut.setInterpolator(Interpolator.EASE_BOTH);
-
-        FadeTransition labelIn = new FadeTransition(Duration.millis(160), label);
-        labelIn.setToValue(1);
-
-        FadeTransition labelOut = new FadeTransition(Duration.millis(120), label);
-        labelOut.setToValue(0);
-
-        item.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
-            scaleOut.stop();
-            labelOut.stop();
-            labelIn.playFromStart();
-            scaleIn.playFromStart();
-        });
-        item.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
-            scaleIn.stop();
-            labelIn.stop();
-            labelOut.playFromStart();
-            scaleOut.playFromStart();
-        });
-        item.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            // Click bounce
-            ScaleTransition bounceDown = new ScaleTransition(Duration.millis(90), item);
-            bounceDown.setToX(0.9);
-            bounceDown.setToY(0.9);
-            ScaleTransition bounceUp = new ScaleTransition(Duration.millis(160), item);
-            bounceUp.setToX(1.08);
-            bounceUp.setToY(1.08);
-            bounceUp.setInterpolator(Interpolator.SPLINE(0.2, 0.7, 0.2, 1));
-            SequentialTransition seq = new SequentialTransition(bounceDown, bounceUp);
-            seq.setOnFinished(ev -> action.run());
-            seq.play();
-        });
-
-        return item;
     }
 
     private static void showOverlay(StackPane overlayRoot, Node dockBar) {

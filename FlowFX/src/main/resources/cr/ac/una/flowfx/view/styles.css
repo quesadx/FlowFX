@@ -106,10 +106,17 @@
     -fx-padding: 8;
 }
 
-.container-sub--semitransparent {
-    -fx-background-color: rgba(255, 255, 255, 0.041);
+.container-sub-dark {
+    -fx-background-color: #c5c5c5;
     -fx-background-radius: 24;
     -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--semitransparent {
+    -fx-background-color: rgba(0, 0, 0, 0.041);
+    -fx-background-radius: 24;
     -fx-border-width: 1;
     -fx-border-radius: 24;
     -fx-padding: 8;
@@ -196,7 +203,7 @@
    MATERIALFX BUTTON COMPONENTS
    ======================================== */
 .mfx-button {
-    -fx-background-color: -fx-btn-base;
+    -fx-background-color: #ffffff7e;
     -fx-background-radius: 24;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
