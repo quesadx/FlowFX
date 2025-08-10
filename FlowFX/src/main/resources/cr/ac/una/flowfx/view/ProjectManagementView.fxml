@@ -63,7 +63,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                          <MFXTextField fx:id="txfProjectName" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -82,13 +82,13 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <TextArea prefHeight="200.0" prefWidth="200.0" />
+                                          <TextArea fx:id="txaProjectDescription" prefHeight="200.0" prefWidth="200.0" />
                                        </children>
                                     </HBox>
                                  </children>
                               </VBox>
-                              <MFXDatePicker maxWidth="1.7976931348623157E308" promptText="Fecha de inicio" />
-                              <MFXDatePicker maxWidth="1.7976931348623157E308" promptText="Fecha de finalización" />
+                              <MFXDatePicker fx:id="dpProjectStartDate" maxWidth="1.7976931348623157E308" promptText="Fecha de inicio" />
+                              <MFXDatePicker fx:id="dpProjectEndDate" maxWidth="1.7976931348623157E308" promptText="Fecha de finalización" />
                            </children>
                         </VBox>
                         <Separator orientation="VERTICAL" prefHeight="200.0">
@@ -111,26 +111,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                              <VBox>
-                                 <children>
-                                    <Label styleClass="jfx-label" text="Correo electrónico del patrocinador" />
-                                    <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
-                                       <children>
-                                          <VBox alignment="CENTER">
-                                             <children>
-                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/lucide--folder-heart.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </children>
-                                          </VBox>
-                                          <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                          <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -149,7 +130,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                          <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -168,7 +149,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                          <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -184,7 +165,7 @@
                               <Font name="System Bold" size="13.0" />
                            </font>
                         </MFXButton>
-                        <MFXButton prefHeight="50.0" prefWidth="150.0" styleClass="jfx-button" text="Crear proyecto">
+                        <MFXButton onAction="#onActionConfirmProjectCreation" prefHeight="50.0" prefWidth="150.0" styleClass="jfx-button" text="Crear proyecto">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>

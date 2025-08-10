@@ -12,6 +12,9 @@ public class ProjectDTO {
     private Character status;
     private Date createdAt;
     private Date updatedAt;
+    private Long leaderUserId;
+    private Long techLeaderId;
+    private Long sponsorId;
 
     public ProjectDTO() {}
 
@@ -25,6 +28,13 @@ public class ProjectDTO {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+    public ProjectDTO(Long id, String name, Date plannedStartDate, Date plannedEndDate, Date actualStartDate, Date actualEndDate, Character status, Date createdAt, Date updatedAt,
+                      Long leaderUserId, Long techLeaderId, Long sponsorId) {
+        this(id, name, plannedStartDate, plannedEndDate, actualStartDate, actualEndDate, status, createdAt, updatedAt);
+        this.leaderUserId = leaderUserId;
+        this.techLeaderId = techLeaderId;
+        this.sponsorId = sponsorId;
     }
 
     public Long getId() { return id; }
@@ -45,4 +55,11 @@ public class ProjectDTO {
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
     public Date getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
+
+    public Long getLeaderUserId() { return leaderUserId; }
+    public void setLeaderUserId(Long leaderUserId) { this.leaderUserId = leaderUserId; }
+    public Long getTechLeaderId() { return techLeaderId; }
+    public void setTechLeaderId(Long techLeaderId) { this.techLeaderId = techLeaderId; }
+    public Long getSponsorId() { return sponsorId; }
+    public void setSponsorId(Long sponsorId) { this.sponsorId = sponsorId; }
 }

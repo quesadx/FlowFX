@@ -24,23 +24,33 @@ public class AnimationManager {
         popup.setVisible(true);
         popup.setManaged(true);
         popup.setOpacity(0);
-        popup.setScaleX(0.8);
-        popup.setScaleY(0.8);
-        
+        popup.setScaleX(0.7);
+        popup.setScaleY(0.7);
+
         for (MFXButton button : buttonsToDisable) {
             button.setDisable(true);
         }
-        
+
         FadeTransition popupFade = new FadeTransition(duration, popup);
         popupFade.setFromValue(0);
         popupFade.setToValue(1);
-        
-        ScaleTransition popupScale = new ScaleTransition(duration, popup);
-        popupScale.setFromX(0.8);
-        popupScale.setFromY(0.8);
-        popupScale.setToX(1.0);
-        popupScale.setToY(1.0);
-        
+
+        // Springy scale: overshoot, then settle
+        Timeline scaleTimeline = new Timeline(
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(popup.scaleXProperty(), 0.7),
+                new KeyValue(popup.scaleYProperty(), 0.7)
+            ),
+            new KeyFrame(duration.multiply(0.7),
+                new KeyValue(popup.scaleXProperty(), 1.08),
+                new KeyValue(popup.scaleYProperty(), 1.08)
+            ),
+            new KeyFrame(duration,
+                new KeyValue(popup.scaleXProperty(), 1.0),
+                new KeyValue(popup.scaleYProperty(), 1.0)
+            )
+        );
+
         GaussianBlur blurEffect;
         if (cover.getEffect() instanceof GaussianBlur) {
             blurEffect = (GaussianBlur) cover.getEffect();
@@ -48,13 +58,13 @@ public class AnimationManager {
             blurEffect = new GaussianBlur(0);
             cover.setEffect(blurEffect);
         }
-        
-        Timeline blurTimeline = new Timeline();
-        KeyValue blurValue = new KeyValue(blurEffect.radiusProperty(), BLUR_RADIUS);
-        KeyFrame blurFrame = new KeyFrame(duration, blurValue);
-        blurTimeline.getKeyFrames().add(blurFrame);
-        
-        ParallelTransition showTransition = new ParallelTransition(popupFade, popupScale, blurTimeline);
+
+        Timeline blurTimeline = new Timeline(
+            new KeyFrame(Duration.ZERO, new KeyValue(blurEffect.radiusProperty(), 0)),
+            new KeyFrame(duration, new KeyValue(blurEffect.radiusProperty(), BLUR_RADIUS))
+        );
+
+        ParallelTransition showTransition = new ParallelTransition(popupFade, scaleTimeline, blurTimeline);
         showTransition.play();
     }
     
@@ -85,32 +95,41 @@ public class AnimationManager {
         FadeTransition popupFade = new FadeTransition(duration, popup);
         popupFade.setFromValue(1);
         popupFade.setToValue(0);
-        
-        ScaleTransition popupScale = new ScaleTransition(duration, popup);
-        popupScale.setFromX(1.0);
-        popupScale.setFromY(1.0);
-        popupScale.setToX(0.8);
-        popupScale.setToY(0.8);
-        
+
+        // Springy scale: shrink with bounce
+        Timeline scaleTimeline = new Timeline(
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(popup.scaleXProperty(), 1.0),
+                new KeyValue(popup.scaleYProperty(), 1.0)
+            ),
+            new KeyFrame(duration.multiply(0.5),
+                new KeyValue(popup.scaleXProperty(), 1.08),
+                new KeyValue(popup.scaleYProperty(), 1.08)
+            ),
+            new KeyFrame(duration,
+                new KeyValue(popup.scaleXProperty(), 0.7),
+                new KeyValue(popup.scaleYProperty(), 0.7)
+            )
+        );
+
         Timeline blurTimeline = new Timeline();
         if (cover.getEffect() instanceof GaussianBlur) {
             GaussianBlur blurEffect = (GaussianBlur) cover.getEffect();
-            KeyValue blurValue = new KeyValue(blurEffect.radiusProperty(), 0);
-            KeyFrame blurFrame = new KeyFrame(duration, blurValue);
-            blurTimeline.getKeyFrames().add(blurFrame);
+            blurTimeline.getKeyFrames().addAll(
+                new KeyFrame(Duration.ZERO, new KeyValue(blurEffect.radiusProperty(), BLUR_RADIUS)),
+                new KeyFrame(duration, new KeyValue(blurEffect.radiusProperty(), 0))
+            );
         }
-        
-        ParallelTransition hideTransition = new ParallelTransition(popupFade, popupScale, blurTimeline);
+
+        ParallelTransition hideTransition = new ParallelTransition(popupFade, scaleTimeline, blurTimeline);
         hideTransition.setOnFinished(e -> {
             popup.setVisible(false);
             popup.setManaged(false);
             cover.setEffect(null);
-            
             for (MFXButton button : buttonsToEnable) {
                 button.setDisable(false);
             }
         });
-        
         hideTransition.play();
     }
     

@@ -1,14 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
+
 package cr.ac.una.flowfx.controller;
 
-import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.Flow;
-
+import io.github.palexdev.materialfx.controls.MFXButton;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
 import javafx.event.ActionEvent;
@@ -20,100 +15,70 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author quesadx
- */
 public class PrincipalController extends Controller implements Initializable {
 
-    @FXML
-    private BorderPane root;
-    @FXML
-    public MFXButton btnAdminSignUp;
-    @FXML
-    public MFXButton btnHome;
-    @FXML
-    public MFXButton btnProjects;
-    @FXML
-    private ImageView imgSettings;
-    @FXML
-    private ImageView imgHome;
-    @FXML
-    private ImageView imgProjects;
-    @FXML
-    private MFXButton btnClose;
-    @FXML
-    private MFXButton btnMaximize;
-    @FXML
-    private MFXButton btnMinimize;
-    @FXML
-    private VBox vbLateralHandlebar, vbNavigationBar;
+    @FXML private BorderPane root;
+    @FXML public MFXButton btnAdminSignUp;
+    @FXML public MFXButton btnHome;
+    @FXML public MFXButton btnProjects;
+    @FXML private ImageView imgSettings;
+    @FXML private ImageView imgHome;
+    @FXML private ImageView imgProjects;
+    @FXML private MFXButton btnClose;
+    @FXML private MFXButton btnMaximize;
+    @FXML private MFXButton btnMinimize;
+    @FXML private VBox vbLateralHandlebar;
+    @FXML private VBox vbNavigationBar;
 
     private static final int RESIZE_MARGIN = 8;
-    private boolean resizingLeft = false;
-    private boolean resizingRight = false;
-    private boolean resizingTop = false;
-    private boolean resizingBottom = false;
-
-    // Window dragging variables
-    private double dragOffsetX, dragOffsetY;
-    // Window resizing variables
-    private double mousePressedX, mousePressedY;
-    private double windowPressedX, windowPressedY, windowPressedWidth, windowPressedHeight;
-
-    /**
-     * Initializes the controller class.
-     */
-    // Variables to store initial mouse position and window position
-    private double xOffset = 0;
-    private double yOffset = 0;
+    private boolean resizingLeft;
+    private boolean resizingRight;
+    private boolean resizingTop;
+    private boolean resizingBottom;
+    private double dragOffsetX;
+    private double dragOffsetY;
+    private double mousePressedX;
+    private double mousePressedY;
+    private double windowPressedX;
+    private double windowPressedY;
+    private double windowPressedWidth;
+    private double windowPressedHeight;
+    private double xOffset;
+    private double yOffset;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("Inicializando PrincipalController");
         setupWindowResizeHandlers();
         setupWindowDragHandlers();
-
-        // vbLateralHandlebar.setStyle("-fx-cursor: move;"); // Visual indication that it's draggable
         vbLateralHandlebar.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
         });
-        
         vbLateralHandlebar.setOnMouseDragged(event -> {
             Stage stage = (Stage) root.getScene().getWindow();
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
-
-        // Prevent window control buttons from getting focus
         btnClose.setFocusTraversable(false);
         btnMaximize.setFocusTraversable(false);
         btnMinimize.setFocusTraversable(false);
-        
-        // Set initial visual state without navigation
         btnHome.setStyle("-fx-background-color: #4c6afe;");
         btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
         btnProjects.setStyle("-fx-background-color: #ffffff;");
         imgHome.setEffect(new ColorAdjust(0, -1, 1, 0));
-        
-        // Wait for scene to be ready before navigating
         javafx.application.Platform.runLater(() -> {
             if (root.getScene() != null) {
                 FlowController.getInstance().goView("MainView");
                 btnHome.requestFocus();
             }
         });
-    // Expose NavigationBar in AppContext for other controllers
-    AppContext.getInstance().set("NavigationBar", vbNavigationBar);
-    // Default to disabled until login occurs
-    vbNavigationBar.setDisable(true);
-    }    
+        AppContext.getInstance().set("navigationBar", vbNavigationBar);
+        vbNavigationBar.setDisable(true);
+    }
 
     @Override
     public void initialize() {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // no-op
     }
 
     @FXML
@@ -121,12 +86,9 @@ public class PrincipalController extends Controller implements Initializable {
         btnAdminSignUp.setStyle("-fx-background-color: #4c6afe;");
         btnHome.setStyle("-fx-background-color: #ffffff;");
         btnProjects.setStyle("-fx-background-color: #ffffff;");
-
-        // Make the image white (by default is a black png)
         imgSettings.setEffect(new ColorAdjust(0, -1, 1, 0));
         imgHome.setEffect(null);
         imgProjects.setEffect(null);
-
         FlowController.getInstance().goView("PersonSignUpView");
     }
 
@@ -135,12 +97,9 @@ public class PrincipalController extends Controller implements Initializable {
         btnHome.setStyle("-fx-background-color: #4c6afe;");
         btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
         btnProjects.setStyle("-fx-background-color: #ffffff;");
-
-        // Make the image white (by default is a black png)
         imgHome.setEffect(new ColorAdjust(0, -1, 1, 0));
         imgSettings.setEffect(null);
         imgProjects.setEffect(null);
-
         FlowController.getInstance().goView("MainView");
     }
 
@@ -149,12 +108,9 @@ public class PrincipalController extends Controller implements Initializable {
         btnProjects.setStyle("-fx-background-color: #4c6afe;");
         btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
         btnHome.setStyle("-fx-background-color: #ffffff;");
-
-        // Make the image white (by default is a black png)
         imgProjects.setEffect(new ColorAdjust(0, -1, 1, 0));
         imgSettings.setEffect(null);
         imgHome.setEffect(null);
-
         FlowController.getInstance().goView("ProjectManagementView");
     }
 
@@ -223,7 +179,7 @@ public class PrincipalController extends Controller implements Initializable {
         if (resizingLeft || resizingRight || resizingTop || resizingBottom) {
             mousePressedX = event.getScreenX();
             mousePressedY = event.getScreenY();
-            javafx.stage.Stage stage = (javafx.stage.Stage) root.getScene().getWindow();
+            Stage stage = (Stage) root.getScene().getWindow();
             windowPressedX = stage.getX();
             windowPressedY = stage.getY();
             windowPressedWidth = stage.getWidth();
@@ -233,7 +189,7 @@ public class PrincipalController extends Controller implements Initializable {
     }
 
     private void handleMouseDraggedForResize(javafx.scene.input.MouseEvent event) {
-        javafx.stage.Stage stage = (javafx.stage.Stage) root.getScene().getWindow();
+        Stage stage = (Stage) root.getScene().getWindow();
         boolean resized = false;
         double minWidth = stage.getMinWidth();
         double minHeight = stage.getMinHeight();
@@ -304,7 +260,7 @@ public class PrincipalController extends Controller implements Initializable {
     private void setupWindowDragHandlers() {
         vbLateralHandlebar.setOnMousePressed(event -> {
             if (!(resizingLeft || resizingRight || resizingTop || resizingBottom)) {
-                javafx.stage.Stage stage = (javafx.stage.Stage) root.getScene().getWindow();
+                Stage stage = (Stage) root.getScene().getWindow();
                 dragOffsetX = event.getScreenX() - stage.getX();
                 dragOffsetY = event.getScreenY() - stage.getY();
                 vbLateralHandlebar.setCursor(javafx.scene.Cursor.MOVE);
@@ -312,7 +268,7 @@ public class PrincipalController extends Controller implements Initializable {
         });
         vbLateralHandlebar.setOnMouseDragged(event -> {
             if (!(resizingLeft || resizingRight || resizingTop || resizingBottom)) {
-                javafx.stage.Stage stage = (javafx.stage.Stage) root.getScene().getWindow();
+                Stage stage = (Stage) root.getScene().getWindow();
                 stage.setX(event.getScreenX() - dragOffsetX);
                 stage.setY(event.getScreenY() - dragOffsetY);
             }
@@ -323,5 +279,4 @@ public class PrincipalController extends Controller implements Initializable {
             }
         });
     }
-
 }

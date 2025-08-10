@@ -13,6 +13,9 @@ public class ProjectViewModel {
     private final ObjectProperty<Character> status = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> createdAt = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> updatedAt = new SimpleObjectProperty<>();
+    private final LongProperty leaderUserId = new SimpleLongProperty();
+    private final LongProperty techLeaderId = new SimpleLongProperty();
+    private final LongProperty sponsorId = new SimpleLongProperty();
 
     public ProjectViewModel() {}
     public ProjectViewModel(ProjectDTO dto) {
@@ -26,6 +29,9 @@ public class ProjectViewModel {
             setStatus(dto.getStatus());
             setCreatedAt(dto.getCreatedAt());
             setUpdatedAt(dto.getUpdatedAt());
+            setLeaderUserId(dto.getLeaderUserId() == null ? 0L : dto.getLeaderUserId());
+            setTechLeaderId(dto.getTechLeaderId() == null ? 0L : dto.getTechLeaderId());
+            setSponsorId(dto.getSponsorId() == null ? 0L : dto.getSponsorId());
         }
     }
 
@@ -39,7 +45,10 @@ public class ProjectViewModel {
             getActualEndDate(),
             getStatus(),
             getCreatedAt(),
-            getUpdatedAt()
+            getUpdatedAt(),
+            getLeaderUserId() == 0L ? null : getLeaderUserId(),
+            getTechLeaderId() == 0L ? null : getTechLeaderId(),
+            getSponsorId() == 0L ? null : getSponsorId()
         );
     }
 
@@ -78,4 +87,16 @@ public class ProjectViewModel {
     public Date getUpdatedAt() { return updatedAt.get(); }
     public void setUpdatedAt(Date value) { updatedAt.set(value); }
     public ObjectProperty<Date> updatedAtProperty() { return updatedAt; }
+
+    public long getLeaderUserId() { return leaderUserId.get(); }
+    public void setLeaderUserId(long value) { leaderUserId.set(value); }
+    public LongProperty leaderUserIdProperty() { return leaderUserId; }
+
+    public long getTechLeaderId() { return techLeaderId.get(); }
+    public void setTechLeaderId(long value) { techLeaderId.set(value); }
+    public LongProperty techLeaderIdProperty() { return techLeaderId; }
+
+    public long getSponsorId() { return sponsorId.get(); }
+    public void setSponsorId(long value) { sponsorId.set(value); }
+    public LongProperty sponsorIdProperty() { return sponsorId; }
 }

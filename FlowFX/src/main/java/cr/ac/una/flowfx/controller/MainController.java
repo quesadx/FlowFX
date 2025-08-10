@@ -1,12 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
+
 package cr.ac.una.flowfx.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import cr.ac.una.flowfx.model.PersonDTO;
 import cr.ac.una.flowfx.service.PersonService;
 import cr.ac.una.flowfx.util.AnimationManager;
@@ -28,11 +24,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-/**
- * FXML Controller class
- *
- * @author quesadx
- */
 public class MainController extends Controller implements Initializable {
 
     @FXML private AnchorPane root;
@@ -63,49 +54,53 @@ public class MainController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("Inicializando MainController");
         vbCover.setEffect(new javafx.scene.effect.GaussianBlur());
         AnimationManager.showPopup(vbLogInDisplay, vbCover);
-        Object nav = AppContext.getInstance().get("NavigationBar");
-        if (nav instanceof VBox) ((VBox) nav).setDisable(!userLoggedIn);
+        Object nav = AppContext.getInstance().get("navigationBar");
+        if (nav instanceof VBox) {
+            ((VBox) nav).setDisable(!userLoggedIn);
+        }
     }
 
     @Override
     public void initialize() {
-        
+        // no-op
     }
 
     @FXML
     private void onActionBtnLogIn(ActionEvent event) {
-        String username = txfUsername.getText().trim();
+        String username = getTrimmedText(txfUsername);
         String password = psfUserPassword.getText();
+        if (username.isEmpty() || password.isEmpty()) {
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), "Complete todos los campos requeridos.");
+            return;
+        }
         PersonService personService = new PersonService();
-        Respuesta r = personService.validateCredentials(username, password);
-        if (r.getEstado()) {
-            user = (PersonDTO) r.getResultado("Person");
+        Respuesta response = personService.validateCredentials(username, password);
+        if (Boolean.TRUE.equals(response.getEstado())) {
+            user = (PersonDTO) response.getResultado("Person");
             AppContext.getInstance().set("user", user);
             userLoggedIn = true;
             AnimationManager.hidePopup(vbLogInDisplay, vbCover);
-            Object nav = AppContext.getInstance().get("NavigationBar");
+            Object nav = AppContext.getInstance().get("navigationBar");
             if (nav instanceof VBox) {
                 ((VBox) nav).setDisable(!userLoggedIn);
             }
         } else {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), r.getMensaje());
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), response.getMensaje());
         }
     }
 
-    
     @FXML
     private void onMouseClickedLblSignUp(MouseEvent event) {
         AnimationManager.hidePopup(vbLogInDisplay);
         AnimationManager.showPopup(vbSignUpDisplay, vbCover);
     }
-    
+
     @FXML
     private void onMouseClickedLblPasswordRecovery(MouseEvent event) {
+        // no-op
     }
-    
 
     @FXML
     private void onActionBtnCancelPersonSignUp(ActionEvent event) {
@@ -113,36 +108,34 @@ public class MainController extends Controller implements Initializable {
         AnimationManager.showPopup(vbLogInDisplay, vbCover);
         clearSignUpFields();
     }
-    
 
     @FXML
     private void onActionBtnPersonSignUp(ActionEvent event) {
         PersonDTO newUser = extractPersonFromSignUp();
         if (newUser == null) return;
-        PersonService personService = new PersonService();
-        Respuesta r = personService.create(newUser);
-        if (Boolean.TRUE.equals(r.getEstado())) {
+        PersonService service = new PersonService();
+        Respuesta response = service.create(newUser);
+        if (Boolean.TRUE.equals(response.getEstado())) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Registro", root.getScene().getWindow(), "Usuario registrado correctamente.");
             AnimationManager.hidePopup(vbSignUpDisplay);
             AnimationManager.showPopup(vbLogInDisplay, vbCover);
             clearSignUpFields();
         } else {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Registro", root.getScene().getWindow(), r.getMensaje());
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Registro", root.getScene().getWindow(), response.getMensaje());
         }
     }
 
     private PersonDTO extractPersonFromSignUp() {
         try {
-            Long id = Long.parseLong(txfPersonId.getText().trim());
-            String firstName = txfPersonFirstName.getText().trim();
-            String lastName = txfPersonLastName.getText().trim();
-            String email = txfPersonEmail.getText().trim();
-            String username = txfPersonUsername.getText().trim();
+            Long id = parseLongSafe(txfPersonId.getText());
+            String firstName = getTrimmedText(txfPersonFirstName);
+            String lastName = getTrimmedText(txfPersonLastName);
+            String email = getTrimmedText(txfPersonEmail);
+            String username = getTrimmedText(txfPersonUsername);
             String password = pswPersonPassword.getText();
             char status = cbIsActive.isSelected() ? 'A' : 'I';
             char isAdmin = cbIsAdmin.isSelected() ? 'Y' : 'N';
-            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()
-                || username.isEmpty() || password.isEmpty()) {
+            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), "Complete todos los campos requeridos.");
                 return null;
             }
@@ -156,9 +149,20 @@ public class MainController extends Controller implements Initializable {
         }
     }
 
-    private PersonDTO extractFromLogIn() {
-        // Query to db goes here
-        return null;
+    private Long parseLongSafe(String text) {
+        if (text == null) return null;
+        String trimmed = text.trim();
+        if (trimmed.isEmpty()) return null;
+        try {
+            return Long.parseLong(trimmed);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private String getTrimmedText(MFXTextField field) {
+        String text = field.getText();
+        return text != null ? text.trim() : "";
     }
 
     private void clearLogInFields() {
@@ -176,5 +180,4 @@ public class MainController extends Controller implements Initializable {
         cbIsAdmin.setSelected(false);
         cbIsActive.setSelected(false);
     }
-
 }

@@ -6,6 +6,7 @@ module cr.ac.una.flowfx {
     requires MaterialFX;
     requires jakarta.persistence;
     requires javafx.graphics;
+    requires transitive javafx.base;
     requires java.base;
     requires java.instrument;
 

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -44,7 +46,7 @@
                            <children>
                               <HBox alignment="CENTER" styleClass="filler-rounded" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <VBox alignment="CENTER" maxWidth="300.0" spacing="12.0" HBox.hgrow="ALWAYS">
+                                    <VBox alignment="CENTER" fillWidth="false" maxWidth="300.0" spacing="12.0" HBox.hgrow="ALWAYS">
                                        <children>
                                           <VBox>
                                              <children>
@@ -60,26 +62,7 @@
                                                             </ImageView>
                                                          </children>
                                                       </VBox>
-                                                      <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                          <VBox>
-                                             <children>
-                                                <Label styleClass="jfx-label" text="Descripción" />
-                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
-                                                   <children>
-                                                      <VBox alignment="CENTER">
-                                                         <children>
-                                                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                               <image>
-                                                                  <Image url="@../resources/icons/lucide--letter-text.png" />
-                                                               </image>
-                                                            </ImageView>
-                                                         </children>
-                                                      </VBox>
-                                                      <TextArea maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      <MFXTextField fx:id="txfProjectName" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -98,7 +81,7 @@
                                                             </ImageView>
                                                          </children>
                                                       </VBox>
-                                                      <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -117,7 +100,7 @@
                                                             </ImageView>
                                                          </children>
                                                       </VBox>
-                                                      <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -136,7 +119,45 @@
                                                             </ImageView>
                                                          </children>
                                                       </VBox>
-                                                      <MFXTextField floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox>
+                                             <children>
+                                                <Label styleClass="jfx-label" text="Fecha de inicio pleaneada" />
+                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                   <children>
+                                                      <VBox alignment="CENTER">
+                                                         <children>
+                                                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                               <image>
+                                                                  <Image url="@../resources/icons/lucide--calendar-clock.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </children>
+                                                      </VBox>
+                                                      <MFXDatePicker fx:id="dpProjectStartDate" prefWidth="200.0" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox>
+                                             <children>
+                                                <Label styleClass="jfx-label" text="Fecha de finalización planeada" />
+                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                   <children>
+                                                      <VBox alignment="CENTER">
+                                                         <children>
+                                                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                               <image>
+                                                                  <Image url="@../resources/icons/lucide--calendar-x-2.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </children>
+                                                      </VBox>
+                                                      <MFXDatePicker fx:id="dpProjectStartDate1" prefWidth="200.0" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -151,7 +172,20 @@
                                           <VBox>
                                              <children>
                                                 <Label styleClass="jfx-label" text="Estado" />
-                                                <VBox alignment="CENTER" prefHeight="100.0" styleClass="container-sub" />
+                                                <VBox alignment="CENTER" prefHeight="100.0" styleClass="container-sub">
+                                                   <children>
+                                                      <HBox alignment="CENTER" spacing="12.0">
+                                                         <children>
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusPending" prefWidth="37.0" size="16.0" text="Pendiente">
+                                                               <toggleGroup>
+                                                                  <ToggleGroup fx:id="ProjectStatus" />
+                                                               </toggleGroup></MFXCircleToggleNode>
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusRunning" prefWidth="37.0" size="16.0" text="En proceso" toggleGroup="$ProjectStatus" />
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusSuspended" prefWidth="37.0" size="16.0" text="Suspendido" toggleGroup="$ProjectStatus" />
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusCompleted" prefWidth="37.0" size="16.0" text="Completado" toggleGroup="$ProjectStatus" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children></VBox>
                                              </children>
                                           </VBox>
                                           <VBox>
