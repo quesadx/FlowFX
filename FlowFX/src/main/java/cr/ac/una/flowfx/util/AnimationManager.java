@@ -61,6 +61,25 @@ public class AnimationManager {
     public static void hidePopup(Node popup, Node cover, MFXButton... buttonsToEnable) {
         hidePopup(popup, cover, DEFAULT_DURATION, buttonsToEnable);
     }
+
+    public static void hidePopup(Node popup) {
+        FadeTransition popupFade = new FadeTransition(DEFAULT_DURATION, popup);
+        popupFade.setFromValue(1);
+        popupFade.setToValue(0);
+
+        ScaleTransition popupScale = new ScaleTransition(DEFAULT_DURATION, popup);
+        popupScale.setFromX(1.0);
+        popupScale.setFromY(1.0);
+        popupScale.setToX(0.8);
+        popupScale.setToY(0.8);
+
+        ParallelTransition hideTransition = new ParallelTransition(popupFade, popupScale);
+        hideTransition.setOnFinished(e -> {
+            popup.setVisible(false);
+            popup.setManaged(false);
+        });
+        hideTransition.play();
+    }
     
     public static void hidePopup(Node popup, Node cover, Duration duration, MFXButton... buttonsToEnable) {
         FadeTransition popupFade = new FadeTransition(duration, popup);

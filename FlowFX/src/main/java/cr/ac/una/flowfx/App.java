@@ -16,7 +16,6 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/cr/ac/una/flowfx/resources/font/Organo.ttf"), 10);
-        //Font.loadFont(getClass().getResourceAsStream("/cr/ac/una/flowfx/resources/font/Outfit-VariableFont_wght.ttf"), 10);
 
         stage.initStyle(StageStyle.UNDECORATED);
         FlowController.getInstance().InitializeFlow(stage, null);
