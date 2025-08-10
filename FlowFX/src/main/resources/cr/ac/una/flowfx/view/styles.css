@@ -151,8 +151,8 @@
     -fx-background-radius: 24 24 12 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24 24 12 12;
-    -fx-padding: 8;
+    -fx-border-radius: 24 24 8 8;
+    -fx-padding: 4;
 }
 
 .container-sub-rounded-bottom {
@@ -160,8 +160,8 @@
     -fx-background-radius: 12 12 24 24;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 12 12 24 24;
-    -fx-padding: 8;
+    -fx-border-radius: 8 8 24 24;
+    -fx-padding: 4;
 }
 
 .filler {
@@ -397,6 +397,33 @@
     -fx-background-color: derive(-fx-primary, 20%);
     -fx-background-radius: 24;
     -fx-text-fill: -fx-text-primary;
+}
+
+/* ========================================
+   GLOBAL DOCK OVERLAY (macOS-style)
+   ======================================== */
+.fx-dock {
+    -fx-background-color: rgba(255,255,255,0.35);
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(255,255,255,0.55);
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0.2, 0, 6);
+}
+
+.fx-dock-item {
+    -fx-padding: 8 10 8 10;
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+}
+.fx-dock-item:hover {
+    -fx-background-color: rgba(255,255,255,0.28);
+}
+
+.fx-dock-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 8, 0.3, 0, 1);
 }
 
 /* ========================================

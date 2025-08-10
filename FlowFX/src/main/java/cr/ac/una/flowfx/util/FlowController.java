@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -25,6 +26,10 @@ public class FlowController {
     private static Stage mainStage;
     private static ResourceBundle idioma;
     private static HashMap<String, FXMLLoader> loaders = new HashMap<>();
+    // Keep a reference to the main layout (PrincipalView root) even if we wrap the Scene root
+    private static BorderPane appRoot;
+    // The stacked root used to host global overlays (e.g., dock)
+    private static StackPane rootStack;
 
     private FlowController() {
     }
@@ -53,8 +58,8 @@ public class FlowController {
 
     public void InitializeFlow(Stage stage, ResourceBundle idioma) {
         getInstance();
-        this.mainStage = stage;
-        this.idioma = idioma;
+    FlowController.mainStage = stage;
+    FlowController.idioma = idioma;
     }
 
     private FXMLLoader getLoader(String name) {
@@ -63,7 +68,7 @@ public class FlowController {
             synchronized (FlowController.class) {
                 if (loader == null) {
                     try {
-                        loader = new FXMLLoader(App.class.getResource("view/" + name + ".fxml"), this.idioma);
+                        loader = new FXMLLoader(App.class.getResource("view/" + name + ".fxml"), FlowController.idioma);
                         loader.load();
                         loaders.put(name, loader);
                     } catch (Exception ex) {
@@ -78,7 +83,20 @@ public class FlowController {
 
     public void goMain() {
         try {
-            mainStage.setScene(new Scene(FXMLLoader.load(App.class.getResource("view/PrincipalView.fxml"), idioma)));
+            // Load main layout so we can wrap it in a StackPane for global overlays
+            FXMLLoader baseLoader = new FXMLLoader(App.class.getResource("view/PrincipalView.fxml"), idioma);
+            Parent base = baseLoader.load();
+            if (base instanceof BorderPane) {
+                appRoot = (BorderPane) base;
+            }
+            // Fallback safety in case FXML root changes type
+            Parent contentRoot = appRoot != null ? appRoot : base;
+
+            // Wrap in a StackPane to layer overlays above all views
+            rootStack = new StackPane();
+            rootStack.getChildren().add(contentRoot);
+            Scene scene = new Scene(rootStack);
+            mainStage.setScene(scene);
             MFXThemeManager.addOn(mainStage.getScene(), Themes.DEFAULT, Themes.LEGACY);
             // Ensure app stylesheet overrides theme styles by appending it last
             try {
@@ -91,6 +109,13 @@ public class FlowController {
                     mainStage.getScene().getStylesheets().add(appCss);
                 }
             } catch (Exception ignored) { }
+
+            // Attach global dock overlay once the scene is ready
+            try {
+                DockOverlayManager.attach(mainStage, rootStack);
+            } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(FlowController.class.getName()).log(Level.WARNING, "Dock overlay attach failed", ex);
+            }
             mainStage.show();
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(FlowController.class.getName()).log(Level.SEVERE, "Error inicializando la vista base.", ex);
@@ -115,9 +140,10 @@ public class FlowController {
             stage = mainStage;
             controller.setStage(stage);
         }
-        switch (location) {
+    switch (location) {
             case "Center":
-                BorderPane borderPane = (BorderPane) stage.getScene().getRoot();
+        // Prefer the stored main BorderPane if available; fallback to scene root cast
+        BorderPane borderPane = appRoot != null ? appRoot : (BorderPane) stage.getScene().getRoot();
                 //VBox vBox = (VBox)borderPane.getCenter();
                 //vBox.getChildren().clear();
                 //vBox.getChildren().add(loader.getRoot());
@@ -128,7 +154,7 @@ public class FlowController {
                 borderPane.setCenter(loader.getRoot());
                 break;
             case "Top":
-                BorderPane borderPane2 = (BorderPane) stage.getScene().getRoot();
+        BorderPane borderPane2 = appRoot != null ? appRoot : (BorderPane) stage.getScene().getRoot();
                 HBox hbox = (HBox)borderPane2.getTop();
                 hbox.getChildren().clear();
                 hbox.getChildren().add(loader.getRoot());
@@ -222,7 +248,7 @@ public class FlowController {
     }
     
     public void limpiarLoader(String view){
-        this.loaders.remove(view);
+    loaders.remove(view);
     }
 
     public static void setIdioma(ResourceBundle idioma) {
@@ -230,11 +256,11 @@ public class FlowController {
     }
     
     public void initialize() {
-        this.loaders.clear();
+    loaders.clear();
     }
 
     public void salir() {
-        this.mainStage.close();
+    mainStage.close();
     }
 
 }

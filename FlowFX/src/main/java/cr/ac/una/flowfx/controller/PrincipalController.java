@@ -59,21 +59,24 @@ public class PrincipalController extends Controller implements Initializable {
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
-        btnClose.setFocusTraversable(false);
-        btnMaximize.setFocusTraversable(false);
-        btnMinimize.setFocusTraversable(false);
-        btnHome.setStyle("-fx-background-color: #4c6afe;");
-        btnAdminSignUp.setStyle("-fx-background-color: #ffffff;");
-        btnProjects.setStyle("-fx-background-color: #ffffff;");
-        imgHome.setEffect(new ColorAdjust(0, -1, 1, 0));
+    btnClose.setFocusTraversable(false);
+    btnMaximize.setFocusTraversable(false);
+    btnMinimize.setFocusTraversable(false);
+    // Dock replaces these buttons; keep initial styles minimal
+    btnHome.setStyle("-fx-background-color: transparent;");
+    btnAdminSignUp.setStyle("-fx-background-color: transparent;");
+    btnProjects.setStyle("-fx-background-color: transparent;");
+    imgHome.setEffect(new ColorAdjust(0, -1, 1, 0));
         javafx.application.Platform.runLater(() -> {
             if (root.getScene() != null) {
                 FlowController.getInstance().goView("MainView");
                 btnHome.requestFocus();
             }
         });
-        AppContext.getInstance().set("navigationBar", vbNavigationBar);
-        vbNavigationBar.setDisable(true);
+    // Disable the legacy left navigation since the DockOverlayManager provides navigation
+    AppContext.getInstance().set("navigationBar", vbNavigationBar);
+    vbNavigationBar.setDisable(true);
+    vbNavigationBar.setOpacity(0.25);
     }
 
     @Override
