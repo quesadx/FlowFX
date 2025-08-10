@@ -106,6 +106,15 @@
     -fx-padding: 8;
 }
 
+.container-sub--semitransparent {
+    -fx-background-color: rgba(255, 255, 255, 0.041);
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-padding: 8;
+}
+
 .container-sub--no-padding {
     -fx-background-color: -fx-surface;
     -fx-background-radius: 24;

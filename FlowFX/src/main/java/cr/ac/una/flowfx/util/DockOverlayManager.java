@@ -29,8 +29,8 @@ import javafx.util.Duration;
  */
 public final class DockOverlayManager {
     private static final double EDGE_TRIGGER_PX = 25.0; // distance from screen border to trigger
-    private static final double DOCK_HEIGHT = 72.0;
-    private static final double DOCK_PADDING = 12.0;
+    private static final double DOCK_HEIGHT = 64.0;
+    private static final double DOCK_PADDING = 4.0;
     private static final double ICON_SIZE = 36.0;
     private static final double ICON_HOVER_SCALE = 1.25;
 
@@ -99,7 +99,7 @@ public final class DockOverlayManager {
 
     private static HBox buildDockBar() {
         HBox bar = new HBox(12);
-        bar.getStyleClass().add("fx-dock");
+        bar.getStyleClass().add("container-sub--semitransparent");
         bar.setPadding(new Insets(DOCK_PADDING));
         bar.setAlignment(Pos.CENTER);
         bar.setFillHeight(false);
