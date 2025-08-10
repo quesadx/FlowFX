@@ -21,7 +21,7 @@ public class EntityManagerHelper {
 
     static {
         try {
-            emf = Persistence.createEntityManagerFactory("cr.ac.una_FlowFX_jar_1.0PU");
+            emf = Persistence.createEntityManagerFactory("FlowFXPU");
             em = emf.createEntityManager();
         } catch (ExceptionInInitializerError e) {
             throw e;
@@ -35,7 +35,7 @@ public class EntityManagerHelper {
 
     public static EntityManager getManager() {
         if (em == null) {
-            emf = Persistence.createEntityManagerFactory("cr.ac.una_FlowFX_jar_1.0PU");
+            emf = Persistence.createEntityManagerFactory("FlowFXPU");
             em = emf.createEntityManager();
         }
         return em;

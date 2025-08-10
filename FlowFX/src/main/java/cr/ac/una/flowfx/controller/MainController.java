@@ -8,9 +8,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import cr.ac.una.flowfx.model.PersonDTO;
+import cr.ac.una.flowfx.service.PersonService;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.Mensaje;
+import cr.ac.una.flowfx.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckListView;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
@@ -75,17 +77,21 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void onActionBtnLogIn(ActionEvent event) {
-        AnimationManager.hidePopup(vbLogInDisplay, vbCover);
-
-        // Simulate a successful login
-        user = new PersonDTO(901170906L, "Matteo", "Vargas", "matteo@una.ac.cr", "matteovq", "password", 'A', 'Y');
-        AppContext.getInstance().set("user", user);
-        userLoggedIn = true;
-
-        // Make de nav bar avalible
-        Object nav = AppContext.getInstance().get("NavigationBar");
-        if (nav instanceof VBox) {
-            ((VBox) nav).setDisable(!userLoggedIn);
+        String username = txfUsername.getText().trim();
+        String password = psfUserPassword.getText();
+        PersonService personService = new PersonService();
+        Respuesta r = personService.validateCredentials(username, password);
+        if (r.getEstado()) {
+            user = (PersonDTO) r.getResultado("Person");
+            AppContext.getInstance().set("user", user);
+            userLoggedIn = true;
+            AnimationManager.hidePopup(vbLogInDisplay, vbCover);
+            Object nav = AppContext.getInstance().get("NavigationBar");
+            if (nav instanceof VBox) {
+                ((VBox) nav).setDisable(!userLoggedIn);
+            }
+        } else {
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), r.getMensaje());
         }
     }
 
@@ -112,11 +118,16 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void onActionBtnPersonSignUp(ActionEvent event) {
         PersonDTO newUser = extractPersonFromSignUp();
-        if (newUser != null) {
-            System.out.println("Usuario registrado: " + newUser.getId());
+        if (newUser == null) return;
+        PersonService personService = new PersonService();
+        Respuesta r = personService.create(newUser);
+        if (Boolean.TRUE.equals(r.getEstado())) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Registro", root.getScene().getWindow(), "Usuario registrado correctamente.");
             AnimationManager.hidePopup(vbSignUpDisplay);
             AnimationManager.showPopup(vbLogInDisplay, vbCover);
             clearSignUpFields();
+        } else {
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Registro", root.getScene().getWindow(), r.getMensaje());
         }
     }
 
@@ -128,16 +139,17 @@ public class MainController extends Controller implements Initializable {
             String email = txfPersonEmail.getText().trim();
             String username = txfPersonUsername.getText().trim();
             String password = pswPersonPassword.getText();
+            char status = cbIsActive.isSelected() ? 'A' : 'I';
             char isAdmin = cbIsAdmin.isSelected() ? 'Y' : 'N';
-            char isActive = cbIsActive.isSelected() ? 'A' : 'I';
-            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() 
-                || username.isEmpty() || password.isEmpty() 
-                || (cbIsActive.isSelected() == false && cbIsAdmin.isSelected() == false)) {
-                    
-                Mensaje mensaje = new Mensaje();
-                mensaje.showModal(Alert.AlertType.ERROR, "Error", root.getScene().getWindow(), "Ocurrió un error al realizar la operación.");
+            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()
+                || username.isEmpty() || password.isEmpty()) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), "Complete todos los campos requeridos.");
+                return null;
             }
-            return new PersonDTO(id, firstName, lastName, email, username, password, isAdmin, isActive);
+            return new PersonDTO(id, firstName, lastName, email, username, password, status, isAdmin);
+        } catch (NumberFormatException nfe) {
+            new Mensaje().showModal(Alert.AlertType.ERROR, "SignUp", root.getScene().getWindow(), "La cédula debe ser numérica.");
+            return null;
         } catch (Exception e) {
             System.err.println("Error al crear usuario por falta de datos: " + e.getMessage());
             return null;

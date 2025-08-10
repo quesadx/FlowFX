@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-  <persistence-unit name="cr.ac.una_FlowFX_jar_1.0PU" transaction-type="RESOURCE_LOCAL">
+<persistence version="3.1"
+             xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_1.xsd">
+  <persistence-unit name="FlowFXPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>cr.ac.una.flowfx.model.Notification</class>
+    <class>cr.ac.una.flowfx.model.NotificationRecipient</class>
+    <class>cr.ac.una.flowfx.model.Person</class>
+    <class>cr.ac.una.flowfx.model.Project</class>
+    <class>cr.ac.una.flowfx.model.ProjectActivity</class>
+    <class>cr.ac.una.flowfx.model.ProjectTracking</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@XEPDB1"/>
-      <property name="javax.persistence.jdbc.user" value="una"/>
-      <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
-      <property name="javax.persistence.jdbc.password" value="una"/>
+      <!-- JDBC config: use Jakarta property keys so EclipseLink 4 reads them -->
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:oracle:thin:@XEPDB1"/>
+      <property name="jakarta.persistence.jdbc.user" value="una"/>
+      <property name="jakarta.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+      <property name="jakarta.persistence.jdbc.password" value="una"/>
+      <!-- Optional logging to help diagnose -->
+      <property name="eclipselink.logging.level" value="INFO"/>
     </properties>
   </persistence-unit>
 </persistence>
