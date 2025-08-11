@@ -108,23 +108,23 @@ public class ProjectManagementController extends Controller implements Initializ
         Object userObj = AppContext.getInstance().get("user");
         if (!(userObj instanceof PersonDTO)) return;
         PersonDTO user = (PersonDTO) userObj;
-        ProjectService service = new ProjectService();
-        Respuesta response = service.findProjectsForUser(user.getId());
-        if (!Boolean.TRUE.equals(response.getEstado())) return;
+        ProjectService s = new ProjectService();
+        Respuesta r = s.findProjectsForUser(user.getId());
+        if (!Boolean.TRUE.equals(r.getEstado())) return;
         @SuppressWarnings("unchecked")
-        List<ProjectDTO> projects = (List<ProjectDTO>) response.getResultado("Projects");
+        List<ProjectDTO> projects = (List<ProjectDTO>) r.getResultado("Projects");
         if (projects == null) return;
-        for (ProjectDTO project : projects) {
-            Board board = new Board();
-            board.getLblTitle().setText(project.getName());
-            board.getLblStatus().setText(String.valueOf(project.getStatus()));
-            board.getBtnExpandProject().setOnAction(e -> {
-                FlowController.getInstance().goView("ProjectExpandView");
+        for (ProjectDTO p : projects) {
+            Board b = new Board();
+            b.getLblTitle().setText(p.getName());
+            b.getLblStatus().setText(String.valueOf(p.getStatus()));
+            b.getBtnExpandProject().setOnAction(e -> {
+                AppContext.getInstance().set("currentProject", p);
                 Object nav = AppContext.getInstance().get("navigationBar");
                 if (nav instanceof VBox) ((VBox) nav).setDisable(true);
-                AppContext.getInstance().set("currentProject", project);
+                FlowController.getInstance().goView("ProjectExpandView");
             });
-            tpProjects.getChildren().add(board);
+            tpProjects.getChildren().add(b);
         }
     }
 

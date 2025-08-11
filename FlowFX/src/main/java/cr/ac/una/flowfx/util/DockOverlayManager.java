@@ -1,44 +1,43 @@
 package cr.ac.una.flowfx.util;
-import javafx.animation.*;
+
+import cr.ac.una.flowfx.controller.DockComponent;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-import cr.ac.una.flowfx.controller.DockComponent;
 
-/**
- * Global, reusable overlay that renders a macOS-like dock on top of all views.
- *
- * Features:
- * - Renders in a StackPane layer above the app root; no changes to individual views.
- * - Auto-shows when the cursor nears the bottom edge (or side), auto-hides on leave.
- * - Frosted/blurred, translucent background with rounded corners and shadow.
- * - Subtle bounce-in/out animations and item hover magnification.
- */
 public final class DockOverlayManager {
-    private static final double EDGE_TRIGGER_PX = 25.0; // distance from screen border to trigger
-    private static final double DOCK_HEIGHT = 64.0;
+    private static final double EDGE_TRIGGER_PX = 25.0;
+    private static final double DOCK_BOTTOM_MARGIN = 16.0;
+    private static final double SHOW_START_TRANSLATE_Y = 24.0;
+    private static final double HIDE_END_TRANSLATE_Y = 18.0;
+    private static final Duration SHOW_DURATION = Duration.millis(500);
+    private static final Duration HIDE_DURATION = Duration.millis(300);
+    private static final Interpolator OVERLAY_INTERPOLATOR = Interpolator.EASE_BOTH;
+    private static final Interpolator DOCK_IN_INTERPOLATOR = Interpolator.SPLINE(0.2, 0.7, 0.2, 1.0);
+    private static final Interpolator DOCK_OUT_INTERPOLATOR = Interpolator.SPLINE(0.3, 0.0, 0.7, 1.0);
 
-    private DockOverlayManager() {}
+    private DockOverlayManager() { }
 
     public static void attach(Stage stage, StackPane rootStack) {
         if (rootStack == null || stage == null) return;
 
-        // Container that holds the dock; kept invisible/collapsed until needed
         StackPane overlayRoot = new StackPane();
-        overlayRoot.setPickOnBounds(false); // let events pass through when dock hidden
-    overlayRoot.setMouseTransparent(false);
-    // Managed so StackPane lays it out to full size
-    overlayRoot.setManaged(true);
+        overlayRoot.setPickOnBounds(false);
+        overlayRoot.setMouseTransparent(false);
+        overlayRoot.setManaged(true);
         overlayRoot.setVisible(false);
         overlayRoot.setOpacity(0);
-        
 
-        // Full-size sentinel pane to detect mouse near edges without blocking clicks
         Pane edgeSentinel = new Pane();
         edgeSentinel.setMouseTransparent(true);
         edgeSentinel.minWidthProperty().bind(rootStack.widthProperty());
@@ -46,25 +45,21 @@ public final class DockOverlayManager {
         edgeSentinel.maxWidthProperty().bind(rootStack.widthProperty());
         edgeSentinel.maxHeightProperty().bind(rootStack.heightProperty());
 
-    // The dock bar itself (FXML component)
-    DockComponent dock = new DockComponent();
-    // Avoid being stretched: keep to preferred size so alignment works
-    dock.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-    StackPane.setAlignment(dock, Pos.BOTTOM_CENTER);
-    StackPane.setMargin(dock, new Insets(0, 0, 16, 0));
+        DockComponent dock = new DockComponent();
+        dock.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        StackPane.setAlignment(dock, Pos.BOTTOM_CENTER);
+        StackPane.setMargin(dock, new Insets(0, 0, DOCK_BOTTOM_MARGIN, 0));
 
-    // Ensure overlay tracks the root size
-    overlayRoot.minWidthProperty().bind(rootStack.widthProperty());
-    overlayRoot.minHeightProperty().bind(rootStack.heightProperty());
-    overlayRoot.prefWidthProperty().bind(rootStack.widthProperty());
-    overlayRoot.prefHeightProperty().bind(rootStack.heightProperty());
-    overlayRoot.maxWidthProperty().bind(rootStack.widthProperty());
-    overlayRoot.maxHeightProperty().bind(rootStack.heightProperty());
+        overlayRoot.minWidthProperty().bind(rootStack.widthProperty());
+        overlayRoot.minHeightProperty().bind(rootStack.heightProperty());
+        overlayRoot.prefWidthProperty().bind(rootStack.widthProperty());
+        overlayRoot.prefHeightProperty().bind(rootStack.heightProperty());
+        overlayRoot.maxWidthProperty().bind(rootStack.widthProperty());
+        overlayRoot.maxHeightProperty().bind(rootStack.heightProperty());
 
-    overlayRoot.getChildren().addAll(edgeSentinel, dock);
+        overlayRoot.getChildren().addAll(edgeSentinel, dock);
         rootStack.getChildren().add(overlayRoot);
 
-    // Show/hide logic: reveal when mouse is near bottom edge; hide otherwise
         rootStack.addEventFilter(MouseEvent.MOUSE_MOVED, e -> {
             double y = e.getY();
             double height = rootStack.getHeight();
@@ -75,13 +70,14 @@ public final class DockOverlayManager {
                 hideOverlay(overlayRoot, dock);
             }
         });
+        rootStack.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {
+            if (!dock.isHover()) hideOverlay(overlayRoot, dock);
+        });
 
-        // Keep overlay on top when visible
         overlayRoot.visibleProperty().addListener((obs, ov, nv) -> {
             if (nv) overlayRoot.toFront();
         });
 
-        // Hide when focus lost (optional guard)
         stage.focusedProperty().addListener((obs, ov, nv) -> {
             if (!nv) hideOverlay(overlayRoot, dock);
         });
@@ -92,18 +88,19 @@ public final class DockOverlayManager {
         overlayRoot.setVisible(true);
         overlayRoot.toFront();
 
-        dockBar.setTranslateY(24);
+        dockBar.setTranslateY(SHOW_START_TRANSLATE_Y);
         dockBar.setOpacity(0);
+
         Timeline inTl = new Timeline(
             new KeyFrame(Duration.ZERO,
                 new KeyValue(overlayRoot.opacityProperty(), 0, Interpolator.EASE_OUT),
                 new KeyValue(dockBar.opacityProperty(), 0, Interpolator.EASE_OUT),
-                new KeyValue(dockBar.translateYProperty(), 24, Interpolator.EASE_OUT)
+                new KeyValue(dockBar.translateYProperty(), SHOW_START_TRANSLATE_Y, Interpolator.EASE_OUT)
             ),
-            new KeyFrame(Duration.millis(320),
-                new KeyValue(overlayRoot.opacityProperty(), 1, Interpolator.EASE_BOTH),
-                new KeyValue(dockBar.opacityProperty(), 1, Interpolator.SPLINE(0.2, 0.7, 0.2, 1)),
-                new KeyValue(dockBar.translateYProperty(), 0, Interpolator.SPLINE(0.2, 0.7, 0.2, 1))
+            new KeyFrame(SHOW_DURATION,
+                new KeyValue(overlayRoot.opacityProperty(), 1, OVERLAY_INTERPOLATOR),
+                new KeyValue(dockBar.opacityProperty(), 1, DOCK_IN_INTERPOLATOR),
+                new KeyValue(dockBar.translateYProperty(), 0, DOCK_IN_INTERPOLATOR)
             )
         );
         inTl.play();
@@ -111,14 +108,15 @@ public final class DockOverlayManager {
 
     private static void hideOverlay(StackPane overlayRoot, Node dockBar) {
         if (!overlayRoot.isVisible()) return;
+
         Timeline outTl = new Timeline(
             new KeyFrame(Duration.ZERO,
                 new KeyValue(dockBar.opacityProperty(), 1, Interpolator.EASE_OUT),
                 new KeyValue(dockBar.translateYProperty(), 0, Interpolator.EASE_OUT)
             ),
-            new KeyFrame(Duration.millis(220),
-                new KeyValue(dockBar.opacityProperty(), 0, Interpolator.EASE_BOTH),
-                new KeyValue(dockBar.translateYProperty(), 18, Interpolator.SPLINE(0.3, 0, 0.7, 1))
+            new KeyFrame(HIDE_DURATION,
+                new KeyValue(dockBar.opacityProperty(), 0, OVERLAY_INTERPOLATOR),
+                new KeyValue(dockBar.translateYProperty(), HIDE_END_TRANSLATE_Y, DOCK_OUT_INTERPOLATOR)
             )
         );
         outTl.setOnFinished(e -> {

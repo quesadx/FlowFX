@@ -8,6 +8,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonService {
 
@@ -123,6 +125,19 @@ public class PersonService {
             return new Respuesta(false, "Credenciales inválidas", "validateCredentials NoResult");
         } catch (Exception ex) {
             return new Respuesta(false, "Error validando credenciales", "validateCredentials " + ex.getMessage());
+        }
+    }
+
+    public Respuesta findAll() {
+        try {
+            Query q = em.createNamedQuery("Person.findAll", Person.class);
+            @SuppressWarnings("unchecked")
+            List<Person> entities = q.getResultList();
+            List<PersonDTO> dtos = new ArrayList<>();
+            for (Person e : entities) dtos.add(toDTO(e));
+            return new Respuesta(true, "Personas encontradas", "findAll success", "Persons", dtos);
+        } catch (Exception ex) {
+            return new Respuesta(false, "Error obteniendo las personas", "findAll " + ex.getMessage());
         }
     }
 }

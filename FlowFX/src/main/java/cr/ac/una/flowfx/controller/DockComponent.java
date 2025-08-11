@@ -2,16 +2,22 @@ package cr.ac.una.flowfx.controller;
 
 import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.animation.Interpolator;
+import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import javafx.animation.Interpolator;
-import javafx.animation.ScaleTransition;
 
 public class DockComponent extends StackPane {
+    private static final double HOVER_SCALE = 1.3;
+    private static final Duration HOVER_IN_DURATION = Duration.millis(190);
+    private static final Duration HOVER_OUT_DURATION = Duration.millis(140);
+    private static final Interpolator HOVER_IN_INTERPOLATOR = Interpolator.SPLINE(0.17, 0.67, 0.35, 1);
+    private static final Interpolator HOVER_OUT_INTERPOLATOR = Interpolator.EASE_BOTH;
+
     @FXML private StackPane root;
     @FXML private HBox bar;
     @FXML private MFXButton btnHome;
@@ -41,14 +47,16 @@ public class DockComponent extends StackPane {
     }
 
     private void addHoverMagnification(Node node) {
-        ScaleTransition scaleIn = new ScaleTransition(Duration.millis(190), node);
-        scaleIn.setToX(1.3);
-        scaleIn.setToY(1.3);
-        scaleIn.setInterpolator(Interpolator.SPLINE(0.17, 0.67, 0.35, 1));
-        ScaleTransition scaleOut = new ScaleTransition(Duration.millis(140), node);
+        ScaleTransition scaleIn = new ScaleTransition(HOVER_IN_DURATION, node);
+        scaleIn.setToX(HOVER_SCALE);
+        scaleIn.setToY(HOVER_SCALE);
+        scaleIn.setInterpolator(HOVER_IN_INTERPOLATOR);
+
+        ScaleTransition scaleOut = new ScaleTransition(HOVER_OUT_DURATION, node);
         scaleOut.setToX(1);
         scaleOut.setToY(1);
-        scaleOut.setInterpolator(Interpolator.EASE_BOTH);
+        scaleOut.setInterpolator(HOVER_OUT_INTERPOLATOR);
+
         node.setOnMouseEntered(e -> { scaleOut.stop(); scaleIn.playFromStart(); });
         node.setOnMouseExited(e -> { scaleIn.stop(); scaleOut.playFromStart(); });
     }

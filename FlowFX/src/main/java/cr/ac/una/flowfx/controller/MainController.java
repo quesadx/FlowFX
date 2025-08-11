@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -57,9 +58,25 @@ public class MainController extends Controller implements Initializable {
         vbCover.setEffect(new javafx.scene.effect.GaussianBlur());
         AnimationManager.showPopup(vbLogInDisplay, vbCover);
         Object nav = AppContext.getInstance().get("navigationBar");
-        if (nav instanceof VBox) {
-            ((VBox) nav).setDisable(!userLoggedIn);
-        }
+        if (nav instanceof VBox) ((VBox) nav).setDisable(!userLoggedIn);
+
+        // Make it so all the text inputs have a limit of 20 characters
+        setTextFieldLimit(txfUsername, 20);
+        setTextFieldLimit(psfUserPassword, 20);
+        setTextFieldLimit(txfPersonId, 9);
+        setTextFieldLimit(txfPersonFirstName, 20);
+        setTextFieldLimit(txfPersonLastName, 20);
+        setTextFieldLimit(txfPersonEmail, 20);
+        setTextFieldLimit(txfPersonUsername, 20);
+        setTextFieldLimit(pswPersonPassword, 20);
+    }
+
+    private void setTextFieldLimit(MFXTextField txf, int i) {
+        txf.addEventFilter(KeyEvent.KEY_TYPED, e -> {
+            if (txf.getText().length() >= i) {
+                e.consume();
+            }
+        });
     }
 
     @Override
@@ -135,11 +152,23 @@ public class MainController extends Controller implements Initializable {
             String password = pswPersonPassword.getText();
             char status = cbIsActive.isSelected() ? 'A' : 'I';
             char isAdmin = cbIsAdmin.isSelected() ? 'Y' : 'N';
-            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || id == null) {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), "Complete todos los campos requeridos.");
                 return null;
             }
-            return new PersonDTO(id, firstName, lastName, email, username, password, status, isAdmin);
+            boolean usernameEmpty = username.isEmpty();
+            boolean passwordEmpty = password.isEmpty();
+            if (usernameEmpty && passwordEmpty) {
+                // Both empty: allowed, set as null
+                return new PersonDTO(id, firstName, lastName, email, null, null, status, isAdmin);
+            } else if (!usernameEmpty && !passwordEmpty) {
+                // Both filled: allowed
+                return new PersonDTO(id, firstName, lastName, email, username, password, status, isAdmin);
+            } else {
+                // Only one filled: error
+                new Mensaje().showModal(Alert.AlertType.ERROR, "SignUp", root.getScene().getWindow(), "Debe completar usuario y clave o dejar ambos vacíos.");
+                return null;
+            }
         } catch (NumberFormatException nfe) {
             new Mensaje().showModal(Alert.AlertType.ERROR, "SignUp", root.getScene().getWindow(), "La cédula debe ser numérica.");
             return null;
@@ -179,5 +208,14 @@ public class MainController extends Controller implements Initializable {
         pswPersonPassword.clear();
         cbIsAdmin.setSelected(false);
         cbIsActive.setSelected(false);
+    }
+
+    @FXML
+    private void onKeyPressedTxfPersonId(KeyEvent event) {
+        // Only allow numeric input, ignore letters and other non-digit keys
+        String text = event.getText();
+        if (!text.matches("[0-9]")) {
+            event.consume();
+        }
     }
 }

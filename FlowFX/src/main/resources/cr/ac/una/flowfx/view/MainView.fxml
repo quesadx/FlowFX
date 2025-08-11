@@ -185,7 +185,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXTextField fx:id="txfPersonId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="NEVER" />
+                                          <MFXTextField fx:id="txfPersonId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" onKeyPressed="#onKeyPressedTxfPersonId" prefWidth="200.0" HBox.hgrow="NEVER" />
                                        </children>
                                     </HBox>
                                  </children>

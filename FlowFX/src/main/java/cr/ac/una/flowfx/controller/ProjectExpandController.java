@@ -48,10 +48,13 @@ public class ProjectExpandController extends Controller implements Initializable
     private final ProjectViewModel vm = new ProjectViewModel();
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) { }
+    public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("Inicialize con parametros!");
+     }
 
     @Override
     public void initialize() {
+        System.out.println("Inicialize sin parametros!");
         Object p = AppContext.getInstance().get("currentProject");
         if (p instanceof ProjectDTO) {
             ProjectDTO dto = (ProjectDTO) p;
