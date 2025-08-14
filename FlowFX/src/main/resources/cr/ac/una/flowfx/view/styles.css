@@ -648,6 +648,10 @@
 .jfx-add > ImageView { -fx-image: url("../resources/icons/lucide--plus.png"); }
 .jfx-return > ImageView { -fx-image: url("../resources/icons/lucide--arrow-left.png"); }
 .jfx-description > ImageView { -fx-image: url("../resources/icons/lucide--letter-text.png"); }
+.jfx-add-project > ImageView { -fx-image: url("../resources/icons/lucide--package-plus.png"); }
+.jfx-add-person > ImageView { -fx-image: url("../resources/icons/lucide--user-round-plus.png"); }
+.jfx-persons > ImageView { -fx-image: url("../resources/icons/lucide--users-round.png"); }
+.jfx-projects > ImageView { -fx-image: url("../resources/icons/lucide--boxes.png"); }
 
 /* ========================================
    TYPOGRAPHY COMPONENTS

@@ -145,4 +145,16 @@ public class ProjectExpandController extends Controller implements Initializable
         field.setText(init == 0L ? "" : String.valueOf(init));
     }
 
+    @FXML
+    private void onActionBtnSelectSponsor(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionBtnSelectLeader(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionBtnSelectTechLeader(ActionEvent event) {
+    }
+
 }

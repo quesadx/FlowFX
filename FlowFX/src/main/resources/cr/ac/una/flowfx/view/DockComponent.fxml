@@ -2,6 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -10,20 +11,29 @@
     <children>
         <HBox fx:id="bar" alignment="CENTER" spacing="12.0" styleClass="container-sub">
             <children>
-                <MFXButton fx:id="btnHome" styleClass="jfx-home" text="">
-                    <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-                    </graphic>
-                </MFXButton>
                 <MFXButton fx:id="btnProjects" styleClass="jfx-projects" text="">
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                     </graphic>
+               <tooltip>
+                  <Tooltip text="Menú de proyectost" />
+               </tooltip>
                 </MFXButton>
-                <MFXButton fx:id="btnAdmin" styleClass="jfx-settings" text="">
+                <MFXButton fx:id="btnHome" styleClass="jfx-home" text="">
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                     </graphic>
+               <tooltip>
+                  <Tooltip text="Dashboard" />
+               </tooltip>
+                </MFXButton>
+                <MFXButton fx:id="btnAdmin" styleClass="jfx-persons" text="">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                    </graphic>
+               <tooltip>
+                  <Tooltip text="Menú de usuarios" />
+               </tooltip>
                 </MFXButton>
             </children>
             <padding>

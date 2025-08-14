@@ -5,6 +5,8 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
@@ -19,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
+import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -50,25 +53,19 @@ public class ProjectManagementController extends Controller implements Initializ
 
     @Override
     public void initialize() {
-        // no-op
+        clearForm();            loadUserProjects();
+        loadUserProjects();
     }
 
     @FXML
     private void onActionBtnReturnProjectCreation(ActionEvent event) {
         AnimationManager.hidePopup(vbProjectCreationDisplay, vbCover);
-        Object nav = AppContext.getInstance().get("navigationBar");
-        if (nav instanceof VBox) {
-            ((VBox) nav).setDisable(false);
-        }
+        clearForm();
     }
 
     @FXML
     private void onActionCreateProject(ActionEvent event) {
         AnimationManager.showPopup(vbProjectCreationDisplay, vbCover);
-        Object nav = AppContext.getInstance().get("navigationBar");
-        if (nav instanceof VBox) {
-            ((VBox) nav).setDisable(true);
-        }
     }
 
     @FXML
@@ -79,9 +76,14 @@ public class ProjectManagementController extends Controller implements Initializ
         dto.setPlannedEndDate(getDateFromPicker(dpProjectEndDate));
         dto.setStatus('P');
 
-        Long leaderId = parseLongSafe(txfLeaderId.getText());
-        Long techId = parseLongSafe(txfTechLeaderId.getText());
-        Long sponsorId = parseLongSafe(txfSponsorId.getText());
+    // Prefer selected PersonDTOs stored in context (set by selector dialog)
+    PersonDTO leaderSel = (PersonDTO) AppContext.getInstance().get("txfLeaderIdSelectedPerson");
+    PersonDTO techSel = (PersonDTO) AppContext.getInstance().get("txfTechLeaderIdSelectedPerson");
+    PersonDTO sponsorSel = (PersonDTO) AppContext.getInstance().get("txfSponsorIdSelectedPerson");
+
+    Long leaderId = leaderSel != null ? leaderSel.getId() : parseLongSafe(txfLeaderId.getText());
+    Long techId = techSel != null ? techSel.getId() : parseLongSafe(txfTechLeaderId.getText());
+    Long sponsorId = sponsorSel != null ? sponsorSel.getId() : parseLongSafe(txfSponsorId.getText());
 
         PersonDTO user = (PersonDTO) AppContext.getInstance().get("user");
         if (leaderId == null && user != null) leaderId = user.getId();
@@ -120,8 +122,6 @@ public class ProjectManagementController extends Controller implements Initializ
             b.getLblStatus().setText(String.valueOf(p.getStatus()));
             b.getBtnExpandProject().setOnAction(e -> {
                 AppContext.getInstance().set("currentProject", p);
-                Object nav = AppContext.getInstance().get("navigationBar");
-                if (nav instanceof VBox) ((VBox) nav).setDisable(true);
                 FlowController.getInstance().goView("ProjectExpandView");
             });
             tpProjects.getChildren().add(b);
@@ -132,11 +132,12 @@ public class ProjectManagementController extends Controller implements Initializ
         if (text == null) return null;
         String trimmed = text.trim();
         if (trimmed.isEmpty()) return null;
-        try {
-            return Long.parseLong(trimmed);
-        } catch (NumberFormatException e) {
-            return null;
+        // Extract first sequence of digits if mixed content
+        Matcher m = Pattern.compile("(\\d+)").matcher(trimmed);
+        if (m.find()) {
+            try { return Long.parseLong(m.group(1)); } catch (NumberFormatException ignored) {}
         }
+        try { return Long.parseLong(trimmed); } catch (NumberFormatException e) { return null; }
     }
 
     private void clearForm() {
@@ -157,4 +158,37 @@ public class ProjectManagementController extends Controller implements Initializ
     private Date getDateFromPicker(MFXDatePicker picker) {
         return picker.getValue() != null ? Date.from(picker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()) : null;
     }
+
+    @FXML
+    private void onActionBtnSelectSponsor(ActionEvent event) {
+        selectPersonForField(txfSponsorId);
+    }
+
+    @FXML
+    private void onActionBtnSelectLeader(ActionEvent event) {
+        selectPersonForField(txfLeaderId);
+    }
+
+    @FXML
+    private void onActionBtnSelectTechLeader(ActionEvent event) {
+        selectPersonForField(txfTechLeaderId);
+    }
+
+    private void selectPersonForField(MFXTextField targetField) {
+        // Allow editing while selecting
+        targetField.setEditable(true);
+        Stage current = (Stage) root.getScene().getWindow();
+        FlowController.getInstance().goViewInWindowModal("PersonSelectionView", current, false);
+        Object sel = AppContext.getInstance().get("personSelectionResult");
+        if (sel instanceof PersonDTO) {
+            PersonDTO p = (PersonDTO) sel;
+            targetField.setText(safe(p.getFirstName()) + " " + safe(p.getLastName()));
+            // store plain id numeric value (if needed elsewhere) into context keyed by field
+            AppContext.getInstance().set(targetField.getId() + "SelectedPerson", p);
+            // Make field read-only after selection
+            targetField.setEditable(false);
+        }
+    }
+
+    private String safe(String s) { return s == null ? "" : s.trim(); }
 }

@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -27,13 +28,17 @@
                      <children>
                         <HBox alignment="CENTER_RIGHT" minHeight="-Infinity">
                            <children>
-                              <MFXButton onAction="#onActionCreateProject" styleClass="jfx-add" text="">
+                              <MFXButton onAction="#onActionCreateProject" text="">
                                  <graphic>
                                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                                  </graphic>
                                  <tooltip>
                                     <Tooltip text="Retornar a vista de proyectos" />
                                  </tooltip>
+                                 <styleClass>
+                                    <String fx:value="jfx-add-project" />
+                                    <String fx:value="jfx-button" />
+                                 </styleClass>
                               </MFXButton>
                            </children>
                         </HBox>
@@ -42,7 +47,7 @@
                   </VBox>
                </children>
             </VBox>
-            <VBox fx:id="vbProjectCreationDisplay" alignment="CENTER" fillWidth="false" maxHeight="425.0" maxWidth="550.0" spacing="12.0" styleClass="filler-rounded" visible="false">
+            <VBox fx:id="vbProjectCreationDisplay" alignment="CENTER" fillWidth="false" maxHeight="550.0" maxWidth="650.0" spacing="12.0" styleClass="filler-rounded" visible="false">
                <children>
                   <Separator maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="325.0" visible="false" />
                   <HBox alignment="TOP_CENTER">
@@ -62,6 +67,9 @@
                                                    </image>
                                                 </ImageView>
                                              </children>
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
                                           </VBox>
                                           <MFXTextField fx:id="txfProjectName" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                        </children>
@@ -81,21 +89,56 @@
                                                    </image>
                                                 </ImageView>
                                              </children>
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
                                           </VBox>
                                           <TextArea fx:id="txaProjectDescription" prefHeight="200.0" prefWidth="200.0" />
                                        </children>
                                     </HBox>
                                  </children>
                               </VBox>
-                              <MFXDatePicker fx:id="dpProjectStartDate" maxWidth="1.7976931348623157E308" promptText="Fecha de inicio" />
-                              <MFXDatePicker fx:id="dpProjectEndDate" maxWidth="1.7976931348623157E308" promptText="Fecha de finalización" />
+                              <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                 <children>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                             <image>
+                                                <Image url="@../resources/icons/lucide--calendar-check-2.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </padding>
+                                    </VBox>
+                                    <MFXDatePicker fx:id="dpProjectStartDate" prefWidth="200.0" promptText="Fecha de inicio" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                 <children>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                             <image>
+                                                <Image url="@../resources/icons/lucide--calendar-x-2.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </padding>
+                                    </VBox>
+                                    <MFXDatePicker fx:id="dpProjectEndDate" maxWidth="1.7976931348623157E308" promptText="Fecha de finalización" />
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
                         <Separator orientation="VERTICAL" prefHeight="200.0">
                            <padding>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                            </padding></Separator>
-                        <VBox alignment="CENTER" spacing="12.0" HBox.hgrow="ALWAYS">
+                        <VBox alignment="TOP_CENTER" spacing="12.0" HBox.hgrow="ALWAYS">
                            <children>
                               <VBox>
                                  <children>
@@ -110,8 +153,16 @@
                                                    </image>
                                                 </ImageView>
                                              </children>
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
                                           </VBox>
                                           <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                          <MFXButton onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Seleccionar" HBox.hgrow="NEVER">
+                                             <tooltip>
+                                                <Tooltip text="Abrir selector de persona" />
+                                             </tooltip>
+                                          </MFXButton>
                                        </children>
                                     </HBox>
                                  </children>
@@ -129,8 +180,16 @@
                                                    </image>
                                                 </ImageView>
                                              </children>
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
                                           </VBox>
                                           <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                          <MFXButton onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Seleccionar">
+                                             <tooltip>
+                                                <Tooltip text="Abrir selector de persona" />
+                                             </tooltip>
+                                          </MFXButton>
                                        </children>
                                     </HBox>
                                  </children>
@@ -148,8 +207,16 @@
                                                    </image>
                                                 </ImageView>
                                              </children>
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
                                           </VBox>
                                           <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                          <MFXButton onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Seleccionar">
+                                             <tooltip>
+                                                <Tooltip text="Abrir selector de persona" />
+                                             </tooltip>
+                                          </MFXButton>
                                        </children>
                                     </HBox>
                                  </children>
@@ -164,11 +231,17 @@
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
+                           <tooltip>
+                              <Tooltip text="Cancelar creación de proycto" />
+                           </tooltip>
                         </MFXButton>
                         <MFXButton onAction="#onActionConfirmProjectCreation" prefHeight="50.0" prefWidth="150.0" styleClass="jfx-button" text="Crear proyecto">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
+                           <tooltip>
+                              <Tooltip text="Confirmar crear proyecto" />
+                           </tooltip>
                         </MFXButton>
                      </children>
                   </HBox>

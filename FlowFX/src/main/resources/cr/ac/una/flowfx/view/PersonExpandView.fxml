@@ -4,9 +4,9 @@
 <?import io.github.palexdev.materialfx.controls.MFXCheckbox?>
 <?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
@@ -29,13 +29,17 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" minHeight="-Infinity" HBox.hgrow="ALWAYS">
                                  <children>
-                     <MFXButton fx:id="btnReturnPersonSignUp" onAction="#onActionReturnPersonSignUp" styleClass="jfx-return" text="">
+                     <MFXButton fx:id="btnReturnPersonSignUp" onAction="#onActionReturnPersonSignUp" text="">
                                        <graphic>
                                           <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                                        </graphic>
                                        <tooltip>
                                           <Tooltip text="Retornar a vista de proyectos" />
                                        </tooltip>
+                                       <styleClass>
+                                          <String fx:value="jfx-return" />
+                                          <String fx:value="jfx-button" />
+                                       </styleClass>
                                     </MFXButton>
                                  </children>
                               </HBox>
@@ -214,10 +218,10 @@
                                                    </children></VBox>
                                              </children>
                                           </VBox>
-                                          <VBox>
+                                          <VBox VBox.vgrow="ALWAYS">
                                              <children>
                                                 <Label styleClass="jfx-label" text="Actividades" />
-                                                <ListView />
+                                                <VBox fx:id="vbActivityList" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" spacing="12.0" styleClass="container-sub" VBox.vgrow="ALWAYS" />
                                              </children>
                                           </VBox>
                                        </children></VBox>

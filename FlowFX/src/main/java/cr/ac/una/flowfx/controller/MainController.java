@@ -5,12 +5,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import cr.ac.una.flowfx.model.PersonDTO;
 import cr.ac.una.flowfx.service.PersonService;
+import cr.ac.una.flowfx.service.ProjectService;
+import cr.ac.una.flowfx.service.ProjectActivityService;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
+import cr.ac.una.flowfx.util.FlowController;
 import cr.ac.una.flowfx.util.Mensaje;
 import cr.ac.una.flowfx.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXCheckListView;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -18,12 +20,23 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.StackedBarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.scene.control.TableRow;
+import cr.ac.una.flowfx.model.ProjectDTO;
+import cr.ac.una.flowfx.model.ProjectActivityDTO;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainController extends Controller implements Initializable {
 
@@ -31,15 +44,11 @@ public class MainController extends Controller implements Initializable {
     @FXML private VBox vbCover;
     @FXML private VBox vbLogInDisplay;
     @FXML private VBox vbSignUpDisplay;
-    @FXML private VBox vBoxCentral;
 
     @FXML private MFXTextField txfUsername;
     @FXML private MFXPasswordField psfUserPassword;
     @FXML private MFXButton btnLogIn;
 
-    @FXML private MFXCheckListView<?> checkListDashboard;
-    @FXML private DatePicker datePKDashboard;
-    @FXML private PieChart pieChartDashboard;
 
     @FXML private MFXTextField txfPersonId;
     @FXML private MFXTextField txfPersonFirstName;
@@ -49,16 +58,27 @@ public class MainController extends Controller implements Initializable {
     @FXML private MFXPasswordField pswPersonPassword;
     @FXML private MFXCheckbox cbIsAdmin;
     @FXML private MFXCheckbox cbIsActive;
+    @FXML private PieChart pcPersonActivities;
 
     private boolean userLoggedIn = false;
     private PersonDTO user;
+    @FXML
+    private StackedBarChart<?, ?> sbcActivitiesPerProjects;
+    @FXML
+    private TableView<ProjectDTO> tvProjects;
+    @FXML
+    private TableColumn<ProjectDTO, String> tbcProjectName;
+    @FXML
+    private TableColumn<ProjectDTO, String> tbcProjectStatus;
+    @FXML
+    private ListView<String> lvActivities;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        vbCover.setEffect(new javafx.scene.effect.GaussianBlur());
+        //vbCover.setEffect(new javafx.scene.effect.GaussianBlur());
         AnimationManager.showPopup(vbLogInDisplay, vbCover);
-        Object nav = AppContext.getInstance().get("navigationBar");
-        if (nav instanceof VBox) ((VBox) nav).setDisable(!userLoggedIn);
+    Object nav = AppContext.getInstance().get("navigationBar");
+    if (nav instanceof VBox) ((VBox) nav).setDisable(!userLoggedIn);
 
         // Make it so all the text inputs have a limit of 20 characters
         setTextFieldLimit(txfUsername, 20);
@@ -69,6 +89,25 @@ public class MainController extends Controller implements Initializable {
         setTextFieldLimit(txfPersonEmail, 20);
         setTextFieldLimit(txfPersonUsername, 20);
         setTextFieldLimit(pswPersonPassword, 20);
+
+        // Configure projects table columns and double-click navigation
+        tbcProjectName.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getName()));
+        tbcProjectStatus.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
+            data.getValue().getStatus() == null ? "-" : String.valueOf(data.getValue().getStatus())
+        ));
+    tvProjects.setRowFactory(tv -> {
+            TableRow<ProjectDTO> row = new TableRow<>();
+            row.setOnMouseClicked(evt -> {
+                if (!row.isEmpty() && evt.getClickCount() == 2) {
+                    ProjectDTO selected = row.getItem();
+                    AppContext.getInstance().set("currentProject", selected);
+                    Object navBar = AppContext.getInstance().get("navigationBar");
+                    if (navBar instanceof VBox) ((VBox) navBar).setDisable(true);
+            FlowController.getInstance().goView("ProjectExpandView");
+                }
+            });
+            return row;
+        });
     }
 
     private void setTextFieldLimit(MFXTextField txf, int i) {
@@ -81,7 +120,7 @@ public class MainController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
-        // no-op
+    refreshDashboard();
     }
 
     @FXML
@@ -99,10 +138,8 @@ public class MainController extends Controller implements Initializable {
             AppContext.getInstance().set("user", user);
             userLoggedIn = true;
             AnimationManager.hidePopup(vbLogInDisplay, vbCover);
-            Object nav = AppContext.getInstance().get("navigationBar");
-            if (nav instanceof VBox) {
-                ((VBox) nav).setDisable(!userLoggedIn);
-            }
+            clearLogInFields();
+            refreshDashboard();
         } else {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), response.getMensaje());
         }
@@ -117,6 +154,9 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void onMouseClickedLblPasswordRecovery(MouseEvent event) {
         // no-op
+        // temp code 
+        Stage stage = (Stage) root.getScene().getWindow();
+        FlowController.getInstance().goViewInWindowModal("PersonSelectionView", stage, false);
     }
 
     @FXML
@@ -140,6 +180,88 @@ public class MainController extends Controller implements Initializable {
         } else {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Registro", root.getScene().getWindow(), response.getMensaje());
         }
+    }
+
+    private void refreshDashboard() {
+        // Require logged user
+        Object u = AppContext.getInstance().get("user");
+        if (!(u instanceof PersonDTO)) {
+            tvProjects.setItems(FXCollections.observableArrayList());
+            lvActivities.setItems(FXCollections.observableArrayList());
+            pcPersonActivities.setData(FXCollections.observableArrayList());
+            sbcActivitiesPerProjects.getData().clear();
+            return;
+        }
+
+        PersonDTO userDto = (PersonDTO) u;
+        ProjectService projectService = new ProjectService();
+        Respuesta r = projectService.findProjectsForUser(userDto.getId());
+        List<ProjectDTO> projects = new ArrayList<>();
+        if (Boolean.TRUE.equals(r.getEstado())) {
+            @SuppressWarnings("unchecked")
+            List<ProjectDTO> pr = (List<ProjectDTO>) r.getResultado("Projects");
+            if (pr != null) projects.addAll(pr);
+        }
+        tvProjects.setItems(FXCollections.observableArrayList(projects));
+
+        // Activities list: latest N activities for user
+        ProjectActivityService actService = new ProjectActivityService();
+        Respuesta ar = actService.findRecentForUser(userDto.getId(), 20);
+        List<String> items = new ArrayList<>();
+        if (Boolean.TRUE.equals(ar.getEstado())) {
+            @SuppressWarnings("unchecked")
+            List<ProjectActivityDTO> acts = (List<ProjectActivityDTO>) ar.getResultado("Activities");
+            if (acts != null) {
+                for (ProjectActivityDTO a : acts) {
+                    String label = (a.getDescription() == null ? "Actividad" : a.getDescription()) +
+                                   " [" + (a.getStatus() == null ? '-' : a.getStatus()) + "]";
+                    items.add(label);
+                }
+            }
+        }
+        lvActivities.setItems(FXCollections.observableArrayList(items));
+
+        // Pie chart: status distribution across user's projects
+        int cntP = 0, cntR = 0, cntS = 0, cntC = 0, cntU = 0;
+        for (ProjectDTO p : projects) {
+            char s = p.getStatus() == null ? '?' : Character.toUpperCase(p.getStatus());
+            switch (s) {
+                case 'P': cntP++; break;
+                case 'R': cntR++; break;
+                case 'S': cntS++; break;
+                case 'C': cntC++; break;
+                default: cntU++; break;
+            }
+        }
+        var pieData = FXCollections.observableArrayList(
+            new PieChart.Data("Pendiente", cntP),
+            new PieChart.Data("En curso", cntR),
+            new PieChart.Data("Suspendido", cntS),
+            new PieChart.Data("Completado", cntC)
+        );
+        if (cntU > 0) pieData.add(new PieChart.Data("Desconocido", cntU));
+        pcPersonActivities.setData(pieData);
+
+        // Stacked bar: simple per-project activity counts
+    List<Long> pids = new ArrayList<>();
+        for (ProjectDTO p : projects) if (p.getId() != null) pids.add(p.getId());
+        Respuesta cr = actService.countByProjectIds(pids);
+    // Safely cast to a typed chart to add typed series
+    @SuppressWarnings("unchecked")
+    StackedBarChart<String, Number> chart = (StackedBarChart<String, Number>) (StackedBarChart<?, ?>) sbcActivitiesPerProjects;
+    chart.getData().clear();
+    XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Actividades");
+        if (Boolean.TRUE.equals(cr.getEstado())) {
+            @SuppressWarnings("unchecked")
+            java.util.Map<Long, Long> counts = (java.util.Map<Long, Long>) cr.getResultado("Counts");
+            for (ProjectDTO p : projects) {
+                long c = 0L;
+                if (counts != null && p.getId() != null && counts.containsKey(p.getId())) c = counts.get(p.getId());
+        series.getData().add(new XYChart.Data<>(p.getName(), c));
+            }
+        }
+    chart.getData().add(series);
     }
 
     private PersonDTO extractPersonFromSignUp() {

@@ -78,8 +78,6 @@ public class PersonSignUpController extends Controller implements Initializable 
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     PersonViewModel vm = row.getItem();
                     AppContext.getInstance().set("selectedPerson", vm.toDTO());
-                    Object nav = AppContext.getInstance().get("navigationBar");
-                    if (nav instanceof VBox) ((VBox) nav).setDisable(true);
                     FlowController.getInstance().goView("PersonExpandView");
                 }
             });
@@ -123,8 +121,6 @@ public class PersonSignUpController extends Controller implements Initializable 
     @FXML
     private void onActionBtnSignUpPerson(ActionEvent event) {
         AnimationManager.showPopup(vbSignUpDisplay, vbCover);
-        Object nav = AppContext.getInstance().get("navigationBar");
-        if (nav instanceof VBox) ((VBox) nav).setDisable(true);
     }
 
     @FXML
@@ -137,8 +133,6 @@ public class PersonSignUpController extends Controller implements Initializable 
     private void onActionBtnCancelPersonSignUp(ActionEvent event) {
         AnimationManager.hidePopup(vbSignUpDisplay, vbCover);
         clearSignUpFields();
-        Object nav = AppContext.getInstance().get("navigationBar");
-        if (nav instanceof VBox) ((VBox) nav).setDisable(false);
     }
 
     @FXML
@@ -152,8 +146,6 @@ public class PersonSignUpController extends Controller implements Initializable 
             AnimationManager.hidePopup(vbSignUpDisplay, vbCover);
             clearSignUpFields();
             refreshPersons();
-            Object nav = AppContext.getInstance().get("navigationBar");
-            if (nav instanceof VBox) ((VBox) nav).setDisable(false);
         } else {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Registro", root.getScene().getWindow(), r.getMensaje());
         }

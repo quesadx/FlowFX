@@ -21,6 +21,7 @@ public class App extends Application {
         FlowController.getInstance().InitializeFlow(stage, null);
         FlowController.getInstance().goMain();
         FlowController.getInstance().goView("MainView");
+        //FlowController.getInstance().goViewInWindowModal("PersonSelectionView", stage, false);
     }
 
 
