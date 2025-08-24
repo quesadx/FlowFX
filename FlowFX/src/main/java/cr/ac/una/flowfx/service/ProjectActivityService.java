@@ -1,125 +1,208 @@
 package cr.ac.una.flowfx.service;
 
-import cr.ac.una.flowfx.model.ProjectActivity;
 import cr.ac.una.flowfx.model.ProjectActivityDTO;
-import cr.ac.una.flowfx.util.EntityManagerHelper;
 import cr.ac.una.flowfx.util.Respuesta;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
-import java.util.ArrayList;
+import cr.ac.una.flowfx.ws.FlowFXWS;
+import cr.ac.una.flowfx.ws.FlowFXWS_Service;
+import jakarta.xml.ws.BindingProvider;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProjectActivityService {
-    public ProjectActivityDTO toDTO(ProjectActivity e) {
-        if (e == null) return null;
-        return new ProjectActivityDTO(
-            e.getId(), e.getDescription(), e.getStatus(), e.getPlannedStartDate(), e.getPlannedEndDate(),
-            e.getActualStartDate(), e.getActualEndDate(), e.getExecutionOrder(), e.getCreatedAt(), e.getUpdatedAt()
-        );
-    }
-    public ProjectActivity fromDTO(ProjectActivityDTO d) {
-        if (d == null) return null;
-        ProjectActivity e = new ProjectActivity();
-        e.setId(d.getId());
-        e.setDescription(d.getDescription());
-        e.setStatus(d.getStatus());
-        e.setPlannedStartDate(d.getPlannedStartDate());
-        e.setPlannedEndDate(d.getPlannedEndDate());
-        e.setActualStartDate(d.getActualStartDate());
-        e.setActualEndDate(d.getActualEndDate());
-        e.setExecutionOrder(d.getExecutionOrder());
-        e.setCreatedAt(d.getCreatedAt());
-        e.setUpdatedAt(d.getUpdatedAt());
-        return e;
-    }
-    public ProjectActivityDTO find(Long id) {
-        EntityManager em = EntityManagerHelper.getManager();
-        return toDTO(em.find(ProjectActivity.class, id));
-    }
-    public ProjectActivityDTO create(ProjectActivityDTO dto) {
-        EntityManager em = EntityManagerHelper.getManager();
-        ProjectActivity e = fromDTO(dto);
-        em.getTransaction().begin();
-        try {
-            em.persist(e);
-            em.getTransaction().commit();
-            return toDTO(e);
-        } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
-            throw ex;
-        }
-    }
-    public ProjectActivityDTO update(ProjectActivityDTO dto) {
-        EntityManager em = EntityManagerHelper.getManager();
-        ProjectActivity e = fromDTO(dto);
-        em.getTransaction().begin();
-        try {
-            ProjectActivity merged = em.merge(e);
-            em.getTransaction().commit();
-            return toDTO(merged);
-        } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
-            throw ex;
-        }
-    }
-    public void delete(Long id) {
-        EntityManager em = EntityManagerHelper.getManager();
-        em.getTransaction().begin();
-        try {
-            ProjectActivity e = em.find(ProjectActivity.class, id);
-            if (e != null) em.remove(e);
-            em.getTransaction().commit();
-        } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
-            throw ex;
-        }
-    }
-
-    // Dashboard helpers
+//
+//    private static final Logger LOG = Logger.getLogger(ProjectActivityService.class.getName());
+//    private FlowFXWS port;
+//
+//    public ProjectActivityService() {
+//        try {
+//            FlowFXWS_Service service = new FlowFXWS_Service();
+//            port = service.getFlowFXWSPort();
+//
+//            if (port instanceof BindingProvider) {
+//                ((BindingProvider) port).getRequestContext().put(
+//                        BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+//                        "http://localhost:8080/FlowFXWS/FlowFXWS"
+//                );
+//            }
+//        } catch (Exception e) {
+//            LOG.log(Level.SEVERE, "Error inicializando port del WS", e);
+//        }
+//    }
+//
+////    public Respuesta find(Long id) {
+////        try {
+////            if (id == null) return new Respuesta(false, "El parámetro 'id' es requerido.", "find.id.null");
+////
+////            cr.ac.una.flowfx.ws.Respuesta wsResp = port.getProjectActivity(id);
+////            Respuesta r = mapRespuesta(wsResp);
+////
+////            if (Boolean.TRUE.equals(r.getEstado()) && wsResp.getMensajeInterno() != null) {
+////                ProjectActivityDTO dto = parseActivity(wsResp.getMensajeInterno());
+////                r.setResultado("Activity", dto);
+////            }
+////
+////            return r;
+////
+////        } catch (Exception ex) {
+////            LOG.log(Level.SEVERE, "Error obteniendo actividad [" + id + "]", ex);
+////            return new Respuesta(false, "Error obteniendo actividad.", "find " + ex.getMessage());
+////        }
+////    }
+//
+//    public Respuesta create(ProjectActivityDTO activity) {
+//        try {
+//            if (activity == null) return new Respuesta(false, "El parámetro 'activity' es requerido.", "create.activity.null");
+//
+//            cr.ac.una.flowfx.ws.Respuesta wsResp = port.createProjectActivity(toWs(activity));
+//            Respuesta r = mapRespuesta(wsResp);
+//
+//            if (Boolean.TRUE.equals(r.getEstado()) && wsResp.getMensajeInterno() != null) {
+//                ProjectActivityDTO dto = parseActivity(wsResp.getMensajeInterno());
+//                r.setResultado("Activity", dto);
+//            }
+//
+//            return r;
+//
+//        } catch (Exception ex) {
+//            LOG.log(Level.SEVERE, "Error creando actividad", ex);
+//            return new Respuesta(false, "Error creando actividad.", "create " + ex.getMessage());
+//        }
+//    }
+//
+//    public Respuesta update(ProjectActivityDTO activity) {
+//        try {
+//            if (activity == null || activity.getId() == null)
+//                return new Respuesta(false, "La actividad y su 'id' son requeridos.", "update.activity.null");
+//
+//            cr.ac.una.flowfx.ws.Respuesta wsResp = port.updateProjectActivity(toWs(activity));
+//            Respuesta r = mapRespuesta(wsResp);
+//
+//            if (Boolean.TRUE.equals(r.getEstado()) && wsResp.getMensajeInterno() != null) {
+//                ProjectActivityDTO dto = parseActivity(wsResp.getMensajeInterno());
+//                r.setResultado("Activity", dto);
+//            }
+//
+//            return r;
+//
+//        } catch (Exception ex) {
+//            LOG.log(Level.SEVERE, "Error actualizando actividad [" + activity.getId() + "]", ex);
+//            return new Respuesta(false, "Error actualizando actividad.", "update " + ex.getMessage());
+//        }
+//    }
+//
+//    public Respuesta delete(Long id) {
+//        try {
+//            if (id == null) return new Respuesta(false, "El parámetro 'id' es requerido.", "delete.id.null");
+//
+//            cr.ac.una.flowfx.ws.Respuesta wsResp = port.deleteProjectActivity(id);
+//            return mapRespuesta(wsResp);
+//
+//        } catch (Exception ex) {
+//            LOG.log(Level.SEVERE, "Error eliminando actividad [" + id + "]", ex);
+//            return new Respuesta(false, "Error eliminando actividad.", "delete " + ex.getMessage());
+//        }
+//    }
+//
     public Respuesta findRecentForUser(Long userId, int maxResults) {
-        try {
-            EntityManager em = EntityManagerHelper.getManager();
-            Query q = em.createQuery(
-                "SELECT a FROM ProjectActivity a " +
-                "WHERE a.responsibleId.id = :uid OR a.createdBy.id = :uid " +
-                "ORDER BY COALESCE(a.createdAt, a.plannedStartDate) DESC",
-                ProjectActivity.class
-            );
-            q.setParameter("uid", userId);
-            q.setMaxResults(maxResults);
-            @SuppressWarnings("unchecked")
-            List<ProjectActivity> entities = q.getResultList();
-            List<ProjectActivityDTO> dtos = new ArrayList<>();
-            for (ProjectActivity e : entities) dtos.add(toDTO(e));
-            return new Respuesta(true, "Actividades del usuario", "findRecentForUser success", "Activities", dtos);
-        } catch (Exception ex) {
-            return new Respuesta(false, "Error obteniendo actividades", "findRecentForUser " + ex.getMessage());
-        }
+//        try {
+//            if (userId == null) return new Respuesta(false, "El parámetro 'userId' es requerido.", "findRecentForUser.userId.null");
+//            if (maxResults <= 0) return new Respuesta(false, "El parámetro 'maxResults' debe ser > 0.", "findRecentForUser.maxResults.invalid");
+//
+//            cr.ac.una.flowfx.ws.Respuesta wsResp = port.getRecentActivitiesForUser(userId, maxResults);
+//            Respuesta r = mapRespuesta(wsResp);
+//
+//            if (Boolean.TRUE.equals(r.getEstado()) && wsResp.getMensajeInterno() != null) {
+//                ProjectActivityDTO[] arr = parseActivityArray(wsResp.getMensajeInterno());
+//                List<ProjectActivityDTO> dtos = Arrays.asList(arr != null ? arr : new ProjectActivityDTO[0]);
+//                r.setResultado("Activities", dtos);
+//            }
+//
+//            return r;
+//
+//        } catch (Exception ex) {
+//            LOG.log(Level.SEVERE, "Error obteniendo actividades recientes del usuario [" + userId + "]", ex);
+//            return new Respuesta(false, "Error obteniendo actividades", "findRecentForUser " + ex.getMessage());
+//        }
+return null;
     }
-
+//
     public Respuesta countByProjectIds(List<Long> projectIds) {
-        try {
-            if (projectIds == null || projectIds.isEmpty()) {
-                return new Respuesta(true, "Sin proyectos", "countByProjectIds empty", "Counts", new HashMap<Long, Long>());
-            }
-            EntityManager em = EntityManagerHelper.getManager();
-            Query q = em.createQuery(
-                "SELECT a.projectId.id, COUNT(a) FROM ProjectActivity a WHERE a.projectId.id IN :ids GROUP BY a.projectId.id"
-            );
-            q.setParameter("ids", projectIds);
-            @SuppressWarnings("unchecked")
-            List<Object[]> rows = q.getResultList();
-            Map<Long, Long> counts = new HashMap<>();
-            for (Object[] row : rows) {
-                Long pid = (Long) row[0];
-                Long cnt = (row[1] instanceof Long) ? (Long) row[1] : ((Number) row[1]).longValue();
-                counts.put(pid, cnt);
-            }
-            return new Respuesta(true, "Conteos por proyecto", "countByProjectIds success", "Counts", counts);
-        } catch (Exception ex) {
-            return new Respuesta(false, "Error contando actividades por proyecto", "countByProjectIds " + ex.getMessage());
-        }
+//        try {
+//            if (projectIds == null || projectIds.isEmpty()) return new Respuesta(true, "Sin proyectos", "countByProjectIds empty", "Counts", new HashMap<Long, Long>());
+//
+//            cr.ac.una.flowfx.ws.Respuesta wsResp = port.countActivitiesByProjectIds(projectIds);
+//            Respuesta r = mapRespuesta(wsResp);
+//
+//            if (Boolean.TRUE.equals(r.getEstado()) && wsResp.getMensajeInterno() != null) {
+//                @SuppressWarnings("unchecked")
+//                Map<Object, Object> raw = (Map<Object, Object>) new com.fasterxml.jackson.databind.ObjectMapper().readValue(wsResp.getMensajeInterno(), Map.class);
+//                Map<Long, Long> counts = new HashMap<>();
+//                for (Map.Entry<Object, Object> e : raw.entrySet()) {
+//                    Long pid = e.getKey() instanceof Number ? ((Number) e.getKey()).longValue() : Long.valueOf(e.getKey().toString());
+//                    Long cnt = e.getValue() instanceof Number ? ((Number) e.getValue()).longValue() : Long.valueOf(e.getValue().toString());
+//                    counts.put(pid, cnt);
+//                }
+//                r.setResultado("Counts", counts);
+//            }
+//
+//            return r;
+//
+//        } catch (Exception ex) {
+//            LOG.log(Level.SEVERE, "Error contando actividades por proyecto", ex);
+//            return new Respuesta(false, "Error contando actividades por proyecto", "countByProjectIds " + ex.getMessage());
+//        }
+return null;
     }
+//
+//    // ----------------- Métodos auxiliares -----------------
+//
+//    private Respuesta mapRespuesta(cr.ac.una.flowfx.ws.Respuesta ws) {
+//        if (ws == null) return new Respuesta(false, "Respuesta nula del WS", "ws.response.null");
+//        return new Respuesta(ws.isEstado(), ws.getMensaje(), ws.getMensajeInterno());
+//    }
+//
+//    private cr.ac.una.flowfx.ws.ProjectActivityDTO toWs(ProjectActivityDTO dto) {
+//        cr.ac.una.flowfx.ws.ProjectActivityDTO w = new cr.ac.una.flowfx.ws.ProjectActivityDTO();
+//        w.setId(dto.getId());
+//        w.setName(dto.getName());
+//        w.setDescription(dto.getDescription());
+//        w.setStartDate(dto.getStartDate());
+//        w.setEndDate(dto.getEndDate());
+//        return w;
+//    }
+//
+//    private ProjectActivityDTO parseActivity(String json) {
+//        try (jakarta.json.JsonReader jr = jakarta.json.Json.createReader(new java.io.StringReader(json))) {
+//            jakarta.json.JsonObject obj = jr.readObject();
+//            ProjectActivityDTO dto = new ProjectActivityDTO();
+//            dto.setId(obj.containsKey("id") ? obj.getJsonNumber("id").longValue() : null);
+//            dto.setName(obj.containsKey("name") ? obj.getString("name") : null);
+//            dto.setDescription(obj.containsKey("description") ? obj.getString("description") : null);
+//            dto.setStartDate(obj.containsKey("startDate") ? obj.getString("startDate") : null);
+//            dto.setEndDate(obj.containsKey("endDate") ? obj.getString("endDate") : null);
+//            return dto;
+//        } catch (Exception e) {
+//            LOG.log(Level.WARNING, "No se pudo parsear mensajeInterno a ProjectActivityDTO", e);
+//            return null;
+//        }
+//    }
+//
+//    private ProjectActivityDTO[] parseActivityArray(String json) {
+//        try (jakarta.json.JsonReader jr = jakarta.json.Json.createReader(new java.io.StringReader(json))) {
+//            jakarta.json.JsonArray arr = jr.readArray();
+//            ProjectActivityDTO[] dtos = new ProjectActivityDTO[arr.size()];
+//            for (int i = 0; i < arr.size(); i++) {
+//                dtos[i] = parseActivity(arr.getJsonObject(i).toString());
+//            }
+//            return dtos;
+//        } catch (Exception e) {
+//            LOG.log(Level.WARNING, "No se pudo parsear mensajeInterno a ProjectActivityDTO[]", e);
+//            return new ProjectActivityDTO[0];
+//        }
+//    }
 }

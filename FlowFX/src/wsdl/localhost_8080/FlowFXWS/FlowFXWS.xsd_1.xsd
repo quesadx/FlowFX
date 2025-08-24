@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.3.payara-p1 (metro-4.0.3.payara-maintenance-004e4e3; 2023-11-08T12:59:53+0000) XMLWS-Impl/4.0.2 XMLWS-API/4.0.1 XMLB-Impl/4.0.4 XMLB-API/4.0.1 git-revision#004e4e3. --><xs:schema xmlns:tns="http://controller.flowfxws.una.ac.cr/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://controller.flowfxws.una.ac.cr/">
+
+<xs:element name="createPerson" type="tns:createPerson"/>
+
+<xs:element name="createPersonResponse" type="tns:createPersonResponse"/>
+
+<xs:element name="createProject" type="tns:createProject"/>
+
+<xs:element name="createProjectResponse" type="tns:createProjectResponse"/>
+
+<xs:element name="deletePerson" type="tns:deletePerson"/>
+
+<xs:element name="deletePersonResponse" type="tns:deletePersonResponse"/>
+
+<xs:element name="deleteProject" type="tns:deleteProject"/>
+
+<xs:element name="deleteProjectResponse" type="tns:deleteProjectResponse"/>
+
+<xs:element name="getAllPeople" type="tns:getAllPeople"/>
+
+<xs:element name="getAllPeopleResponse" type="tns:getAllPeopleResponse"/>
+
+<xs:element name="getPerson" type="tns:getPerson"/>
+
+<xs:element name="getPersonResponse" type="tns:getPersonResponse"/>
+
+<xs:element name="getProject" type="tns:getProject"/>
+
+<xs:element name="getProjectResponse" type="tns:getProjectResponse"/>
+
+<xs:element name="updatePerson" type="tns:updatePerson"/>
+
+<xs:element name="updatePersonResponse" type="tns:updatePersonResponse"/>
+
+<xs:element name="updateProject" type="tns:updateProject"/>
+
+<xs:element name="updateProjectResponse" type="tns:updateProjectResponse"/>
+
+<xs:element name="validateCredentials" type="tns:validateCredentials"/>
+
+<xs:element name="validateCredentialsResponse" type="tns:validateCredentialsResponse"/>
+
+<xs:complexType name="updateProject">
+<xs:sequence>
+<xs:element name="project" type="tns:projectDTO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="projectDTO">
+<xs:sequence>
+<xs:element name="actualEndDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="actualStartDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="createdAt" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="leaderUserId" type="xs:long" minOccurs="0"/>
+<xs:element name="name" type="xs:string" minOccurs="0"/>
+<xs:element name="plannedEndDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="plannedStartDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="sponsorId" type="xs:long" minOccurs="0"/>
+<xs:element name="status" type="xs:unsignedShort" minOccurs="0"/>
+<xs:element name="techLeaderId" type="xs:long" minOccurs="0"/>
+<xs:element name="updatedAt" type="xs:dateTime" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="updateProjectResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="respuesta">
+<xs:sequence>
+<xs:element name="estado" type="xs:boolean" minOccurs="0"/>
+<xs:element name="mensaje" type="xs:string" minOccurs="0"/>
+<xs:element name="mensajeInterno" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteProject">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteProjectResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPerson">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPersonResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deletePerson">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deletePersonResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="validateCredentials">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="validateCredentialsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="updatePerson">
+<xs:sequence>
+<xs:element name="person" type="tns:personDTO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="personDTO">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0"/>
+<xs:element name="firstName" type="xs:string" minOccurs="0"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="isAdmin" type="xs:unsignedShort" minOccurs="0"/>
+<xs:element name="lastName" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+<xs:element name="status" type="xs:unsignedShort" minOccurs="0"/>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="updatePersonResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getProject">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getProjectResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createPerson">
+<xs:sequence>
+<xs:element name="person" type="tns:personDTO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createPersonResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllPeople">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAllPeopleResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createProject">
+<xs:sequence>
+<xs:element name="project" type="tns:projectDTO" minOccurs="0"/>
+<xs:element name="leaderId" type="xs:long" minOccurs="0"/>
+<xs:element name="techLeaderId" type="xs:long" minOccurs="0"/>
+<xs:element name="sponsorId" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createProjectResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

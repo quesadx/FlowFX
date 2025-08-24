@@ -17,10 +17,6 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- *
- * @author krist
- */
 @Entity
 @Table(name = "PERSON")
 @NamedQueries({
