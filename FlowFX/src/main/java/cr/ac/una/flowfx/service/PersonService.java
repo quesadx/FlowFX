@@ -152,6 +152,9 @@ public class PersonService {
         w.setEmail(p.getEmail());
         w.setUsername(p.getUsername());
         w.setPassword(p.getPassword());
+        // Map Character flags to WS String fields
+        w.setStatus(p.getStatus() != null ? String.valueOf(p.getStatus()) : null);
+        w.setIsAdmin(p.getIsAdmin() != null ? String.valueOf(p.getIsAdmin()) : null);
         return w;
     }
 
@@ -195,6 +198,8 @@ public class PersonService {
         p.setEmail(o.containsKey("email") && !o.isNull("email") ? o.getString("email") : null);
         p.setUsername(o.containsKey("username") && !o.isNull("username") ? o.getString("username") : null);
         p.setPassword(o.containsKey("password") && !o.isNull("password") ? o.getString("password") : null);
+        p.setStatus(o.containsKey("status") && !o.isNull("status") && !o.getString("status").isBlank() ? o.getString("status").charAt(0) : null);
+        p.setIsAdmin(o.containsKey("isAdmin") && !o.isNull("isAdmin") && !o.getString("isAdmin").isBlank() ? o.getString("isAdmin").charAt(0) : null);
         return p;
     }
 }

@@ -137,10 +137,10 @@
 <xs:element name="email" type="xs:string" minOccurs="0"/>
 <xs:element name="firstName" type="xs:string" minOccurs="0"/>
 <xs:element name="id" type="xs:long" minOccurs="0"/>
-<xs:element name="isAdmin" type="xs:unsignedShort" minOccurs="0"/>
+<xs:element name="isAdmin" type="xs:string" minOccurs="0"/>
 <xs:element name="lastName" type="xs:string" minOccurs="0"/>
 <xs:element name="password" type="xs:string" minOccurs="0"/>
-<xs:element name="status" type="xs:unsignedShort" minOccurs="0"/>
+<xs:element name="status" type="xs:string" minOccurs="0"/>
 <xs:element name="username" type="xs:string" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
