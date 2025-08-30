@@ -58,11 +58,101 @@
 <message name="getProjectResponse">
 <part name="parameters" element="tns:getProjectResponse"/>
 </message>
+<message name="getAllProjects">
+<part name="parameters" element="tns:getAllProjects"/>
+</message>
+<message name="getAllProjectsResponse">
+<part name="parameters" element="tns:getAllProjectsResponse"/>
+</message>
+<message name="createProjectActivity">
+<part name="parameters" element="tns:createProjectActivity"/>
+</message>
+<message name="createProjectActivityResponse">
+<part name="parameters" element="tns:createProjectActivityResponse"/>
+</message>
+<message name="updateProjectActivity">
+<part name="parameters" element="tns:updateProjectActivity"/>
+</message>
+<message name="updateProjectActivityResponse">
+<part name="parameters" element="tns:updateProjectActivityResponse"/>
+</message>
+<message name="getProjectActivity">
+<part name="parameters" element="tns:getProjectActivity"/>
+</message>
+<message name="getProjectActivityResponse">
+<part name="parameters" element="tns:getProjectActivityResponse"/>
+</message>
+<message name="deleteProjectActivity">
+<part name="parameters" element="tns:deleteProjectActivity"/>
+</message>
+<message name="deleteProjectActivityResponse">
+<part name="parameters" element="tns:deleteProjectActivityResponse"/>
+</message>
+<message name="getProjectsForUser">
+<part name="parameters" element="tns:getProjectsForUser"/>
+</message>
+<message name="getProjectsForUserResponse">
+<part name="parameters" element="tns:getProjectsForUserResponse"/>
+</message>
+<message name="getProjectTracking">
+<part name="parameters" element="tns:getProjectTracking"/>
+</message>
+<message name="getProjectTrackingResponse">
+<part name="parameters" element="tns:getProjectTrackingResponse"/>
+</message>
+<message name="createProjectTracking">
+<part name="parameters" element="tns:createProjectTracking"/>
+</message>
+<message name="createProjectTrackingResponse">
+<part name="parameters" element="tns:createProjectTrackingResponse"/>
+</message>
+<message name="updateProjectTracking">
+<part name="parameters" element="tns:updateProjectTracking"/>
+</message>
+<message name="updateProjectTrackingResponse">
+<part name="parameters" element="tns:updateProjectTrackingResponse"/>
+</message>
+<message name="deleteProjectTracking">
+<part name="parameters" element="tns:deleteProjectTracking"/>
+</message>
+<message name="deleteProjectTrackingResponse">
+<part name="parameters" element="tns:deleteProjectTrackingResponse"/>
+</message>
+<message name="getAllProjectTrackings">
+<part name="parameters" element="tns:getAllProjectTrackings"/>
+</message>
+<message name="getAllProjectTrackingsResponse">
+<part name="parameters" element="tns:getAllProjectTrackingsResponse"/>
+</message>
 <message name="validateCredentials">
 <part name="parameters" element="tns:validateCredentials"/>
 </message>
 <message name="validateCredentialsResponse">
 <part name="parameters" element="tns:validateCredentialsResponse"/>
+</message>
+<message name="getAllProjectActivities">
+<part name="parameters" element="tns:getAllProjectActivities"/>
+</message>
+<message name="getAllProjectActivitiesResponse">
+<part name="parameters" element="tns:getAllProjectActivitiesResponse"/>
+</message>
+<message name="getProjectTrackingByProject">
+<part name="parameters" element="tns:getProjectTrackingByProject"/>
+</message>
+<message name="getProjectTrackingByProjectResponse">
+<part name="parameters" element="tns:getProjectTrackingByProjectResponse"/>
+</message>
+<message name="countActivitiesByProjectIds">
+<part name="parameters" element="tns:countActivitiesByProjectIds"/>
+</message>
+<message name="countActivitiesByProjectIdsResponse">
+<part name="parameters" element="tns:countActivitiesByProjectIdsResponse"/>
+</message>
+<message name="getRecentActivitiesForUser">
+<part name="parameters" element="tns:getRecentActivitiesForUser"/>
+</message>
+<message name="getRecentActivitiesForUserResponse">
+<part name="parameters" element="tns:getRecentActivitiesForUserResponse"/>
 </message>
 <portType name="FlowFXWS">
 <operation name="getPerson">
@@ -101,9 +191,69 @@
 <input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectRequest" message="tns:getProject"/>
 <output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectResponse" message="tns:getProjectResponse"/>
 </operation>
+<operation name="getAllProjects">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getAllProjectsRequest" message="tns:getAllProjects"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getAllProjectsResponse" message="tns:getAllProjectsResponse"/>
+</operation>
+<operation name="createProjectActivity">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/createProjectActivityRequest" message="tns:createProjectActivity"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/createProjectActivityResponse" message="tns:createProjectActivityResponse"/>
+</operation>
+<operation name="updateProjectActivity">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/updateProjectActivityRequest" message="tns:updateProjectActivity"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/updateProjectActivityResponse" message="tns:updateProjectActivityResponse"/>
+</operation>
+<operation name="getProjectActivity">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectActivityRequest" message="tns:getProjectActivity"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectActivityResponse" message="tns:getProjectActivityResponse"/>
+</operation>
+<operation name="deleteProjectActivity">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/deleteProjectActivityRequest" message="tns:deleteProjectActivity"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/deleteProjectActivityResponse" message="tns:deleteProjectActivityResponse"/>
+</operation>
+<operation name="getProjectsForUser">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectsForUserRequest" message="tns:getProjectsForUser"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectsForUserResponse" message="tns:getProjectsForUserResponse"/>
+</operation>
+<operation name="getProjectTracking">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectTrackingRequest" message="tns:getProjectTracking"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectTrackingResponse" message="tns:getProjectTrackingResponse"/>
+</operation>
+<operation name="createProjectTracking">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/createProjectTrackingRequest" message="tns:createProjectTracking"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/createProjectTrackingResponse" message="tns:createProjectTrackingResponse"/>
+</operation>
+<operation name="updateProjectTracking">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/updateProjectTrackingRequest" message="tns:updateProjectTracking"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/updateProjectTrackingResponse" message="tns:updateProjectTrackingResponse"/>
+</operation>
+<operation name="deleteProjectTracking">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/deleteProjectTrackingRequest" message="tns:deleteProjectTracking"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/deleteProjectTrackingResponse" message="tns:deleteProjectTrackingResponse"/>
+</operation>
+<operation name="getAllProjectTrackings">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getAllProjectTrackingsRequest" message="tns:getAllProjectTrackings"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getAllProjectTrackingsResponse" message="tns:getAllProjectTrackingsResponse"/>
+</operation>
 <operation name="validateCredentials">
 <input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/validateCredentialsRequest" message="tns:validateCredentials"/>
 <output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/validateCredentialsResponse" message="tns:validateCredentialsResponse"/>
+</operation>
+<operation name="getAllProjectActivities">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getAllProjectActivitiesRequest" message="tns:getAllProjectActivities"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getAllProjectActivitiesResponse" message="tns:getAllProjectActivitiesResponse"/>
+</operation>
+<operation name="getProjectTrackingByProject">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectTrackingByProjectRequest" message="tns:getProjectTrackingByProject"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getProjectTrackingByProjectResponse" message="tns:getProjectTrackingByProjectResponse"/>
+</operation>
+<operation name="countActivitiesByProjectIds">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/countActivitiesByProjectIdsRequest" message="tns:countActivitiesByProjectIds"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/countActivitiesByProjectIdsResponse" message="tns:countActivitiesByProjectIdsResponse"/>
+</operation>
+<operation name="getRecentActivitiesForUser">
+<input wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getRecentActivitiesForUserRequest" message="tns:getRecentActivitiesForUser"/>
+<output wsam:Action="http://controller.flowfxws.una.ac.cr/FlowFXWS/getRecentActivitiesForUserResponse" message="tns:getRecentActivitiesForUserResponse"/>
 </operation>
 </portType>
 <binding name="FlowFXWSPortBinding" type="tns:FlowFXWS">
@@ -189,7 +339,142 @@
 <soap:body use="literal"/>
 </output>
 </operation>
+<operation name="getAllProjects">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="createProjectActivity">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="updateProjectActivity">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getProjectActivity">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="deleteProjectActivity">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getProjectsForUser">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getProjectTracking">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="createProjectTracking">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="updateProjectTracking">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="deleteProjectTracking">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getAllProjectTrackings">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="validateCredentials">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getAllProjectActivities">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getProjectTrackingByProject">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="countActivitiesByProjectIds">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getRecentActivitiesForUser">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

@@ -8,15 +8,22 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
-
 import jakarta.xml.ws.BindingProvider;
+
 import java.io.StringReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * PersonService
+ * - Preparado para recibir lo que mande el WS:
+ *   - Soporta mensajeInterno como objeto o arreglo.
+ *   - Reconoce envolturas típicas (person/Person/PERSON, persons/Persons/PERSONS, data, list).
+ *   - Acepta alias de campos (id/per_id, firstName/per_first_name, etc.).
+ *   - Tolerante a números enviados como string.
+ */
 public class PersonService {
 
     private static final Logger LOG = Logger.getLogger(PersonService.class.getName());
@@ -158,24 +165,63 @@ public class PersonService {
         return w;
     }
 
+    /**
+     * Llena un único PersonDTO desde mensajeInterno:
+     * - Si viene como objeto directo.
+     * - Si viene envuelto bajo "person"/"Person"/"PERSON".
+     * - Si viene como arreglo (toma el primero).
+     */
     private void fillSingleFromMensajeInterno(Respuesta r) {
         String mi = r.getMensajeInterno();
         if (mi == null || mi.isBlank()) return;
 
+        // 1) Intento: objeto directo (con posible envoltura)
         try (JsonReader jr = Json.createReader(new StringReader(mi))) {
             JsonObject obj = jr.readObject();
-            if (obj.containsKey("person")) obj = obj.getJsonObject("person");
+
+            if (obj.containsKey("person") && obj.get("person") instanceof JsonObject) {
+                obj = obj.getJsonObject("person");
+            } else if (obj.containsKey("Person") && obj.get("Person") instanceof JsonObject) {
+                obj = obj.getJsonObject("Person");
+            } else if (obj.containsKey("PERSON") && obj.get("PERSON") instanceof JsonObject) {
+                obj = obj.getJsonObject("PERSON");
+            }
             PersonDTO dto = fromJsonPerson(obj);
-            if (dto != null) r.setResultado(ENTITY_KEY, dto);
-        } catch (Exception e) {
-            // si no es JSON válido, se puede dejar mensajeInterno para debug
+            if (dto != null) {
+                r.setResultado(ENTITY_KEY, dto);
+                return;
+            }
+        } catch (Exception ignore) {
+            // Puede no ser un objeto JSON, seguimos al siguiente intento
+        }
+
+        // 2) Intento: arreglo (tomar el primero)
+        try (JsonReader jr = Json.createReader(new StringReader(mi))) {
+            JsonArray arr = jr.readArray();
+            if (!arr.isEmpty()) {
+                JsonObject obj = arr.getJsonObject(0);
+                PersonDTO dto = fromJsonPerson(obj);
+                if (dto != null) {
+                    r.setResultado(ENTITY_KEY, dto);
+                }
+            }
+        } catch (Exception ignore) {
+            // Dejar mensajeInterno para diagnóstico
         }
     }
 
+    /**
+     * Llena la lista de PersonDTO desde mensajeInterno:
+     * - Arreglo directo.
+     * - Objeto con arreglo bajo "persons"/"Persons"/"PERSONS"/"data"/"list".
+     */
     private void fillListFromMensajeInterno(Respuesta r) {
         String mi = r.getMensajeInterno();
         if (mi == null || mi.isBlank()) return;
+
         List<PersonDTO> list = new ArrayList<>();
+
+        // 1) Intento: arreglo directo
         try (JsonReader jr = Json.createReader(new StringReader(mi))) {
             JsonArray arr = jr.readArray();
             for (int i = 0; i < arr.size(); i++) {
@@ -183,23 +229,133 @@ public class PersonService {
                 PersonDTO dto = fromJsonPerson(obj);
                 if (dto != null) list.add(dto);
             }
-        } catch (Exception e) {
-            // fallback: intentar parsear como objeto con lista interna
+            r.setResultado(LIST_KEY, list);
+            return;
+        } catch (Exception ignore) {
+            // Pasar a objeto con arreglo interno
         }
+
+        // 2) Intento: objeto con arreglo interno
+        try (JsonReader jr = Json.createReader(new StringReader(mi))) {
+            JsonObject root = jr.readObject();
+            JsonArray arr = null;
+            if (root.containsKey("persons") && root.get("persons") instanceof JsonArray) {
+                arr = root.getJsonArray("persons");
+            } else if (root.containsKey("Persons") && root.get("Persons") instanceof JsonArray) {
+                arr = root.getJsonArray("Persons");
+            } else if (root.containsKey("PERSONS") && root.get("PERSONS") instanceof JsonArray) {
+                arr = root.getJsonArray("PERSONS");
+            } else if (root.containsKey("data") && root.get("data") instanceof JsonArray) {
+                arr = root.getJsonArray("data");
+            } else if (root.containsKey("list") && root.get("list") instanceof JsonArray) {
+                arr = root.getJsonArray("list");
+            }
+
+            if (arr != null) {
+                for (int i = 0; i < arr.size(); i++) {
+                    JsonObject obj = arr.getJsonObject(i);
+                    PersonDTO dto = fromJsonPerson(obj);
+                    if (dto != null) list.add(dto);
+                }
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.FINE, "No se pudo parsear lista de personas desde mensajeInterno", ex);
+        }
+
         r.setResultado(LIST_KEY, list);
     }
 
+    /**
+     * Convierte un JsonObject a PersonDTO aceptando alias de nombres y tipos.
+     */
     private PersonDTO fromJsonPerson(JsonObject o) {
         if (o == null) return null;
         PersonDTO p = new PersonDTO();
-        if (o.containsKey("id") && !o.isNull("id")) p.setId(o.getJsonNumber("id").longValue());
-        p.setFirstName(o.containsKey("firstName") && !o.isNull("firstName") ? o.getString("firstName") : null);
-        p.setLastName(o.containsKey("lastName") && !o.isNull("lastName") ? o.getString("lastName") : null);
-        p.setEmail(o.containsKey("email") && !o.isNull("email") ? o.getString("email") : null);
-        p.setUsername(o.containsKey("username") && !o.isNull("username") ? o.getString("username") : null);
-        p.setPassword(o.containsKey("password") && !o.isNull("password") ? o.getString("password") : null);
-        p.setStatus(o.containsKey("status") && !o.isNull("status") && !o.getString("status").isBlank() ? o.getString("status").charAt(0) : null);
-        p.setIsAdmin(o.containsKey("isAdmin") && !o.isNull("isAdmin") && !o.getString("isAdmin").isBlank() ? o.getString("isAdmin").charAt(0) : null);
+
+        // id: id | per_id | person_id
+        Long id = getLong(o, "id", "per_id", "person_id", "PER_ID");
+        p.setId(id);
+
+        // firstName: firstName | per_first_name | first_name | FIRST_NAME
+        p.setFirstName(getString(o, "firstName", "per_first_name", "first_name", "FIRST_NAME"));
+
+        // lastName: lastName | per_last_name | last_name | LAST_NAME
+        p.setLastName(getString(o, "lastName", "per_last_name", "last_name", "LAST_NAME"));
+
+        // email: email | EMAIL
+        p.setEmail(getString(o, "email", "EMAIL"));
+
+        // username: username | USERNAME
+        p.setUsername(getString(o, "username", "USERNAME"));
+
+        // password: password | PASSWORD
+        p.setPassword(getString(o, "password", "PASSWORD"));
+
+        // status: status | STATUS (string -> first char)
+        Character status = getChar(o, "status", "STATUS");
+        p.setStatus(status);
+
+        // isAdmin: isAdmin | is_admin | IS_ADMIN (string -> first char)
+        Character isAdmin = getChar(o, "isAdmin", "is_admin", "IS_ADMIN");
+        p.setIsAdmin(isAdmin);
+
         return p;
+    }
+
+    // ======== Helpers de lectura segura JSON ========
+
+    private String getString(JsonObject obj, String... keys) {
+        for (String k : keys) {
+            if (obj.containsKey(k) && !obj.isNull(k)) {
+                try {
+                    switch (obj.get(k).getValueType()) {
+                        case STRING:
+                            return obj.getString(k);
+                        case NUMBER:
+                            return obj.getJsonNumber(k).toString();
+                        case TRUE:
+                            return "true";
+                        case FALSE:
+                            return "false";
+                        default:
+                            // Como fallback, devolver representación textual
+                            return obj.get(k).toString();
+                    }
+                } catch (Exception ignore) {
+                }
+            }
+        }
+        return null;
+    }
+
+    private Long getLong(JsonObject obj, String... keys) {
+        for (String k : keys) {
+            if (obj.containsKey(k) && !obj.isNull(k)) {
+                try {
+                    switch (obj.get(k).getValueType()) {
+                        case NUMBER:
+                            return obj.getJsonNumber(k).longValue();
+                        case STRING:
+                            String s = obj.getString(k);
+                            if (s != null && !s.isBlank()) return Long.parseLong(s.trim());
+                            break;
+                        default:
+                            String raw = obj.get(k).toString();
+                            if (raw != null && !raw.isBlank()) return Long.parseLong(raw.replace("\"", "").trim());
+                    }
+                } catch (Exception ignore) {
+                }
+            }
+        }
+        return null;
+    }
+
+    private Character getChar(JsonObject obj, String... keys) {
+        String s = getString(obj, keys);
+        if (s != null) {
+            s = s.trim();
+            if (!s.isEmpty()) return s.charAt(0);
+        }
+        return null;
     }
 }

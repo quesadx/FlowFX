@@ -1,12 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?><!-- Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.3.payara-p1 (metro-4.0.3.payara-maintenance-004e4e3; 2023-11-08T12:59:53+0000) XMLWS-Impl/4.0.2 XMLWS-API/4.0.1 XMLB-Impl/4.0.4 XMLB-API/4.0.1 git-revision#004e4e3. --><xs:schema xmlns:tns="http://controller.flowfxws.una.ac.cr/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://controller.flowfxws.una.ac.cr/">
 
+<xs:element name="countActivitiesByProjectIds" type="tns:countActivitiesByProjectIds"/>
+
+<xs:element name="countActivitiesByProjectIdsResponse" type="tns:countActivitiesByProjectIdsResponse"/>
+
 <xs:element name="createPerson" type="tns:createPerson"/>
 
 <xs:element name="createPersonResponse" type="tns:createPersonResponse"/>
 
 <xs:element name="createProject" type="tns:createProject"/>
 
+<xs:element name="createProjectActivity" type="tns:createProjectActivity"/>
+
+<xs:element name="createProjectActivityResponse" type="tns:createProjectActivityResponse"/>
+
 <xs:element name="createProjectResponse" type="tns:createProjectResponse"/>
+
+<xs:element name="createProjectTracking" type="tns:createProjectTracking"/>
+
+<xs:element name="createProjectTrackingResponse" type="tns:createProjectTrackingResponse"/>
 
 <xs:element name="deletePerson" type="tns:deletePerson"/>
 
@@ -14,11 +26,31 @@
 
 <xs:element name="deleteProject" type="tns:deleteProject"/>
 
+<xs:element name="deleteProjectActivity" type="tns:deleteProjectActivity"/>
+
+<xs:element name="deleteProjectActivityResponse" type="tns:deleteProjectActivityResponse"/>
+
 <xs:element name="deleteProjectResponse" type="tns:deleteProjectResponse"/>
+
+<xs:element name="deleteProjectTracking" type="tns:deleteProjectTracking"/>
+
+<xs:element name="deleteProjectTrackingResponse" type="tns:deleteProjectTrackingResponse"/>
 
 <xs:element name="getAllPeople" type="tns:getAllPeople"/>
 
 <xs:element name="getAllPeopleResponse" type="tns:getAllPeopleResponse"/>
+
+<xs:element name="getAllProjectActivities" type="tns:getAllProjectActivities"/>
+
+<xs:element name="getAllProjectActivitiesResponse" type="tns:getAllProjectActivitiesResponse"/>
+
+<xs:element name="getAllProjectTrackings" type="tns:getAllProjectTrackings"/>
+
+<xs:element name="getAllProjectTrackingsResponse" type="tns:getAllProjectTrackingsResponse"/>
+
+<xs:element name="getAllProjects" type="tns:getAllProjects"/>
+
+<xs:element name="getAllProjectsResponse" type="tns:getAllProjectsResponse"/>
 
 <xs:element name="getPerson" type="tns:getPerson"/>
 
@@ -26,7 +58,27 @@
 
 <xs:element name="getProject" type="tns:getProject"/>
 
+<xs:element name="getProjectActivity" type="tns:getProjectActivity"/>
+
+<xs:element name="getProjectActivityResponse" type="tns:getProjectActivityResponse"/>
+
 <xs:element name="getProjectResponse" type="tns:getProjectResponse"/>
+
+<xs:element name="getProjectTracking" type="tns:getProjectTracking"/>
+
+<xs:element name="getProjectTrackingByProject" type="tns:getProjectTrackingByProject"/>
+
+<xs:element name="getProjectTrackingByProjectResponse" type="tns:getProjectTrackingByProjectResponse"/>
+
+<xs:element name="getProjectTrackingResponse" type="tns:getProjectTrackingResponse"/>
+
+<xs:element name="getProjectsForUser" type="tns:getProjectsForUser"/>
+
+<xs:element name="getProjectsForUserResponse" type="tns:getProjectsForUserResponse"/>
+
+<xs:element name="getRecentActivitiesForUser" type="tns:getRecentActivitiesForUser"/>
+
+<xs:element name="getRecentActivitiesForUserResponse" type="tns:getRecentActivitiesForUserResponse"/>
 
 <xs:element name="updatePerson" type="tns:updatePerson"/>
 
@@ -34,11 +86,87 @@
 
 <xs:element name="updateProject" type="tns:updateProject"/>
 
+<xs:element name="updateProjectActivity" type="tns:updateProjectActivity"/>
+
+<xs:element name="updateProjectActivityResponse" type="tns:updateProjectActivityResponse"/>
+
 <xs:element name="updateProjectResponse" type="tns:updateProjectResponse"/>
+
+<xs:element name="updateProjectTracking" type="tns:updateProjectTracking"/>
+
+<xs:element name="updateProjectTrackingResponse" type="tns:updateProjectTrackingResponse"/>
 
 <xs:element name="validateCredentials" type="tns:validateCredentials"/>
 
 <xs:element name="validateCredentialsResponse" type="tns:validateCredentialsResponse"/>
+
+<xs:complexType name="deletePerson">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deletePersonResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="respuesta">
+<xs:sequence>
+<xs:element name="estado" type="xs:boolean" minOccurs="0"/>
+<xs:element name="mensaje" type="xs:string" minOccurs="0"/>
+<xs:element name="mensajeInterno" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="validateCredentials">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="validateCredentialsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createPerson">
+<xs:sequence>
+<xs:element name="person" type="tns:personDTO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="personDTO">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0"/>
+<xs:element name="firstName" type="xs:string" minOccurs="0"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="isAdmin" type="xs:string" minOccurs="0"/>
+<xs:element name="lastName" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+<xs:element name="status" type="xs:string" minOccurs="0"/>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createPersonResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllProjects">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAllProjectsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
 
 <xs:complexType name="updateProject">
 <xs:sequence>
@@ -57,7 +185,7 @@
 <xs:element name="plannedEndDate" type="xs:dateTime" minOccurs="0"/>
 <xs:element name="plannedStartDate" type="xs:dateTime" minOccurs="0"/>
 <xs:element name="sponsorId" type="xs:long" minOccurs="0"/>
-<xs:element name="status" type="xs:unsignedShort" minOccurs="0"/>
+<xs:element name="status" type="xs:string" minOccurs="0"/>
 <xs:element name="techLeaderId" type="xs:long" minOccurs="0"/>
 <xs:element name="updatedAt" type="xs:dateTime" minOccurs="0"/>
 </xs:sequence>
@@ -66,14 +194,6 @@
 <xs:complexType name="updateProjectResponse">
 <xs:sequence>
 <xs:element name="return" type="tns:respuesta" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="respuesta">
-<xs:sequence>
-<xs:element name="estado" type="xs:boolean" minOccurs="0"/>
-<xs:element name="mensaje" type="xs:string" minOccurs="0"/>
-<xs:element name="mensajeInterno" type="xs:string" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -101,26 +221,28 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="deletePerson">
+<xs:complexType name="updateProjectActivity">
 <xs:sequence>
+<xs:element name="activity" type="tns:projectActivityDTO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="projectActivityDTO">
+<xs:sequence>
+<xs:element name="actualEndDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="actualStartDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="createdAt" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="description" type="xs:string" minOccurs="0"/>
+<xs:element name="executionOrder" type="xs:int" minOccurs="0"/>
 <xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="plannedEndDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="plannedStartDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="status" type="xs:string" minOccurs="0"/>
+<xs:element name="updatedAt" type="xs:dateTime" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="deletePersonResponse">
-<xs:sequence>
-<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="validateCredentials">
-<xs:sequence>
-<xs:element name="username" type="xs:string" minOccurs="0"/>
-<xs:element name="password" type="xs:string" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="validateCredentialsResponse">
+<xs:complexType name="updateProjectActivityResponse">
 <xs:sequence>
 <xs:element name="return" type="tns:respuesta" minOccurs="0"/>
 </xs:sequence>
@@ -132,20 +254,44 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="personDTO">
+<xs:complexType name="updatePersonResponse">
 <xs:sequence>
-<xs:element name="email" type="xs:string" minOccurs="0"/>
-<xs:element name="firstName" type="xs:string" minOccurs="0"/>
-<xs:element name="id" type="xs:long" minOccurs="0"/>
-<xs:element name="isAdmin" type="xs:string" minOccurs="0"/>
-<xs:element name="lastName" type="xs:string" minOccurs="0"/>
-<xs:element name="password" type="xs:string" minOccurs="0"/>
-<xs:element name="status" type="xs:string" minOccurs="0"/>
-<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="updatePersonResponse">
+<xs:complexType name="createProjectTracking">
+<xs:sequence>
+<xs:element name="tracking" type="tns:projectTrackingDTO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="projectTrackingDTO">
+<xs:sequence>
+<xs:element name="createdAt" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="createdBy" type="xs:long" minOccurs="0"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="observations" type="xs:string" minOccurs="0"/>
+<xs:element name="progressPercentage" type="xs:double" minOccurs="0"/>
+<xs:element name="projectId" type="xs:long" minOccurs="0"/>
+<xs:element name="trackingDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="updatedAt" type="xs:dateTime" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createProjectTrackingResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteProjectTracking">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteProjectTrackingResponse">
 <xs:sequence>
 <xs:element name="return" type="tns:respuesta" minOccurs="0"/>
 </xs:sequence>
@@ -163,13 +309,132 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="createPerson">
+<xs:complexType name="getProjectsForUser">
 <xs:sequence>
-<xs:element name="person" type="tns:personDTO" minOccurs="0"/>
+<xs:element name="userId" type="xs:long" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="createPersonResponse">
+<xs:complexType name="getProjectsForUserResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getRecentActivitiesForUser">
+<xs:sequence>
+<xs:element name="userId" type="xs:long" minOccurs="0"/>
+<xs:element name="maxResults" type="xs:int" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getRecentActivitiesForUserResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllProjectTrackings">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAllProjectTrackingsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllProjectActivities">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAllProjectActivitiesResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getProjectTracking">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getProjectTrackingResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createProject">
+<xs:sequence>
+<xs:element name="project" type="tns:projectDTO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createProjectResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getProjectTrackingByProject">
+<xs:sequence>
+<xs:element name="projectId" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getProjectTrackingByProjectResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createProjectActivity">
+<xs:sequence>
+<xs:element name="activity" type="tns:projectActivityDTO" minOccurs="0"/>
+<xs:element name="projectId" type="xs:long" minOccurs="0"/>
+<xs:element name="responsibleId" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createProjectActivityResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteProjectActivity">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteProjectActivityResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="updateProjectTracking">
+<xs:sequence>
+<xs:element name="tracking" type="tns:projectTrackingDTO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="updateProjectTrackingResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:respuesta" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getProjectActivity">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getProjectActivityResponse">
 <xs:sequence>
 <xs:element name="return" type="tns:respuesta" minOccurs="0"/>
 </xs:sequence>
@@ -185,16 +450,13 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="createProject">
+<xs:complexType name="countActivitiesByProjectIds">
 <xs:sequence>
-<xs:element name="project" type="tns:projectDTO" minOccurs="0"/>
-<xs:element name="leaderId" type="xs:long" minOccurs="0"/>
-<xs:element name="techLeaderId" type="xs:long" minOccurs="0"/>
-<xs:element name="sponsorId" type="xs:long" minOccurs="0"/>
+<xs:element name="projectIds" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="createProjectResponse">
+<xs:complexType name="countActivitiesByProjectIdsResponse">
 <xs:sequence>
 <xs:element name="return" type="tns:respuesta" minOccurs="0"/>
 </xs:sequence>

@@ -9,7 +9,7 @@ public class ProjectDTO {
     private Date plannedEndDate;
     private Date actualStartDate;
     private Date actualEndDate;
-    private Character status;
+    private String status;
     private Date createdAt;
     private Date updatedAt;
     private Long leaderUserId;
@@ -18,7 +18,7 @@ public class ProjectDTO {
 
     public ProjectDTO() {}
 
-    public ProjectDTO(Long id, String name, Date plannedStartDate, Date plannedEndDate, Date actualStartDate, Date actualEndDate, Character status, Date createdAt, Date updatedAt) {
+    public ProjectDTO(Long id, String name, Date plannedStartDate, Date plannedEndDate, Date actualStartDate, Date actualEndDate, String status, Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.plannedStartDate = plannedStartDate;
@@ -29,7 +29,7 @@ public class ProjectDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-    public ProjectDTO(Long id, String name, Date plannedStartDate, Date plannedEndDate, Date actualStartDate, Date actualEndDate, Character status, Date createdAt, Date updatedAt,
+    public ProjectDTO(Long id, String name, Date plannedStartDate, Date plannedEndDate, Date actualStartDate, Date actualEndDate, String status, Date createdAt, Date updatedAt,
                       Long leaderUserId, Long techLeaderId, Long sponsorId) {
         this(id, name, plannedStartDate, plannedEndDate, actualStartDate, actualEndDate, status, createdAt, updatedAt);
         this.leaderUserId = leaderUserId;
@@ -49,8 +49,8 @@ public class ProjectDTO {
     public void setActualStartDate(Date actualStartDate) { this.actualStartDate = actualStartDate; }
     public Date getActualEndDate() { return actualEndDate; }
     public void setActualEndDate(Date actualEndDate) { this.actualEndDate = actualEndDate; }
-    public Character getStatus() { return status; }
-    public void setStatus(Character status) { this.status = status; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
     public Date getUpdatedAt() { return updatedAt; }

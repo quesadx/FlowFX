@@ -6,7 +6,7 @@ import java.util.Date;
 public class ProjectActivityViewModel {
     private final LongProperty id = new SimpleLongProperty();
     private final StringProperty description = new SimpleStringProperty();
-    private final ObjectProperty<Character> status = new SimpleObjectProperty<>();
+    private final ObjectProperty<String> status = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> plannedStartDate = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> plannedEndDate = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> actualStartDate = new SimpleObjectProperty<>();
@@ -32,18 +32,18 @@ public class ProjectActivityViewModel {
     }
 
     public ProjectActivityDTO toDTO() {
-        return new ProjectActivityDTO(
-            getId() == 0L ? null : getId(),
-            getDescription(),
-            getStatus(),
-            getPlannedStartDate(),
-            getPlannedEndDate(),
-            getActualStartDate(),
-            getActualEndDate(),
-            getExecutionOrder(),
-            getCreatedAt(),
-            getUpdatedAt()
-        );
+        ProjectActivityDTO dto = new ProjectActivityDTO();
+        dto.setId(getId() == 0L ? null : getId());
+        dto.setDescription(getDescription());
+        dto.setStatus(getStatus()); // String
+        dto.setPlannedStartDate(getPlannedStartDate());
+        dto.setPlannedEndDate(getPlannedEndDate());
+        dto.setActualStartDate(getActualStartDate());
+        dto.setActualEndDate(getActualEndDate());
+        dto.setExecutionOrder(getExecutionOrder());
+        dto.setCreatedAt(getCreatedAt());
+        dto.setUpdatedAt(getUpdatedAt());
+        return dto;
     }
 
     public long getId() { return id.get(); }
@@ -54,9 +54,9 @@ public class ProjectActivityViewModel {
     public void setDescription(String value) { description.set(value); }
     public StringProperty descriptionProperty() { return description; }
 
-    public Character getStatus() { return status.get(); }
-    public void setStatus(Character value) { status.set(value); }
-    public ObjectProperty<Character> statusProperty() { return status; }
+    public String getStatus() { return status.get(); }
+    public void setStatus(String value) { status.set(value); }
+    public ObjectProperty<String> statusProperty() { return status; }
 
     public Date getPlannedStartDate() { return plannedStartDate.get(); }
     public void setPlannedStartDate(Date value) { plannedStartDate.set(value); }

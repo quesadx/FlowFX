@@ -10,7 +10,7 @@ public class ProjectViewModel {
     private final ObjectProperty<Date> plannedEndDate = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> actualStartDate = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> actualEndDate = new SimpleObjectProperty<>();
-    private final ObjectProperty<Character> status = new SimpleObjectProperty<>();
+    private final ObjectProperty<String> status = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> createdAt = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> updatedAt = new SimpleObjectProperty<>();
     private final LongProperty leaderUserId = new SimpleLongProperty();
@@ -76,9 +76,9 @@ public class ProjectViewModel {
     public void setActualEndDate(Date value) { actualEndDate.set(value); }
     public ObjectProperty<Date> actualEndDateProperty() { return actualEndDate; }
 
-    public Character getStatus() { return status.get(); }
-    public void setStatus(Character value) { status.set(value); }
-    public ObjectProperty<Character> statusProperty() { return status; }
+    public String getStatus() { return status.get(); }
+    public void setStatus(String value) { status.set(value); }
+    public ObjectProperty<String> statusProperty() { return status; }
 
     public Date getCreatedAt() { return createdAt.get(); }
     public void setCreatedAt(Date value) { createdAt.set(value); }

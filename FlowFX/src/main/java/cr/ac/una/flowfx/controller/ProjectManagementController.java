@@ -74,7 +74,7 @@ public class ProjectManagementController extends Controller implements Initializ
         dto.setName(getTrimmedText(txfProjectName));
         dto.setPlannedStartDate(getDateFromPicker(dpProjectStartDate));
         dto.setPlannedEndDate(getDateFromPicker(dpProjectEndDate));
-        dto.setStatus('P');
+        dto.setStatus("P");
 
     // Prefer selected PersonDTOs stored in context (set by selector dialog)
     PersonDTO leaderSel = (PersonDTO) AppContext.getInstance().get("txfLeaderIdSelectedPerson");

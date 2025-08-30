@@ -24,33 +24,35 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 /**
- * FXML Controller class
- *
- * @author quesadx
+ * Controller for the Project Expand view.
+ * Ensures status is handled as String ("P","R","S","C") and binds UI to ViewModel.
  */
 public class ProjectExpandController extends Controller implements Initializable {
 
     @FXML private AnchorPane root;
     @FXML private VBox vbCover;
     @FXML private MFXButton btnReturnManagement;
+
     @FXML private MFXTextField txfProjectName;
     @FXML private MFXTextField txfSponsorId;
     @FXML private MFXTextField txfLeaderId;
     @FXML private MFXTextField txfTechLeaderId;
-    @FXML private MFXDatePicker dpProjectStartDate;
-    @FXML private MFXDatePicker dpProjectStartDate1;
+
+    @FXML private MFXDatePicker dpProjectStartDate;   // planned start
+    @FXML private MFXDatePicker dpProjectStartDate1;  // planned end
+
     @FXML private MFXCircleToggleNode tgProjectStatusPending;
-    @FXML private ToggleGroup ProjectStatus;
     @FXML private MFXCircleToggleNode tgProjectStatusRunning;
     @FXML private MFXCircleToggleNode tgProjectStatusSuspended;
     @FXML private MFXCircleToggleNode tgProjectStatusCompleted;
-    
+    @FXML private ToggleGroup ProjectStatus;
+
     private final ProjectViewModel vm = new ProjectViewModel();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("Inicialize con parametros!");
-     }
+    }
 
     @Override
     public void initialize() {
@@ -65,6 +67,7 @@ public class ProjectExpandController extends Controller implements Initializable
             vm.setPlannedEndDate(initial.getPlannedEndDate());
             vm.setActualStartDate(initial.getActualStartDate());
             vm.setActualEndDate(initial.getActualEndDate());
+            // Status must be String (e.g., "P","R","S","C")
             vm.setStatus(initial.getStatus());
             vm.setCreatedAt(initial.getCreatedAt());
             vm.setUpdatedAt(initial.getUpdatedAt());
@@ -72,7 +75,8 @@ public class ProjectExpandController extends Controller implements Initializable
             vm.setTechLeaderId(initial.getTechLeaderId());
             vm.setSponsorId(initial.getSponsorId());
         } else {
-            vm.setStatus('P');
+            // Default to Pending as String
+            vm.setStatus("P");
         }
         bindFields();
     }
@@ -80,53 +84,71 @@ public class ProjectExpandController extends Controller implements Initializable
     @FXML
     private void onActionBtnReturnToManagement(ActionEvent event) {
         FlowController.getInstance().goView("ProjectManagementView");
-    Object nav = AppContext.getInstance().get("navigationBar");
+        Object nav = AppContext.getInstance().get("navigationBar");
         if (nav instanceof VBox) ((VBox) nav).setDisable(false);
     }
 
     private void bindFields() {
+        // Name
         txfProjectName.textProperty().bindBidirectional(vm.nameProperty());
+
+        // Dates
         bindDatePicker(dpProjectStartDate, true);
         bindDatePicker(dpProjectStartDate1, false);
-    tgProjectStatusPending.setUserData('P');
-        tgProjectStatusRunning.setUserData('R');
-        tgProjectStatusSuspended.setUserData('S');
-        tgProjectStatusCompleted.setUserData('C');
-    BindingUtils.bindToggleGroupToProperty(ProjectStatus, vm.statusProperty());
-    if (vm.getStatus() == null) ProjectStatus.selectToggle(tgProjectStatusPending);
 
-    bindNumericText(txfLeaderId, true, false);
-    bindNumericText(txfTechLeaderId, false, false);
-    bindNumericText(txfSponsorId, false, true);
+        // Status as String tokens
+        tgProjectStatusPending.setUserData("P");
+        tgProjectStatusRunning.setUserData("R");
+        tgProjectStatusSuspended.setUserData("S");
+        tgProjectStatusCompleted.setUserData("C");
+
+        // Bind ToggleGroup to ViewModel status (String)
+        BindingUtils.bindToggleGroupToProperty(ProjectStatus, vm.statusProperty());
+
+        // Default selection if empty
+        if (vm.getStatus() == null || vm.getStatus().isBlank()) {
+            ProjectStatus.selectToggle(tgProjectStatusPending);
+        }
+
+        // Numeric bindings for related IDs
+        bindNumericText(txfLeaderId, true, false);
+        bindNumericText(txfTechLeaderId, false, false);
+        bindNumericText(txfSponsorId, false, true);
     }
 
     private void bindDatePicker(MFXDatePicker picker, boolean isStart) {
         if (isStart) {
             vm.plannedStartDateProperty().addListener((obs, o, n) -> {
-                LocalDate ld = n == null ? null : Instant.ofEpochMilli(n.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate ld = n == null ? null
+                        : Instant.ofEpochMilli(n.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
                 if (ld != picker.getValue()) picker.setValue(ld);
             });
             picker.valueProperty().addListener((obs, o, n) -> {
-                Date d = n == null ? null : Date.from(n.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date d = n == null ? null
+                        : Date.from(n.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 if (d == null && vm.getPlannedStartDate() != null) vm.setPlannedStartDate(null);
                 else if (d != null && !d.equals(vm.getPlannedStartDate())) vm.setPlannedStartDate(d);
             });
             if (vm.getPlannedStartDate() != null) {
-                LocalDate ld = Instant.ofEpochMilli(vm.getPlannedStartDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate ld = Instant.ofEpochMilli(vm.getPlannedStartDate().getTime())
+                        .atZone(ZoneId.systemDefault()).toLocalDate();
                 picker.setValue(ld);
             }
         } else {
             vm.plannedEndDateProperty().addListener((obs, o, n) -> {
-                LocalDate ld = n == null ? null : Instant.ofEpochMilli(n.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate ld = n == null ? null
+                        : Instant.ofEpochMilli(n.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
                 if (ld != picker.getValue()) picker.setValue(ld);
             });
             picker.valueProperty().addListener((obs, o, n) -> {
-                Date d = n == null ? null : Date.from(n.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date d = n == null ? null
+                        : Date.from(n.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 if (d == null && vm.getPlannedEndDate() != null) vm.setPlannedEndDate(null);
                 else if (d != null && !d.equals(vm.getPlannedEndDate())) vm.setPlannedEndDate(d);
             });
             if (vm.getPlannedEndDate() != null) {
-                LocalDate ld = Instant.ofEpochMilli(vm.getPlannedEndDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate ld = Instant.ofEpochMilli(vm.getPlannedEndDate().getTime())
+                        .atZone(ZoneId.systemDefault()).toLocalDate();
                 picker.setValue(ld);
             }
         }
@@ -139,22 +161,25 @@ public class ProjectExpandController extends Controller implements Initializable
                 if (isLeader) vm.setLeaderUserId(v);
                 else if (isSponsor) vm.setSponsorId(v);
                 else vm.setTechLeaderId(v);
-            } catch (NumberFormatException ignored) { }
+            } catch (NumberFormatException ignored) {
+            }
         });
-        long init = isLeader ? vm.getLeaderUserId() : isSponsor ? vm.getSponsorId() : vm.getTechLeaderId();
+        long init = isLeader ? vm.getLeaderUserId() : (isSponsor ? vm.getSponsorId() : vm.getTechLeaderId());
         field.setText(init == 0L ? "" : String.valueOf(init));
     }
 
     @FXML
     private void onActionBtnSelectSponsor(ActionEvent event) {
+        // TODO: open sponsor selector and update vm.sponsorId
     }
 
     @FXML
     private void onActionBtnSelectLeader(ActionEvent event) {
+        // TODO: open leader selector and update vm.leaderUserId
     }
 
     @FXML
     private void onActionBtnSelectTechLeader(ActionEvent event) {
+        // TODO: open tech leader selector and update vm.techLeaderId
     }
-
 }

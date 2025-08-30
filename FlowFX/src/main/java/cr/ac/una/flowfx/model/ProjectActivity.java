@@ -53,7 +53,7 @@ public class ProjectActivity implements Serializable {
     private String description;
     @Basic(optional = false)
     @Column(name = "STATUS")
-    private Character status;
+    private String status;
     @Basic(optional = false)
     @Column(name = "PLANNED_START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -96,7 +96,7 @@ public class ProjectActivity implements Serializable {
         this.id = id;
     }
 
-    public ProjectActivity(Long id, String description, Character status, Date plannedStartDate, Date plannedEndDate, Integer executionOrder) {
+    public ProjectActivity(Long id, String description, String status, Date plannedStartDate, Date plannedEndDate, Integer executionOrder) {
         this.id = id;
         this.description = description;
         this.status = status;
@@ -121,11 +121,11 @@ public class ProjectActivity implements Serializable {
         this.description = description;
     }
 
-    public Character getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Character status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
