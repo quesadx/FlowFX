@@ -136,6 +136,9 @@
     -fx-border-focus: #4c6afe;      /* Focused border */
     -fx-shadow-light: rgba(0, 0, 0, 0.08);
     -fx-shadow-medium: rgba(0, 0, 0, 0.15);
+
+    /* Micro-interaction halo for blue glow accents */
+    -fx-focus-halo-blue: rgba(76, 106, 254, 0.28);
 }
 
 
@@ -149,10 +152,13 @@
     -fx-background-color: -fx-bg-filler;
 }
 
-.filler-rounded {                   /* Rounded neutral card */
-    -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
-    -fx-effect: dropshadow(gaussian, -fx-shadow-light, 10, 0.1, 0, 2);
+.filler-rounded {                   /* Rounded neutral card with soft elevation */
+    -fx-background-color:
+        linear-gradient(from 0% 0% to 0% 100%, derive(-fx-surface, 2%) 0%, derive(-fx-surface, -2%) 100%),
+        -fx-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 24, 23;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-light, 12, 0.15, 0, 2);
     -fx-padding: 8;
 }
 
@@ -173,23 +179,31 @@
     -fx-border-radius: 24;
 }
 
-.container-sub {                    /* Secondary card/panel */
-    -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+.container-sub {                    /* Secondary card/panel (soft-neumorphic) */
+    -fx-background-color:
+        linear-gradient(from 0% 0% to 0% 100%, derive(-fx-surface, 2%) 0%, derive(-fx-surface, -2%) 100%),
+        -fx-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 24, 23;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
     -fx-border-radius: 24;
     -fx-padding: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0.2, 0, 2);
 }
 
 /* Alias missing from previous CSS but used in FXML */
 .container--sub {                   /* Alias to .container-sub */
-    -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-color:
+        linear-gradient(from 0% 0% to 0% 100%, derive(-fx-surface, 2%) 0%, derive(-fx-surface, -2%) 100%),
+        -fx-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 24, 23;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
     -fx-border-radius: 24;
     -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0.18, 0, 2);
 }
 
 .container-sub-dark {               /* Darker separator panel */
@@ -310,20 +324,33 @@
 
 /* MaterialFX button base */
 .mfx-button {
-    -fx-background-color: #ffffff7e, rgba(0,0,0,0.02);
+    /* Subtle raised button with micro bevel */
+    -fx-background-color:
+        linear-gradient(derive(-fx-btn-base, 3%), derive(-fx-btn-base, -2%)),
+        -fx-btn-base;
     -fx-background-insets: 0, 1;
-    -fx-background-radius: 24, 24;
+    -fx-background-radius: 24, 23;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
     -fx-border-radius: 24;
     -fx-text-fill: -fx-text-primary;
     -fx-padding: 8 14 8 14;
 }
-.mfx-button:hover   { -fx-background-color: derive(-fx-btn-base, -5%); }
-.mfx-button:pressed { -fx-background-color: -fx-btn-base-pressed; }
-.mfx-button:focused { -fx-effect: dropshadow(gaussian, -fx-faint-focus-color, 10, 0.4, 0, 0); }
+.mfx-button:hover   {
+    -fx-background-color:
+        linear-gradient(derive(-fx-btn-base, 1%), derive(-fx-btn-base, -3%)),
+        derive(-fx-btn-base, -2%);
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.35, 0, 0);
+}
+.mfx-button:pressed {
+    -fx-background-color: -fx-btn-base-pressed;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.22), 10, 0.3, 0, 1);
+}
+.mfx-button:focused {
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.45, 0, 0);
+}
 .mfx-button:disabled {
-    -fx-opacity: 0.6;
+    -fx-opacity: 0.65;
     -fx-cursor: default;
 }
 
@@ -338,9 +365,16 @@
     -fx-font-size: 14px;
     -fx-padding: 8 16 8 16;
 }
-.mfx-button.jfx-button:hover   { -fx-background-color: -fx-primary; }
-.mfx-button.jfx-button:pressed { -fx-background-color: derive(-fx-primary-600, -10%); }
-.mfx-button.jfx-button:focused { -fx-effect: dropshadow(gaussian, -fx-faint-focus-color, 12, 0.5, 0, 0); }
+.mfx-button.jfx-button:hover   {
+    -fx-background-color:
+        linear-gradient(derive(-fx-primary, 4%), derive(-fx-primary, -2%)),
+        -fx-primary;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 24, 23;
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.45, 0, 0);
+}
+.mfx-button.jfx-button:pressed { -fx-background-color: derive(-fx-primary-600, -10%); -fx-effect: innershadow(gaussian, rgba(0,0,0,0.24), 10, 0.35, 0, 1); }
+.mfx-button.jfx-button:focused { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 12, 0.55, 0, 0); }
 .mfx-button.jfx-button:disabled { -fx-background-color: #aab7ff; -fx-opacity: 0.7; }
 
 
@@ -376,6 +410,8 @@
     -fx-border-color: -fx-border-focus;
     -fx-border-width: 2;
     -fx-border-radius: 24;
+    /* Blue halo like buttons */
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0);
 }
 
 .mfx-text-field:focus-within,
@@ -468,15 +504,15 @@
     -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24;
 }
 .mfx-combo-box:hover   { -fx-border-color: -fx-border-focus; }
-.mfx-combo-box:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; }
+.mfx-combo-box:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0); }
 .mfx-combo-box .arrow  { -fx-background-color: -fx-text-secondary; }
 .mfx-combo-box:disabled { -fx-background-color: -fx-surface-variant; -fx-border-color: -fx-border-default; }
 
 .mfx-scroll-pane, .mfx-scroll-pane .viewport { -fx-background-color: transparent; }
 .mfx-scroll-pane .scroll-bar { -fx-background-color: transparent; }
 .mfx-scroll-pane .scroll-bar .track { -fx-background-color: -fx-surface-variant; -fx-background-radius: 8; }
-.mfx-scroll-pane .scroll-bar .thumb { -fx-background-color: #c2c7d0; -fx-background-radius: 8; }
-.mfx-scroll-pane .scroll-bar .thumb:hover { -fx-background-color: -fx-border-focus; }
+.mfx-scroll-pane .scroll-bar .thumb { -fx-background-color: #c2c7d0; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 1); }
+.mfx-scroll-pane .scroll-bar .thumb:hover { -fx-background-color: -fx-border-focus; -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.35, 0, 0); }
 
 .mfx-slider .track { -fx-background-color: -fx-border-default; -fx-background-radius: 12; }
 .mfx-slider .thumb { -fx-background-color: -fx-border-focus; -fx-background-radius: 12; }
@@ -504,6 +540,7 @@
     -fx-border-color: -fx-border-focus; -fx-border-width: 2;
     -fx-background-radius: 24; -fx-border-radius: 24;
     -fx-focus-color: transparent; -fx-faint-focus-color: transparent;
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0);
 }
 .text-field:disabled, .password-field:disabled { -fx-background-color: -fx-surface-variant; -fx-border-color: -fx-border-default; }
 
@@ -519,7 +556,7 @@
 }
 .list-view .virtual-flow, .tree-view .virtual-flow { -fx-background-color: transparent; }
 .list-view .list-cell, .tree-view .tree-cell { -fx-background-color: transparent; -fx-text-fill: -fx-text-primary; -fx-border-color: transparent; }
-.list-view .list-cell:hover, .tree-view .tree-cell:hover { -fx-background-color: -fx-surface-hover; -fx-background-radius: 12; }
+.list-view .list-cell:hover, .tree-view .tree-cell:hover { -fx-background-color: -fx-surface-hover; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0.2, 0, 1); }
 .list-view .list-cell:selected, .tree-view .tree-cell:selected { -fx-background-color: -fx-primary-200; -fx-text-fill: -fx-text-primary; }
 .list-view .list-cell:focused, .tree-view .tree-cell:focused { -fx-effect: dropshadow(gaussian, -fx-faint-focus-color, 12, 0.5, 0, 0); }
 
@@ -546,7 +583,7 @@
 .combo-box-popup .list-view { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 12; }
 
 .date-picker { -fx-background-color: -fx-surface; -fx-background-radius: 24; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24; }
-.date-picker:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; }
+.date-picker:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0); }
 .date-picker .text-field { -fx-background-color: transparent; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; }
 .date-picker-popup { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 12; }
 .date-picker-popup .month-year-pane, .date-picker-popup .calendar-grid { -fx-background-color: transparent; }
@@ -558,8 +595,8 @@
 .scroll-pane, .scroll-pane .viewport { -fx-background-color: transparent; }
 .scroll-pane .scroll-bar { -fx-background-color: transparent; }
 .scroll-pane .scroll-bar .track  { -fx-background-color: -fx-surface-variant; -fx-background-radius: 8; }
-.scroll-pane .scroll-bar .thumb  { -fx-background-color: #c2c7d0; -fx-background-radius: 8; }
-.scroll-pane .scroll-bar .thumb:hover { -fx-background-color: -fx-border-focus; }
+.scroll-pane .scroll-bar .thumb  { -fx-background-color: #c2c7d0; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.2, 0, 1); }
+.scroll-pane .scroll-bar .thumb:hover { -fx-background-color: -fx-border-focus; -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.35, 0, 0); }
 
 /* Selections */
 .check-box { -fx-text-fill: -fx-text-primary; }
@@ -577,13 +614,13 @@
 }
 .toggle-button:hover   { -fx-background-color: derive(-fx-btn-base, -10%); }
 .toggle-button:pressed { -fx-background-color: -fx-btn-base-pressed; }
-.toggle-button:selected { -fx-background-color: -fx-primary-600; -fx-text-fill: -fx-text-inverse; }
+.toggle-button:selected { -fx-background-color: -fx-primary-600; -fx-text-fill: -fx-text-inverse; -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0); }
 
 /* Tabs & panels */
 .tab-pane, .tab-pane .tab-header-area { -fx-background-color: transparent; }
 .tab-pane .tab { -fx-background-color: -fx-surface-variant; -fx-background-radius: 20; -fx-border-color: -fx-border-default; -fx-border-radius: 20; }
 .tab-pane .tab:hover { -fx-background-color: derive(-fx-surface-variant, -5%); }
-.tab-pane .tab:selected { -fx-background-color: -fx-surface; }
+.tab-pane .tab:selected { -fx-background-color: -fx-surface; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0.25, 0, 1); }
 .tab-pane .tab .tab-label { -fx-text-fill: -fx-text-primary; -fx-font-weight: bold; }
 
 .titled-pane { -fx-background-color: transparent; -fx-text-fill: -fx-text-primary; }
@@ -602,7 +639,7 @@
 .context-menu { -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-radius: 12; }
 .menu-bar { -fx-background-insets: 0; -fx-border-color: -fx-border-default; -fx-border-width: 0 0 1 0; }
 .menu-item:focused, .menu-item:armed { -fx-background-color: -fx-surface-hover; }
-.tooltip { -fx-background-color: -fx-surface; -fx-text-fill: -fx-text-primary; -fx-background-radius: 10; -fx-border-color: -fx-border-default; -fx-border-radius: 10; -fx-font-size: 12px; }
+.tooltip { -fx-background-color: -fx-surface; -fx-text-fill: -fx-text-primary; -fx-background-radius: 10; -fx-border-color: -fx-border-default; -fx-border-radius: 10; -fx-font-size: 12px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.3, 0, 2); }
 
 /* Misc */
 .spinner { -fx-background-color: -fx-surface; -fx-background-radius: 24; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24; }
@@ -1882,3 +1919,64 @@
     -fx-border-color: -fx-border-default;
     -fx-border-radius: 12;
 }
+
+/* ========================================
+   12) ADDITIONAL HALOS & NEUMORPHIC TOUCHES
+   -----------------------------------------
+   Subtle blue halos and soft elevation on more components to keep
+   the micro-interactions consistent across the app.
+   These appear at the end to override any earlier duplicate rules.
+   ======================================== */
+
+/* Cards & containers: slight lift on hover */
+.filler-rounded:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 14, 0.25, 0, 3);
+}
+.container-sub:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 14, 0.25, 0, 3);
+}
+.container--sub:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0.22, 0, 2);
+}
+
+/* Checkboxes & radios: consistent blue halo on focus */
+.mfx-check-box:focused .box { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0); }
+.check-box:focused .box     { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0); }
+.radio-button:focused .radio { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0); }
+
+/* Table rows: subtle halo when focused for keyboard users */
+.mfx-table-view .table-row-cell:focused { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.35, 0, 0); }
+.table-view .table-row-cell:focused, .tree-table-view .tree-table-row-cell:focused {
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.35, 0, 0);
+}
+
+/* Pagination: blue halo on focused number buttons */
+.pagination .number-button:focused { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0); }
+
+/* Sliders: glow thumb on hover */
+.slider .thumb:hover     { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0); }
+.mfx-slider .thumb:hover { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0); }
+
+/* Choice inputs: add consistent halo on focus (core + MFX) */
+.combo-box-base:focused, .choice-box:focused, .date-picker:focused, .mfx-combo-box:focused {
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0);
+}
+
+/* Text inputs: halo on focus for core controls */
+.text-field:focused, .password-field:focused, .text-area:focused {
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0);
+}
+
+/* Toggle buttons: a small halo when selected */
+.toggle-button:selected { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0); }
+
+/* Tabs: match earlier elevated selected tab effect */
+.tab-pane .tab:selected { -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0.25, 0, 1); }
+
+/* Scrollbar thumbs: unify hover glow across core & MFX */
+.scroll-pane .scroll-bar .thumb:hover, .mfx-scroll-pane .scroll-bar .thumb:hover {
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.35, 0, 0);
+}
+
+/* Tooltip: subtle depth to float above content */
+.tooltip { -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.3, 0, 2); }
