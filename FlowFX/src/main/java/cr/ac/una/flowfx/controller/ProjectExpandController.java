@@ -170,16 +170,32 @@ public class ProjectExpandController extends Controller implements Initializable
 
     @FXML
     private void onActionBtnSelectSponsor(ActionEvent event) {
-        // TODO: open sponsor selector and update vm.sponsorId
+        openPersonSelector(txfSponsorId, "ProjectExpand.sponsor.selected");
     }
 
     @FXML
     private void onActionBtnSelectLeader(ActionEvent event) {
-        // TODO: open leader selector and update vm.leaderUserId
+        openPersonSelector(txfLeaderId, "ProjectExpand.leader.selected");
     }
 
     @FXML
     private void onActionBtnSelectTechLeader(ActionEvent event) {
-        // TODO: open tech leader selector and update vm.techLeaderId
+        openPersonSelector(txfTechLeaderId, "ProjectExpand.techleader.selected");
+    }
+
+    private void openPersonSelector(MFXTextField target, String contextKey) {
+        target.setEditable(true);
+        FlowController.getInstance().goViewInWindowModal("PersonSelectionView", (javafx.stage.Stage) root.getScene().getWindow(), false);
+        Object sel = AppContext.getInstance().get("personSelectionResult");
+        if (sel instanceof cr.ac.una.flowfx.model.PersonDTO p) {
+            String label = (p.getFirstName() == null ? "" : p.getFirstName().trim()) + " " + (p.getLastName() == null ? "" : p.getLastName().trim());
+            target.setText(label.trim());
+            if (target == txfLeaderId) vm.setLeaderUserId(p.getId() == null ? 0L : p.getId());
+            else if (target == txfTechLeaderId) vm.setTechLeaderId(p.getId() == null ? 0L : p.getId());
+            else if (target == txfSponsorId) vm.setSponsorId(p.getId() == null ? 0L : p.getId());
+            // store entire DTO for optional later use
+            AppContext.getInstance().set(contextKey, p);
+            target.setEditable(false);
+        }
     }
 }

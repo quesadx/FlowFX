@@ -144,6 +144,14 @@ public class MainController extends Controller implements Initializable {
         Respuesta response = personService.validateCredentials(username, password);
         if (Boolean.TRUE.equals(response.getEstado())) {
             user = (PersonDTO) response.getResultado("Person");
+            if (user == null) {
+                // Defensive: server reported success but did not include a Person payload.
+                // Likely cause: WS did not set mensajeInterno with a Person JSON.
+                System.out.println("Login success without Person payload. mensajeInterno=" + response.getMensajeInterno());
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(),
+                        "No se recibió información del usuario. Intente de nuevo o contacte al administrador.");
+                return;
+            }
             AppContext.getInstance().set("user", user);
             userLoggedIn = true;
 

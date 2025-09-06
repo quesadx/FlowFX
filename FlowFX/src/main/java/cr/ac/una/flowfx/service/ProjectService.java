@@ -129,7 +129,9 @@ public class ProjectService {
             if (project == null || project.getId() == null)
                 return new Respuesta(false, "El proyecto y su 'id' son requeridos.", "update.project.null");
 
-            cr.ac.una.flowfx.ws.Respuesta wsResp = port.updateProject(toWs(project, null, null, null));
+            cr.ac.una.flowfx.ws.Respuesta wsResp = port.updateProject(
+                    toWs(project, project.getLeaderUserId(), project.getTechLeaderId(), project.getSponsorId())
+            );
             Respuesta r = mapRespuesta(wsResp);
 
             if (Boolean.TRUE.equals(r.getEstado())) {
@@ -239,6 +241,31 @@ public class ProjectService {
         ProjectDTO dto = new ProjectDTO();
         dto.setId(getLong(obj, "id", "project_id", "projectId"));
         dto.setName(getString(obj, "name", "project_name", "projectName"));
+
+        // Dates as epoch millis
+        Long psd = getLong(obj, "plannedStartDate", "planned_start_date", "plannedStart");
+        Long ped = getLong(obj, "plannedEndDate", "planned_end_date", "plannedEnd");
+        Long asd = getLong(obj, "actualStartDate", "actual_start_date", "actualStart");
+        Long aed = getLong(obj, "actualEndDate", "actual_end_date", "actualEnd");
+        if (psd != null) dto.setPlannedStartDate(new java.util.Date(psd));
+        if (ped != null) dto.setPlannedEndDate(new java.util.Date(ped));
+        if (asd != null) dto.setActualStartDate(new java.util.Date(asd));
+        if (aed != null) dto.setActualEndDate(new java.util.Date(aed));
+
+        // Status token
+        String st = getString(obj, "status", "statusCode");
+        if (st != null && !st.isBlank()) dto.setStatus(st.substring(0, 1).toUpperCase());
+
+        // Relations
+        dto.setLeaderUserId(getLong(obj, "leaderUserId", "leaderId", "leader_user_id"));
+        dto.setTechLeaderId(getLong(obj, "techLeaderId", "technicalLeaderId", "tech_leader_id"));
+        dto.setSponsorId(getLong(obj, "sponsorId", "sponsor_id"));
+
+        // Timestamps
+        Long createdAt = getLong(obj, "createdAt", "created_at");
+        Long updatedAt = getLong(obj, "updatedAt", "updated_at");
+        if (createdAt != null) dto.setCreatedAt(new java.util.Date(createdAt));
+        if (updatedAt != null) dto.setUpdatedAt(new java.util.Date(updatedAt));
         return dto;
     }
 
