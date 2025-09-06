@@ -1,0 +1,1224 @@
+/* Full backup of styles.css taken on 2025-08-09 before switching to dark theme */
+
+/* ========================================
+   BASE THEME VARIABLES
+   ======================================== */
+* {
+    /* Primary Color Palette */
+    -fx-primary: #5c77ff;
+    -fx-primary-light: #91a3ff;
+    -fx-primary-dark: #4c6afe;
+    -fx-secondary: #252835;
+    
+    /* Background Colors */
+    -fx-bg-primary: #f4f3f0;
+    -fx-bg-secondary: #e9e9e9;
+    -fx-bg-filler: #f8f8f8fd;
+    -fx-surface: #ffffff;
+    -fx-surface-variant: #f5f5f5;
+    -fx-surface-hover: #f0f0f0;
+    
+    /* Button Colors */
+    -fx-btn-base: #ffffff;
+    -fx-btn-base-pressed: #91a3ff;
+    
+    /* Semantic Color System */
+    -fx-red: #fcc6c6;
+    -fx-red-border: #d15a5a;
+    -fx-yellow: #f9eacc;
+    -fx-yellow-border: #a19140;
+    -fx-purple: #d4cdff;
+    -fx-purple-border: #9656ad;
+    -fx-blue: #cae5ff;
+    -fx-blue-border: #a6c8ff;
+    -fx-green: #a8e6aa;
+    -fx-green-border: #8bff8b;
+    
+    /* Text Colors */
+    -fx-text-primary: #252835;
+    -fx-text-secondary: #6b7280;
+    -fx-text-inverse: #ffffff;
+    
+    /* Border and Effects */
+    -fx-border-default: #f1f1f1;
+    -fx-border-focus: #5c77ff;
+    -fx-shadow-light: rgba(0, 0, 0, 0.1);
+    -fx-shadow-medium: rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================
+   FONT DEFINITIONS
+   ======================================== */
+@font-face {
+    font-family: 'Organo';
+    src: url('/cr/ac/una/flowfx/resources/font/Organo.ttf');
+}
+
+@font-face {
+    font-family: 'Outfit-Bold';
+    src: url('/cr/ac/una/flowfx/resources/font/Outfit-VariableFont_wght.ttf');
+}
+
+/* ========================================
+   WINDOW HANDLE
+   ======================================== */
+
+.handle {
+    /* make the cursor be the open hand */
+    -fx-cursor: open-hand;
+}
+
+.handle:focused {
+    -fx-cursor: hand;
+}
+
+   
+/* ========================================
+   BASE COMPONENT STYLES
+   ======================================== */
+
+/* ========================================
+   CONTAINER COMPONENTS
+   ======================================== */
+.container {
+    -fx-background-color: -fx-bg-primary;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-padding: 8;
+}
+
+.container--no-padding {
+    -fx-background-color: -fx-bg-primary;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-padding: 8;
+}
+
+.container-sub-dark {
+    -fx-background-color: #c5c5c5;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--semitransparent {
+    -fx-background-color: rgba(0, 0, 0, 0.041);
+    -fx-background-radius: 24;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-padding: 8;
+}
+
+.container-sub--no-padding {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--purple {
+    -fx-background-color: -fx-purple;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--red {
+    -fx-background-color: -fx-red;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--yellow {
+    -fx-background-color: -fx-yellow;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub--blue {
+    -fx-background-color: -fx-blue;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.container-sub-rounded-top {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24 24 12 12;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 24 24 8 8;
+    -fx-padding: 4;
+}
+
+.container-sub-rounded-bottom {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12 12 24 24;
+    -fx-border-color: -fx-bg-secondary;
+    -fx-border-width: 1;
+    -fx-border-radius: 8 8 24 24;
+    -fx-padding: 4;
+}
+
+.filler {
+    -fx-background-color: -fx-bg-filler;
+}
+
+.filler-rounded {
+    -fx-background-color: -fx-bg-filler;
+    -fx-background-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+    -fx-padding: 8;
+}
+
+.handle {
+    -fx-cursor: hand;
+}
+
+.handle:focused {
+    -fx-effect: dropshadow(gaussian, -fx-border-focus, 2, 0, 0, 0);
+}
+
+/* ========================================
+   MATERIALFX BUTTON COMPONENTS
+   ======================================== */
+.mfx-button {
+    -fx-background-color: #ffffff7e;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-padding: 8;
+
+}
+.mfx-button:hover {
+    -fx-background-color: derive(-fx-btn-base, -10%);
+    -fx-background-radius: 24;
+    -fx-padding: 8;
+}
+
+.mfx-button:pressed {
+    -fx-background-color: -fx-btn-base-pressed;
+    -fx-background-radius: 24;
+    -fx-padding: 8;
+}
+
+.mfx-button:focused {
+    -fx-background-color: -fx-btn-base;
+    -fx-background-radius: 24;
+    -fx-padding: 8;
+}
+
+.mfx-button.jfx-button {
+    -fx-background-color: #4c6afe;
+    -fx-background-radius: 24;
+    -fx-border-color: derive(-fx-primary, -10%);
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-text-fill: -fx-text-inverse;
+    -fx-font-size: 14px;
+    -fx-padding: 8;
+}
+
+/* ========================================
+   MATERIALFX TEXTFIELD COMPONENTS
+   ======================================== */
+.mfx-text-field {
+    -mfx-main: -fx-surface;
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-surface;
+    -fx-border-radius: 24;
+}
+
+.mfx-text-field:readonly,
+.mfx-text-field:readonly .text-field {
+    -fx-cursor: default;
+}
+
+.mfx-text-field .text-field {
+    -fx-highlight-fill: derive(-fx-primary, 80%);
+    -fx-prompt-text-fill: -fx-text-secondary;
+    -fx-text-fill: -fx-text-primary;
+    -fx-text-box-border: transparent;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    /* Prevent inner border so only the outer MFX container draws focus */
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.mfx-text-field:focus-within {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+    -fx-border-radius: 24;
+}
+
+/* Ensure container itself does not draw a separate focus halo/effect */
+.mfx-text-field:focus-within,
+.mfx-text-field:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: none;
+}
+
+.mfx-text-field .floating-text {
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.mfx-text-field:floating .floating-text {
+    -fx-background-color: -fx-surface;
+    -fx-text-fill: -fx-border-focus;
+}
+
+.mfx-text-field:focus-within .floating-text {
+    -fx-text-fill: -fx-border-focus;
+}
+
+.mfx-text-field .measure-unit {
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.mfx-text-field .text-field:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    /* Prevent double ring: no inner border/background on focus */
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.mfx-text-field:disabled {
+    -fx-border-color: -fx-border-default;
+    -fx-background-color: -fx-surface-variant;
+}
+
+.mfx-text-field:disabled .floating-text {
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.mfx-text-field:disabled .text-field {
+    -fx-text-inner-color: -fx-text-secondary;
+}
+
+/* Mirror rules for MFXPasswordField to keep behavior consistent */
+.mfx-password-field {
+    -mfx-main: -fx-surface;
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-surface;
+    -fx-border-radius: 24;
+}
+
+.mfx-password-field .password-field {
+    -fx-highlight-fill: derive(-fx-primary, 80%);
+    -fx-prompt-text-fill: -fx-text-secondary;
+    -fx-text-fill: -fx-text-primary;
+    -fx-text-box-border: transparent;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.mfx-password-field:focus-within {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+    -fx-border-radius: 24;
+}
+
+/* Ensure container itself does not draw a separate focus halo/effect */
+.mfx-password-field:focus-within,
+.mfx-password-field:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: none;
+}
+
+.mfx-password-field .floating-text { -fx-text-fill: -fx-text-secondary; }
+.mfx-password-field:floating .floating-text { -fx-background-color: -fx-surface; -fx-text-fill: -fx-border-focus; }
+.mfx-password-field:focus-within .floating-text { -fx-text-fill: -fx-border-focus; }
+
+.mfx-password-field .password-field:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.mfx-password-field:disabled {
+    -fx-border-color: -fx-border-default;
+    -fx-background-color: -fx-surface-variant;
+}
+.mfx-password-field:disabled .floating-text { -fx-text-fill: -fx-text-secondary; }
+.mfx-password-field:disabled .password-field { -fx-text-inner-color: -fx-text-secondary; }
+
+/* ========================================
+   MATERIALFX LISTVIEW COMPONENTS
+   ======================================== */
+.mfx-list-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.mfx-list-view .virtual-flow {
+    -fx-background-color: transparent;
+    -fx-background-radius: 24;
+}
+
+.mfx-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: transparent;
+}
+
+.mfx-list-view .list-cell:selected {
+    -fx-background-color: -fx-primary;
+    -fx-background-radius: 24;
+    -fx-text-fill: -fx-text-inverse;
+}
+
+.mfx-list-view .list-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+    -fx-background-radius: 24;
+}
+
+.mfx-list-view .list-cell:focused {
+    -fx-background-color: derive(-fx-primary, 20%);
+    -fx-background-radius: 24;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* ========================================
+   GLOBAL DOCK OVERLAY (macOS-style)
+   ======================================== */
+.fx-dock {
+    -fx-background-color: rgba(255,255,255,0.35);
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(255,255,255,0.55);
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0.2, 0, 6);
+}
+
+.fx-dock-item {
+    -fx-padding: 8 10 8 10;
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+}
+.fx-dock-item:hover {
+    -fx-background-color: rgba(255,255,255,0.28);
+}
+
+.fx-dock-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 8, 0.3, 0, 1);
+}
+
+/* ========================================
+   MATERIALFX TABLEVIEW COMPONENTS
+   ======================================== */
+.mfx-table-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.mfx-table-view .column-header {
+    -fx-background-color: -fx-surface-variant;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 0 0 1 0;
+    -fx-font-weight: bold;
+}
+
+.mfx-table-view .column-header:hover {
+    -fx-background-color: derive(-fx-surface-variant, -5%);
+}
+
+.mfx-table-view .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 0 0 1 0;
+}
+
+.mfx-table-view .table-row-cell:selected {
+    -fx-background-color: derive(-fx-primary, 80%);
+    -fx-text-fill: -fx-text-primary;
+}
+
+.mfx-table-view .table-row-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.mfx-table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-text-fill: inherit;
+}
+
+/* ========================================
+   MATERIALFX CHECKBOX COMPONENTS
+   ======================================== */
+.mfx-check-box {
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 14px;
+}
+
+.mfx-check-box .box {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.mfx-check-box:hover .box {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.mfx-check-box:selected .box {
+    -fx-background-color: -fx-border-focus;
+    -fx-border-color: -fx-border-focus;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.mfx-check-box:disabled .box {
+    -fx-background-color: -fx-surface-variant;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* ========================================
+   MATERIALFX COMBOBOX COMPONENTS
+   ======================================== */
+.mfx-combo-box {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.mfx-combo-box:hover {
+    -fx-border-color: -fx-border-focus;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+}
+
+.mfx-combo-box:focused {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+}
+
+.mfx-combo-box .arrow {
+    -fx-background-color: -fx-text-secondary;
+}
+
+.mfx-combo-box:disabled {
+    -fx-background-color: -fx-surface-variant;
+    -fx-border-color: -fx-border-default;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+}
+
+/* ========================================
+   MATERIALFX SCROLLPANE COMPONENTS
+   ======================================== */
+.mfx-scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.mfx-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.mfx-scroll-pane .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.mfx-scroll-pane .scroll-bar .track {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-radius: 12;
+}
+
+.mfx-scroll-pane .scroll-bar .thumb {
+    -fx-background-color: -fx-text-secondary;
+    -fx-background-radius: 12;
+}
+
+.mfx-scroll-pane .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 12;
+}
+
+/* ========================================
+   MATERIALFX SLIDER COMPONENTS
+   ======================================== */
+.mfx-slider .track {
+    -fx-background-color: -fx-border-default;
+    -fx-background-radius: 12;
+}
+
+.mfx-slider .thumb {
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 12;
+}
+
+.mfx-slider .colored-track {
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 12;
+}
+
+.mfx-slider:disabled .track {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-radius: 12;
+}
+
+.mfx-slider:disabled .thumb {
+    -fx-background-color: -fx-text-secondary;
+    -fx-background-radius: 12;
+}
+
+/* ========================================
+   MATERIALFX PROGRESSBAR COMPONENTS
+   ======================================== */
+.mfx-progress-bar {
+    -fx-background-radius: 12;
+    -fx-background-color: -fx-border-default;
+}
+
+.mfx-progress-bar .track {
+    -fx-background-color: -fx-border-default;
+    -fx-background-radius: 12;
+}
+
+.mfx-progress-bar .bar {
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+}
+
+/* ========================================
+   ICON DEFINITIONS
+   ======================================== */
+.jfx-home > ImageView { -fx-image: url("../resources/icons/lucide--home.png"); }
+.jfx-settings > ImageView { -fx-image: url("../resources/icons/lucide--settings.png"); }
+.jfx-projects > ImageView { -fx-image: url("../resources/icons/lucide--folder-search.png"); }
+.jfx-maximize > ImageView { -fx-image: url("../resources/icons/lucide--maximize.png"); }
+.jfx-minimize > ImageView { -fx-image: url("../resources/icons/lucide--minimize.png"); }
+.jfx-close > ImageView { -fx-image: url("../resources/icons/lucide--x.png"); }
+.jfx-expand > ImageView { -fx-image: url("../resources/icons/lucide--fullscreen.png"); }
+.jfx-edit > ImageView { -fx-image: url("../resources/icons/lucide--edit.png"); }
+.jfx-add > ImageView { -fx-image: url("../resources/icons/lucide--plus.png"); }
+.jfx-return > ImageView { -fx-image: url("../resources/icons/lucide--arrow-left.png"); }
+.jfx-description > ImageView { -fx-image: url("../resources/icons/lucide--letter-text.png"); }
+.jfx-add-project > ImageView { -fx-image: url("../resources/icons/lucide--package-plus.png"); }
+.jfx-add-person > ImageView { -fx-image: url("../resources/icons/lucide--user-round-plus.png"); }
+.jfx-persons > ImageView { -fx-image: url("../resources/icons/lucide--users-round.png"); }
+.jfx-projects > ImageView { -fx-image: url("../resources/icons/lucide--boxes.png"); }
+
+/* ========================================
+   TYPOGRAPHY COMPONENTS
+   ======================================== */
+.jfx-label {
+    -fx-font-family: 'Outfit-Bold';
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.jfx-hyperlink {
+    -fx-text-fill: -fx-primary;
+    -fx-font-family: 'Outfit-Bold';
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.jfx-hyperlink:hover {
+    -fx-text-fill: derive(-fx-primary, 20%);
+    -fx-underline: true;
+}
+
+.jfx-title {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 68px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.jfx-title-small {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 36px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.jfx-title-tiny {
+    /* -fx-font-family: 'Organo'; */
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* Colored Title Variants */
+.jfx-title-tiny--purple {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-purple-border;
+}
+
+.jfx-title-tiny--red {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-red-border;
+}
+
+.jfx-title-tiny--yellow {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-yellow-border;
+}
+
+.jfx-title-tiny--blue {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-blue-border;
+}
+
+.jfx-title-tiny--white {
+    -fx-font-family: 'Organo';
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-text-inverse;
+}
+
+/* ========================================
+   TAG COMPONENTS
+   ======================================== */
+.jfx-red-number-tag,
+.jfx-yellow-number-tag,
+.jfx-purple-number-tag,
+.jfx-blue-number-tag {
+    -fx-background-color: -fx-surface;
+    -fx-font-size: 14px;
+    -fx-border-radius: 24;
+    -fx-background-radius: 24;
+    -fx-alignment: center;
+    -fx-border-width: 2;
+    -fx-padding: 4;
+}
+
+.jfx-red-number-tag {
+    -fx-border-color: -fx-red-border;
+    -fx-text-fill: -fx-red-border;
+}
+
+.jfx-yellow-number-tag {
+    -fx-border-color: -fx-yellow-border;
+    -fx-text-fill: -fx-yellow-border;
+}
+
+.jfx-purple-number-tag {
+    -fx-border-color: -fx-purple-border;
+    -fx-text-fill: -fx-purple-border;
+}
+
+.jfx-blue-number-tag {
+    -fx-border-color: -fx-blue-border;
+    -fx-text-fill: -fx-blue-border;
+}
+
+
+
+
+
+
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — TEXT INPUTS
+   ======================================== */
+.text-field, .password-field {
+    -fx-background-color: -fx-surface;
+    -fx-text-fill: -fx-text-primary;
+    -fx-prompt-text-fill: -fx-text-secondary;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-surface;
+    -fx-border-radius: 24;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.text-field:disabled, .password-field:disabled {
+    -fx-background-color: -fx-surface-variant;
+    -fx-border-color: -fx-border-default;
+}
+
+.text-area {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-surface;
+    -fx-border-radius: 24;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.text-area .content {
+    -fx-background-color: transparent;
+    -fx-background-radius: 24;
+}
+
+.text-area:focused {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+}
+
+.text-area:disabled {
+    -fx-background-color: -fx-surface-variant;
+    -fx-border-color: -fx-border-default;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — LIST & TREE
+   ======================================== */
+.list-view, .tree-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.list-view .virtual-flow, .tree-view .virtual-flow {
+    -fx-background-color: transparent;
+}
+
+.list-view .list-cell, .tree-view .tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: transparent;
+}
+
+.list-view .list-cell:selected, .tree-view .tree-cell:selected {
+    -fx-background-color: -fx-primary;
+    -fx-background-radius: 24;
+    -fx-text-fill: -fx-text-inverse;
+}
+
+.list-view .list-cell:hover, .tree-view .tree-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+    -fx-background-radius: 24;
+}
+
+.list-view .list-cell:focused, .tree-view .tree-cell:focused {
+    -fx-background-color: derive(-fx-primary, 20%);
+    -fx-background-radius: 24;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — TABLES
+   ======================================== */
+.table-view, .tree-table-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.table-view .column-header-background, .tree-table-view .column-header-background {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-insets: 0;
+}
+
+.table-view .column-header, .tree-table-view .column-header {
+    -fx-background-color: -fx-surface-variant;
+    -fx-text-fill: -fx-text-primary;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .table-row-cell, .tree-table-view .tree-table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .table-row-cell:selected, .tree-table-view .tree-table-row-cell:selected {
+    -fx-background-color: derive(-fx-primary, 80%);
+}
+
+.table-view .table-row-cell:hover, .tree-table-view .tree-table-row-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.table-view .table-cell, .tree-table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — CHOICE INPUTS
+   ======================================== */
+.combo-box-base, .choice-box {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.combo-box-base:hover, .choice-box:hover {
+    -fx-border-color: -fx-border-focus;
+}
+
+.combo-box-base:focused, .choice-box:focused {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+}
+
+.combo-box-base .arrow-button, .date-picker .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.date-picker {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.date-picker:focused {
+    -fx-border-color: -fx-border-focus;
+    -fx-border-width: 2;
+}
+
+.date-picker .text-field { /* use text-field rules, ensure transparent nested bg */
+    -fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.date-picker-popup {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.date-picker-popup .month-year-pane, .date-picker-popup .calendar-grid {
+    -fx-background-color: transparent;
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+    -fx-background-radius: 12;
+}
+
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-text-inverse;
+    -fx-background-radius: 12;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — SCROLLING
+   ======================================== */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar .track {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-radius: 12;
+}
+
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: -fx-text-secondary;
+    -fx-background-radius: 12;
+}
+
+.scroll-pane .scroll-bar .thumb:hover {
+    -fx-background-color: -fx-border-focus;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — SELECTIONS
+   ======================================== */
+.check-box {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.check-box .box {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.check-box:hover .box {
+    -fx-border-color: -fx-border-focus;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -fx-border-focus;
+    -fx-border-color: -fx-border-focus;
+}
+
+.radio-button {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.radio-button .radio {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 2;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+.radio-button:selected .radio, .radio-button:armed .radio {
+    -fx-background-color: -fx-border-focus;
+    -fx-border-color: -fx-border-focus;
+}
+
+.toggle-button {
+    -fx-background-color: -fx-btn-base;
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 24;
+}
+
+.toggle-button:hover { -fx-background-color: derive(-fx-btn-base, -10%); -fx-background-radius: 24; }
+.toggle-button:pressed { -fx-background-color: -fx-btn-base-pressed; -fx-background-radius: 24; }
+.toggle-button:selected { -fx-background-color: -fx-primary; -fx-text-fill: -fx-text-inverse; -fx-background-radius: 24; }
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — TABS & PANELS
+   ======================================== */
+.tab-pane {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 24;
+}
+
+.tab-pane .tab:hover { -fx-background-color: derive(-fx-surface-variant, -5%); }
+.tab-pane .tab:selected { -fx-background-color: -fx-surface; }
+.tab-pane .tab .tab-label { -fx-text-fill: -fx-text-primary; -fx-font-weight: bold; }
+
+.titled-pane {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.titled-pane > .title {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 24;
+}
+
+.titled-pane:expanded > .content {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 24;
+}
+
+.accordion { -fx-background-color: transparent; }
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — PROGRESS & SLIDER
+   ======================================== */
+.progress-bar { -fx-background-color: -fx-border-default; -fx-background-radius: 12; }
+.progress-bar .track { -fx-background-color: -fx-border-default; -fx-background-radius: 12; }
+.progress-bar .bar { -fx-background-color: -fx-border-focus; -fx-background-radius: 12; -fx-background-insets: 0; }
+
+.progress-indicator { -fx-progress-color: -fx-border-focus; }
+
+.slider .track { -fx-background-color: -fx-border-default; -fx-background-radius: 12; }
+.slider .thumb { -fx-background-color: -fx-border-focus; -fx-background-radius: 12; }
+.slider:disabled .track { -fx-background-color: -fx-surface-variant; }
+.slider:disabled .thumb { -fx-background-color: -fx-text-secondary; }
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — MENUS & POPUPS
+   ======================================== */
+.context-menu, .menu-bar, .menu-button > .arrow-button, .menu {
+    -fx-background-color: -fx-surface;
+}
+
+.context-menu {
+    -fx-background-radius: 12;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 12;
+}
+
+.menu-bar {
+    -fx-background-insets: 0;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 0 0 1 0;
+}
+
+.menu-item:focused, .menu-item:armed {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.tooltip {
+    -fx-background-color: -fx-surface;
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-radius: 12;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 12;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — MISC
+   ======================================== */
+.spinner {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.spinner .increment-arrow-button, .spinner .decrement-arrow-button {
+    -fx-background-color: transparent;
+}
+
+.spinner .text-field { -fx-background-color: transparent; }
+
+.pagination { -fx-background-color: transparent; }
+.pagination .control-box { -fx-background-color: transparent; }
+.pagination .number-button {
+    -fx-background-color: -fx-surface-variant;
+    -fx-background-radius: 24;
+    -fx-text-fill: -fx-text-primary;
+}
+.pagination .number-button:hover { -fx-background-color: derive(-fx-surface-variant, -5%); }
+.pagination .number-button:selected {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-text-inverse;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — SEPARATOR
+   ======================================== */
+.separator *.line { -fx-background-color: -fx-border-default; }
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — HYPERLINK & TOOLBAR
+   ======================================== */
+.hyperlink {
+    -fx-text-fill: -fx-primary;
+    -fx-font-weight: bold;
+}
+.hyperlink:hover { -fx-text-fill: derive(-fx-primary, 20%); -fx-underline: true; }
+
+.tool-bar {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — SPLITPANE
+   ======================================== */
+.split-pane { -fx-background-color: transparent; }
+.split-pane > .split-pane-divider {
+    -fx-padding: 8;
+    -fx-background-color: -fx-border-default;
+}
+
+/* ========================================
+   JAVAFX STANDARD CONTROLS — COLOR PICKER
+   ======================================== */
+.color-picker {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-border-default;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+.color-picker:hover { -fx-border-color: -fx-border-focus; }
+.color-picker:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; }
+.color-palette, .custom-color-dialog {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -fx-border-default;
+    -fx-border-radius: 12;
+}

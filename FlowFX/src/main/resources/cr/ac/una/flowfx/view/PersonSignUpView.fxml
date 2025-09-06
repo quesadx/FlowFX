@@ -26,7 +26,7 @@
                <children>
                   <VBox alignment="TOP_CENTER" spacing="4.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" minHeight="-Infinity">
+                        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" styleClass="container-sub">
                            <children>
                               <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnSignUpPerson" text="">
                                  <graphic>
@@ -37,7 +37,13 @@
                                     <String fx:value="jfx-button" />
                                  </styleClass>
                               </MFXButton>
-                           </children></HBox>
+                           </children>
+                        </HBox>
+                        <Separator prefWidth="200.0" visible="false">
+                           <padding>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </padding>
+                        </Separator>
                         <TableView fx:id="tbvPersons" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                           <columns>
                               <TableColumn fx:id="tbvPersonid" prefWidth="75.0" text="ID" />
