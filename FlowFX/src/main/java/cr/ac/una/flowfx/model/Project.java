@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.flowfx.model;
 
 import jakarta.persistence.Basic;
@@ -9,99 +5,174 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
+ * JPA entity representing a project.
  *
- * @author krist
+ * <p>This class is a direct mapping of the PROJECT table. Named queries and
+ * relationships are preserved to maintain existing runtime behavior.</p>
  */
 @Entity
 @Table(name = "PROJECT")
-@NamedQueries({
-    @NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p"),
-    @NamedQuery(name = "Project.findById", query = "SELECT p FROM Project p WHERE p.id = :id"),
-    @NamedQuery(name = "Project.findByName", query = "SELECT p FROM Project p WHERE p.name= :name"),
-    @NamedQuery(name = "Project.findByPlannedStartDate", query = "SELECT p FROM Project p WHERE p.plannedStartDate = :plannedStartDate"),
-    @NamedQuery(name = "Project.findByPlannedEndDate", query = "SELECT p FROM Project p WHERE p.plannedEndDate = :plannedEndDate"),
-    @NamedQuery(name = "Project.findByActualStartDate", query = "SELECT p FROM Project p WHERE p.actualStartDate = :actualStartDate"),
-    @NamedQuery(name = "Project.findByActualEndDate", query = "SELECT p FROM Project p WHERE p.actualEndDate = :actualEndDate"),
-    @NamedQuery(name = "Project.findByStatus", query = "SELECT p FROM Project p WHERE p.status = :status"),
-    @NamedQuery(name = "Project.findByCreatedAt", query = "SELECT p FROM Project p WHERE p.createdAt = :createdAt"),
-    @NamedQuery(name = "Project.findByUpdatedAt", query = "SELECT p FROM Project p WHERE p.updatedAt = :updatedAt")})
+@NamedQueries(
+    {
+        @NamedQuery(
+            name = "Project.findAll",
+            query = "SELECT p FROM Project p"
+        ),
+        @NamedQuery(
+            name = "Project.findById",
+            query = "SELECT p FROM Project p WHERE p.id = :id"
+        ),
+        @NamedQuery(
+            name = "Project.findByName",
+            query = "SELECT p FROM Project p WHERE p.name= :name"
+        ),
+        @NamedQuery(
+            name = "Project.findByPlannedStartDate",
+            query = "SELECT p FROM Project p WHERE p.plannedStartDate = :plannedStartDate"
+        ),
+        @NamedQuery(
+            name = "Project.findByPlannedEndDate",
+            query = "SELECT p FROM Project p WHERE p.plannedEndDate = :plannedEndDate"
+        ),
+        @NamedQuery(
+            name = "Project.findByActualStartDate",
+            query = "SELECT p FROM Project p WHERE p.actualStartDate = :actualStartDate"
+        ),
+        @NamedQuery(
+            name = "Project.findByActualEndDate",
+            query = "SELECT p FROM Project p WHERE p.actualEndDate = :actualEndDate"
+        ),
+        @NamedQuery(
+            name = "Project.findByStatus",
+            query = "SELECT p FROM Project p WHERE p.status = :status"
+        ),
+        @NamedQuery(
+            name = "Project.findByCreatedAt",
+            query = "SELECT p FROM Project p WHERE p.createdAt = :createdAt"
+        ),
+        @NamedQuery(
+            name = "Project.findByUpdatedAt",
+            query = "SELECT p FROM Project p WHERE p.updatedAt = :updatedAt"
+        ),
+    }
+)
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PROJECT_ID_GEN")
-    @SequenceGenerator(name = "SEQ_PROJECT_ID_GEN", sequenceName = "SEQ_PROJECT_ID", allocationSize = 1)
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "SEQ_PROJECT_ID_GEN"
+    )
+    @SequenceGenerator(
+        name = "SEQ_PROJECT_ID_GEN",
+        sequenceName = "SEQ_PROJECT_ID",
+        allocationSize = 1
+    )
     @Basic(optional = false)
     @Column(name = "PROJECT_ID")
     private Long id;
+
     @Basic(optional = false)
     @Column(name = "PROJECT_NAME")
     private String name;
+
     @Basic(optional = false)
     @Column(name = "PLANNED_START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date plannedStartDate;
+
     @Basic(optional = false)
     @Column(name = "PLANNED_END_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date plannedEndDate;
+
     @Column(name = "ACTUAL_START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualStartDate;
+
     @Column(name = "ACTUAL_END_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualEndDate;
+
     @Basic(optional = false)
     @Column(name = "STATUS")
     private Character status;
+
     @Column(name = "CREATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
     @Column(name = "UPDATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
+
+    @OneToMany(
+        cascade = CascadeType.ALL,
+        mappedBy = "projectId",
+        fetch = FetchType.LAZY
+    )
     private List<Notification> notificationList;
+
     @JoinColumn(name = "LEADER_USER_ID", referencedColumnName = "PER_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person leaderUserId;
+
     @JoinColumn(name = "TECH_LEADER_ID", referencedColumnName = "PER_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person techLeaderId;
+
     @JoinColumn(name = "SPONSOR_ID", referencedColumnName = "PER_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person sponsorId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
+
+    @OneToMany(
+        cascade = CascadeType.ALL,
+        mappedBy = "projectId",
+        fetch = FetchType.LAZY
+    )
     private List<ProjectTracking> trackingList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId", fetch = FetchType.LAZY)
+
+    @OneToMany(
+        cascade = CascadeType.ALL,
+        mappedBy = "projectId",
+        fetch = FetchType.LAZY
+    )
     private List<ProjectActivity> activityList;
 
-    public Project() {
-    }
+    public Project() {}
 
     public Project(Long id) {
         this.id = id;
     }
 
-    public Project(Long id, String name, Date plannedStartDate, Date plannedEndDate, Character status) {
+    public Project(
+        Long id,
+        String name,
+        Date plannedStartDate,
+        Date plannedEndDate,
+        Character status
+    ) {
         this.id = id;
         this.name = name;
         this.plannedStartDate = plannedStartDate;
@@ -231,27 +302,23 @@ public class Project implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+        return Objects.hashCode(id);
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Project)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Project other = (Project) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        Project other = (Project) obj;
+        return Objects.equals(this.id, other.id);
     }
 
     @Override
     public String toString() {
-    return "cr.ac.una.flowfx.model.Project[ id=" + id + " ]";
+        return "cr.ac.una.flowfx.model.Project[ id=" + id + " ]";
     }
-    
 }

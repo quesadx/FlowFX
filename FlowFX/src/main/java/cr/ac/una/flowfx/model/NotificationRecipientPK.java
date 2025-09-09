@@ -1,30 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.flowfx.model;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
-
+import java.util.Objects;
 
 /**
+ * Composite primary key for {@link NotificationRecipient}.
  *
- * @author krist
+ * <p>This embeddable key consists of notification identifier and recipient
+ * email. Equals and hashCode are implemented using {@link Objects} to ensure
+ * stable behavior across different JVMs and to match value semantics.</p>
  */
 @Embeddable
 public class NotificationRecipientPK implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Basic(optional = false)
     @Column(name = "NOTIFICATION_ID")
     private Long id;
+
     @Basic(optional = false)
     @Column(name = "EMAIL")
     private String email;
 
     public NotificationRecipientPK() {
+        // Default constructor required by JPA
     }
 
     public NotificationRecipientPK(Long id, String email) {
@@ -50,31 +53,32 @@ public class NotificationRecipientPK implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        hash += (email != null ? email.hashCode() : 0);
-        return hash;
+        return Objects.hash(id, email);
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof NotificationRecipientPK)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        NotificationRecipientPK other = (NotificationRecipientPK) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        if ((this.email == null && other.email != null) || (this.email != null && !this.email.equals(other.email))) {
-            return false;
-        }
-        return true;
+        NotificationRecipientPK other = (NotificationRecipientPK) obj;
+        return (
+            Objects.equals(this.id, other.id) &&
+            Objects.equals(this.email, other.email)
+        );
     }
 
     @Override
     public String toString() {
-    return "cr.ac.una.flowfx.model.NotificationRecipientPK[ id=" + id + ", email=" + email + " ]";
+        return (
+            "cr.ac.una.flowfx.model.NotificationRecipientPK{id=" +
+            id +
+            ", email=" +
+            email +
+            '}'
+        );
     }
-    
 }

@@ -43,6 +43,9 @@ import javafx.stage.Stage;
  */
 public class MainController extends Controller implements Initializable {
 
+    private static final java.util.logging.Logger LOGGER =
+        java.util.logging.Logger.getLogger(MainController.class.getName());
+
     @FXML
     private AnchorPane root;
 
@@ -198,7 +201,7 @@ public class MainController extends Controller implements Initializable {
             if (user == null) {
                 // Defensive: server reported success but did not include a Person payload.
                 // Likely cause: WS did not set mensajeInterno with a Person JSON.
-                System.out.println(
+                LOGGER.warning(
                     "Login success without Person payload. mensajeInterno=" +
                     response.getMensajeInterno()
                 );
@@ -468,7 +471,7 @@ public class MainController extends Controller implements Initializable {
             );
             return null;
         } catch (Exception e) {
-            System.err.println(
+            LOGGER.warning(
                 "Error al crear usuario por falta de datos: " + e.getMessage()
             );
             return null;

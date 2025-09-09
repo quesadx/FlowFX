@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.flowfx.model;
 
 import jakarta.persistence.Basic;
@@ -18,56 +14,100 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
+ * JPA entity representing a project tracking entry.
  *
- * @author krist
+ * <p>This class maps to the PROJECT_TRACKING table and preserves the existing
+ * named queries and relationships used by the application. Equals and hashCode
+ * implementations are based on the identifier using {@link Objects} for clarity
+ * and stability.</p>
  */
 @Entity
 @Table(name = "PROJECT_TRACKING")
-@NamedQueries({
-    @NamedQuery(name = "ProjectTracking.findAll", query = "SELECT p FROM ProjectTracking p"),
-    @NamedQuery(name = "ProjectTracking.findById", query = "SELECT p FROM ProjectTracking p WHERE p.id = :id"),
-    @NamedQuery(name = "ProjectTracking.findByObservations", query = "SELECT p FROM ProjectTracking p WHERE p.observations = :observations"),
-    @NamedQuery(name = "ProjectTracking.findByTrackingDate", query = "SELECT p FROM ProjectTracking p WHERE p.trackingDate = :trackingDate"),
-    @NamedQuery(name = "ProjectTracking.findByProgressPercentage", query = "SELECT p FROM ProjectTracking p WHERE p.progressPercentage = :progressPercentage"),
-    @NamedQuery(name = "ProjectTracking.findByCreatedAt", query = "SELECT p FROM ProjectTracking p WHERE p.createdAt = :createdAt")})
+@NamedQueries(
+    {
+        @NamedQuery(
+            name = "ProjectTracking.findAll",
+            query = "SELECT p FROM ProjectTracking p"
+        ),
+        @NamedQuery(
+            name = "ProjectTracking.findById",
+            query = "SELECT p FROM ProjectTracking p WHERE p.id = :id"
+        ),
+        @NamedQuery(
+            name = "ProjectTracking.findByObservations",
+            query = "SELECT p FROM ProjectTracking p WHERE p.observations = :observations"
+        ),
+        @NamedQuery(
+            name = "ProjectTracking.findByTrackingDate",
+            query = "SELECT p FROM ProjectTracking p WHERE p.trackingDate = :trackingDate"
+        ),
+        @NamedQuery(
+            name = "ProjectTracking.findByProgressPercentage",
+            query = "SELECT p FROM ProjectTracking p WHERE p.progressPercentage = :progressPercentage"
+        ),
+        @NamedQuery(
+            name = "ProjectTracking.findByCreatedAt",
+            query = "SELECT p FROM ProjectTracking p WHERE p.createdAt = :createdAt"
+        ),
+    }
+)
 public class ProjectTracking implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+
     @Id
     @Basic(optional = false)
     @Column(name = "TRACKING_ID")
     private Long id;
+
     @Basic(optional = false)
     @Column(name = "OBSERVATIONS")
     private String observations;
+
     @Basic(optional = false)
     @Column(name = "TRACKING_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date trackingDate;
+
     @Basic(optional = false)
     @Column(name = "PROGRESS_PERCENTAGE")
     private Integer progressPercentage;
+
     @Column(name = "CREATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
     @JoinColumn(name = "CREATED_BY", referencedColumnName = "PER_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person createdBy;
+
     @JoinColumn(name = "PROJECT_ID", referencedColumnName = "PROJECT_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Project projectId;
 
-    public ProjectTracking() {
-    }
+    /**
+     * Default constructor required by JPA.
+     */
+    public ProjectTracking() {}
 
+    /**
+     * Convenience constructor with identifier.
+     *
+     * @param id identifier
+     */
     public ProjectTracking(Long id) {
         this.id = id;
     }
 
-    public ProjectTracking(Long id, String observations, Date trackingDate, Integer progressPercentage) {
+    public ProjectTracking(
+        Long id,
+        String observations,
+        Date trackingDate,
+        Integer progressPercentage
+    ) {
         this.id = id;
         this.observations = observations;
         this.trackingDate = trackingDate;
@@ -132,27 +172,26 @@ public class ProjectTracking implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+        return Objects.hashCode(id);
     }
 
+    /**
+     * Equality is based on the identifier to preserve previous semantics.
+     */
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProjectTracking)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        ProjectTracking other = (ProjectTracking) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        ProjectTracking other = (ProjectTracking) obj;
+        return Objects.equals(this.id, other.id);
     }
 
     @Override
     public String toString() {
-    return "cr.ac.una.flowfx.model.ProjectTracking[ id=" + id + " ]";
+        return "cr.ac.una.flowfx.model.ProjectTracking[ id=" + id + " ]";
     }
-    
 }

@@ -1,28 +1,48 @@
 package cr.ac.una.flowfx.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
- * Data Transfer Object for project tracking.
- * - Added createdBy field to support setCreatedBy(Long).
- * - progressPercentage remains Integer; an overloaded setter accepts Number.
+ * Data Transfer Object for project tracking entries.
+ *
+ * <p>This DTO carries tracking information between layers. It preserves the
+ * existing public API (constructors and accessors) while providing improved
+ * documentation, value semantics and a flexible setter for progress values.</p>
  */
 public class ProjectTrackingDTO {
+
     private Long id;
     private Long projectId;
-    private Long createdBy;               // Added
+    private Long createdBy;
     private String observations;
     private Date trackingDate;
-    private Integer progressPercentage;   // Stored as Integer
+    private Integer progressPercentage;
     private Date createdAt;
 
-    public ProjectTrackingDTO() {}
+    /**
+     * Default constructor.
+     */
+    public ProjectTrackingDTO() {
+        // no-op
+    }
 
-    public ProjectTrackingDTO(Long id,
-                              String observations,
-                              Date trackingDate,
-                              Integer progressPercentage,
-                              Date createdAt) {
+    /**
+     * Basic constructor.
+     *
+     * @param id identifier
+     * @param observations textual observations
+     * @param trackingDate date of tracking
+     * @param progressPercentage progress percentage as Integer
+     * @param createdAt creation timestamp
+     */
+    public ProjectTrackingDTO(
+        Long id,
+        String observations,
+        Date trackingDate,
+        Integer progressPercentage,
+        Date createdAt
+    ) {
         this.id = id;
         this.observations = observations;
         this.trackingDate = trackingDate;
@@ -30,14 +50,26 @@ public class ProjectTrackingDTO {
         this.createdAt = createdAt;
     }
 
-    // Optionally, a constructor including createdBy if needed by callers.
-    public ProjectTrackingDTO(Long id,
-                              Long projectId,
-                              Long createdBy,
-                              String observations,
-                              Date trackingDate,
-                              Integer progressPercentage,
-                              Date createdAt) {
+    /**
+     * Extended constructor including project and creator identifiers.
+     *
+     * @param id identifier
+     * @param projectId linked project identifier
+     * @param createdBy user who created the tracking entry
+     * @param observations textual observations
+     * @param trackingDate date of tracking
+     * @param progressPercentage progress percentage as Integer
+     * @param createdAt creation timestamp
+     */
+    public ProjectTrackingDTO(
+        Long id,
+        Long projectId,
+        Long createdBy,
+        String observations,
+        Date trackingDate,
+        Integer progressPercentage,
+        Date createdAt
+    ) {
         this.id = id;
         this.projectId = projectId;
         this.createdBy = createdBy;
@@ -47,40 +79,106 @@ public class ProjectTrackingDTO {
         this.createdAt = createdAt;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // --- Accessors ---
 
-    public Long getProjectId() { return projectId; }
-    public void setProjectId(Long projectId) { this.projectId = projectId; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getCreatedBy() { return createdBy; }                 // Added
-    public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; } // Added
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getObservations() { return observations; }
-    public void setObservations(String observations) { this.observations = observations; }
+    public Long getProjectId() {
+        return projectId;
+    }
 
-    public Date getTrackingDate() { return trackingDate; }
-    public void setTrackingDate(Date trackingDate) { this.trackingDate = trackingDate; }
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
 
-    public Integer getProgressPercentage() { return progressPercentage; }
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
+    }
+
+    public Date getTrackingDate() {
+        return trackingDate;
+    }
+
+    public void setTrackingDate(Date trackingDate) {
+        this.trackingDate = trackingDate;
+    }
+
+    public Integer getProgressPercentage() {
+        return progressPercentage;
+    }
 
     /**
-     * Setter accepting Integer.
+     * Setter accepting Integer values.
+     *
+     * @param progressPercentage integer progress (0-100 expected)
      */
     public void setProgressPercentage(Integer progressPercentage) {
         this.progressPercentage = progressPercentage;
     }
 
     /**
-     * Overloaded setter to accept any numeric type (e.g., Double).
-     * Converts to Integer via rounding. Null-safe.
+     * Flexible setter accepting any {@link Number}. The value is converted to
+     * Integer using rounding. Null input clears the value.
+     *
+     * @param progressPercentage numeric progress value
      */
     public void setProgressPercentage(Number progressPercentage) {
-        this.progressPercentage = (progressPercentage == null)
-                ? null
-                : (int) Math.round(progressPercentage.doubleValue());
+        this.progressPercentage = progressPercentage == null
+            ? null
+            : (int) Math.round(progressPercentage.doubleValue());
     }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // --- Value semantics ---
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    /**
+     * Equality is based on identifier to remain compatible with code that treats
+     * DTO identity by id.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof ProjectTrackingDTO)) {
+            return false;
+        }
+        ProjectTrackingDTO other = (ProjectTrackingDTO) obj;
+        return Objects.equals(this.id, other.id);
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectTrackingDTO{id=" + id + ", projectId=" + projectId + "}";
+    }
 }

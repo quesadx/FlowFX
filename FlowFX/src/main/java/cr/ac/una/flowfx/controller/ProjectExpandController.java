@@ -56,6 +56,11 @@ public class ProjectExpandController
     extends Controller
     implements Initializable {
 
+    private static final java.util.logging.Logger LOGGER =
+        java.util.logging.Logger.getLogger(
+            ProjectExpandController.class.getName()
+        );
+
     @FXML
     private AnchorPane root;
 
@@ -166,12 +171,14 @@ public class ProjectExpandController
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("Inicialize con parametros!");
+        LOGGER.fine(
+            "initialize(URL, ResourceBundle) invoked for ProjectExpandController"
+        );
     }
 
     @Override
     public void initialize() {
-        System.out.println("Inicialize sin parametros!");
+        LOGGER.fine("initialize() invoked for ProjectExpandController");
         Object p = AppContext.getInstance().get("currentProject");
         if (p instanceof ProjectDTO) {
             ProjectDTO dto = (ProjectDTO) p;
@@ -426,9 +433,7 @@ public class ProjectExpandController
         ProjectActivityDTO dto = new ProjectActivityDTO();
         long projectId = vm.getId();
         if (projectId <= 0) {
-            System.out.println(
-                "[Activity Create] Project id missing; aborting."
-            );
+            LOGGER.warning("[Activity Create] Project id missing; aborting.");
             return;
         }
         dto.setProjectId(projectId);
@@ -457,7 +462,7 @@ public class ProjectExpandController
         ProjectActivityService svc = new ProjectActivityService();
         Respuesta r = svc.create(dto, projectId, responsibleId);
         if (Boolean.TRUE.equals(r.getEstado())) {
-            System.out.println("[Activity Create] Created successfully.");
+            LOGGER.info("[Activity Create] Created successfully.");
             // Optimistic UI update (use server-returned entity if available)
             Object createdObj = r.getResultado("ProjectActivity");
             if (createdObj instanceof ProjectActivityDTO createdDto) {
@@ -482,7 +487,7 @@ public class ProjectExpandController
             // Defensive full reload to stay in sync with backend ordering / data
             loadActivitiesForProject();
         } else {
-            System.out.println(
+            LOGGER.warning(
                 "[Activity Create] Failed: " +
                 r.getMensaje() +
                 " | " +
@@ -514,7 +519,7 @@ public class ProjectExpandController
             selectedActivity.setActualEndDate(fromPicker(dpActualEndDate));
 
             // Debug print
-            System.out.println(
+            LOGGER.fine(
                 "[Activity Confirm] id=" +
                 selectedActivity.getId() +
                 ", order=" +
@@ -659,12 +664,12 @@ public class ProjectExpandController
                     tbvActivities.refresh();
 
                     // Debug print of current order
-                    System.out.println(
+                    LOGGER.fine(
                         "=== Activities new order (index -> id:order) ==="
                     );
                     for (int i = 0; i < activities.size(); i++) {
                         ProjectActivityViewModel a = activities.get(i);
-                        System.out.println(
+                        LOGGER.fine(
                             i + " -> " + a.getId() + ":" + a.getExecutionOrder()
                         );
                     }
@@ -716,7 +721,7 @@ public class ProjectExpandController
         };
         task.setOnSucceeded(e -> {
             List<ProjectActivityDTO> dtos = task.getValue();
-            System.out.println(
+            LOGGER.fine(
                 "[Activities Load] WS returned list size=" +
                 (dtos != null ? dtos.size() : 0) +
                 ", filtering by projectId=" +
@@ -737,7 +742,7 @@ public class ProjectExpandController
                     )
                 )
                 .forEach(activities::add);
-            System.out.println(
+            LOGGER.fine(
                 "[Activities Load] After filter size=" + activities.size()
             );
         });

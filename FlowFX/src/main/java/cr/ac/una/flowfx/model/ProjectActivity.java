@@ -21,82 +21,145 @@ import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
+ * JPA entity representing a project activity.
  *
- * @author krist
+ * <p>This class maps the PROJECT_ACTIVITY table. The named queries and JPA
+ * relationships are preserved to avoid any behavioral changes.</p>
  */
 @Entity
 @Table(name = "PROJECT_ACTIVITY")
-@NamedQueries({
-    @NamedQuery(name = "ProjectActivity.findAll", query = "SELECT p FROM ProjectActivity p"),
-    @NamedQuery(name = "ProjectActivity.findById", query = "SELECT p FROM ProjectActivity p WHERE p.id = :id"),
-    @NamedQuery(name = "ProjectActivity.findByDescription", query = "SELECT p FROM ProjectActivity p WHERE p.description = :description"),
-    @NamedQuery(name = "ProjectActivity.findByStatus", query = "SELECT p FROM ProjectActivity p WHERE p.status = :status"),
-    @NamedQuery(name = "ProjectActivity.findByPlannedStartDate", query = "SELECT p FROM ProjectActivity p WHERE p.plannedStartDate = :plannedStartDate"),
-    @NamedQuery(name = "ProjectActivity.findByPlannedEndDate", query = "SELECT p FROM ProjectActivity p WHERE p.plannedEndDate = :plannedEndDate"),
-    @NamedQuery(name = "ProjectActivity.findByActualStartDate", query = "SELECT p FROM ProjectActivity p WHERE p.actualStartDate = :actualStartDate"),
-    @NamedQuery(name = "ProjectActivity.findByActualEndDate", query = "SELECT p FROM ProjectActivity p WHERE p.actualEndDate = :actualEndDate"),
-    @NamedQuery(name = "ProjectActivity.findByExecutionOrder", query = "SELECT p FROM ProjectActivity p WHERE p.executionOrder = :executionOrder"),
-    @NamedQuery(name = "ProjectActivity.findByCreatedAt", query = "SELECT p FROM ProjectActivity p WHERE p.createdAt = :createdAt"),
-    @NamedQuery(name = "ProjectActivity.findByUpdatedAt", query = "SELECT p FROM ProjectActivity p WHERE p.updatedAt = :updatedAt")})
+@NamedQueries(
+    {
+        @NamedQuery(
+            name = "ProjectActivity.findAll",
+            query = "SELECT p FROM ProjectActivity p"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findById",
+            query = "SELECT p FROM ProjectActivity p WHERE p.id = :id"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByDescription",
+            query = "SELECT p FROM ProjectActivity p WHERE p.description = :description"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByStatus",
+            query = "SELECT p FROM ProjectActivity p WHERE p.status = :status"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByPlannedStartDate",
+            query = "SELECT p FROM ProjectActivity p WHERE p.plannedStartDate = :plannedStartDate"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByPlannedEndDate",
+            query = "SELECT p FROM ProjectActivity p WHERE p.plannedEndDate = :plannedEndDate"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByActualStartDate",
+            query = "SELECT p FROM ProjectActivity p WHERE p.actualStartDate = :actualStartDate"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByActualEndDate",
+            query = "SELECT p FROM ProjectActivity p WHERE p.actualEndDate = :actualEndDate"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByExecutionOrder",
+            query = "SELECT p FROM ProjectActivity p WHERE p.executionOrder = :executionOrder"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByCreatedAt",
+            query = "SELECT p FROM ProjectActivity p WHERE p.createdAt = :createdAt"
+        ),
+        @NamedQuery(
+            name = "ProjectActivity.findByUpdatedAt",
+            query = "SELECT p FROM ProjectActivity p WHERE p.updatedAt = :updatedAt"
+        ),
+    }
+)
 public class ProjectActivity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
     @Column(name = "ACTIVITY_ID")
     private Long id;
+
     @Basic(optional = false)
     @Column(name = "DESCRIPTION")
     private String description;
+
     @Basic(optional = false)
     @Column(name = "STATUS")
     private String status;
+
     @Basic(optional = false)
     @Column(name = "PLANNED_START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date plannedStartDate;
+
     @Basic(optional = false)
     @Column(name = "PLANNED_END_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date plannedEndDate;
+
     @Column(name = "ACTUAL_START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualStartDate;
+
     @Column(name = "ACTUAL_END_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualEndDate;
+
     @Basic(optional = false)
     @Column(name = "EXECUTION_ORDER")
     private Integer executionOrder;
+
     @Column(name = "CREATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
     @Column(name = "UPDATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "activityId", fetch = FetchType.LAZY)
+
+    @OneToMany(
+        cascade = CascadeType.ALL,
+        mappedBy = "activityId",
+        fetch = FetchType.LAZY
+    )
     private List<Notification> notificationList;
+
     @JoinColumn(name = "RESPONSIBLE_ID", referencedColumnName = "PER_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person responsibleId;
+
     @JoinColumn(name = "CREATED_BY", referencedColumnName = "PER_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Person createdBy;
+
     @JoinColumn(name = "PROJECT_ID", referencedColumnName = "PROJECT_ID")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Project projectId;
 
-    public ProjectActivity() {
-    }
+    public ProjectActivity() {}
 
     public ProjectActivity(Long id) {
         this.id = id;
     }
 
-    public ProjectActivity(Long id, String description, String status, Date plannedStartDate, Date plannedEndDate, Integer executionOrder) {
+    public ProjectActivity(
+        Long id,
+        String description,
+        String status,
+        Date plannedStartDate,
+        Date plannedEndDate,
+        Integer executionOrder
+    ) {
         this.id = id;
         this.description = description;
         this.status = status;
@@ -219,27 +282,23 @@ public class ProjectActivity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+        return Objects.hashCode(id);
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProjectActivity)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        ProjectActivity other = (ProjectActivity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        ProjectActivity other = (ProjectActivity) obj;
+        return Objects.equals(this.id, other.id);
     }
 
     @Override
     public String toString() {
-    return "cr.ac.una.flowfx.model.ProjectActivity[ id=" + id + " ]";
+        return "cr.ac.una.flowfx.model.ProjectActivity[ id=" + id + " ]";
     }
-    
 }

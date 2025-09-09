@@ -1,8 +1,23 @@
 package cr.ac.una.flowfx.model;
 
 import java.util.Date;
-import javafx.beans.property.*;
+import java.util.Objects;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
+/**
+ * View model for ProjectActivity used by JavaFX bindings.
+ *
+ * <p>This class wraps observable properties and provides conversion to and from
+ * {@link ProjectActivityDTO}. Public API is preserved to remain compatible with
+ * existing consumers.</p>
+ */
 public class ProjectActivityViewModel {
 
     private final LongProperty id = new SimpleLongProperty();
@@ -21,8 +36,18 @@ public class ProjectActivityViewModel {
     private final ObjectProperty<Date> createdAt = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> updatedAt = new SimpleObjectProperty<>();
 
-    public ProjectActivityViewModel() {}
+    /**
+     * Default constructor.
+     */
+    public ProjectActivityViewModel() {
+        // no-op
+    }
 
+    /**
+     * Initialize view model from a DTO. Null DTO is tolerated.
+     *
+     * @param dto source DTO
+     */
     public ProjectActivityViewModel(ProjectActivityDTO dto) {
         if (dto != null) {
             setId(dto.getId() == null ? 0L : dto.getId());
@@ -41,12 +66,17 @@ public class ProjectActivityViewModel {
         }
     }
 
+    /**
+     * Convert this view model into a DTO.
+     *
+     * @return a ProjectActivityDTO reflecting the current state
+     */
     public ProjectActivityDTO toDTO() {
         ProjectActivityDTO dto = new ProjectActivityDTO();
         dto.setId(getId() == 0L ? null : getId());
         dto.setProjectId(getProjectId() == 0L ? null : getProjectId());
         dto.setDescription(getDescription());
-        dto.setStatus(getStatus()); // String
+        dto.setStatus(getStatus());
         dto.setPlannedStartDate(getPlannedStartDate());
         dto.setPlannedEndDate(getPlannedEndDate());
         dto.setActualStartDate(getActualStartDate());
@@ -187,5 +217,36 @@ public class ProjectActivityViewModel {
 
     public ObjectProperty<Date> updatedAtProperty() {
         return updatedAt;
+    }
+
+    @Override
+    public int hashCode() {
+        Long idVal = getId() == 0L ? null : getId();
+        return Objects.hashCode(idVal);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof ProjectActivityViewModel)) {
+            return false;
+        }
+        ProjectActivityViewModel other = (ProjectActivityViewModel) obj;
+        Long thisId = getId() == 0L ? null : getId();
+        Long otherId = other.getId() == 0L ? null : other.getId();
+        return Objects.equals(thisId, otherId);
+    }
+
+    @Override
+    public String toString() {
+        return (
+            "ProjectActivityViewModel{id=" +
+            (getId() == 0L ? "null" : getId()) +
+            ", description=" +
+            getDescription() +
+            "}"
+        );
     }
 }
