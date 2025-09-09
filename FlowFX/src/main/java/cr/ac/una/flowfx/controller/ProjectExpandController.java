@@ -1,5 +1,19 @@
 package cr.ac.una.flowfx.controller;
 
+import cr.ac.una.flowfx.model.ProjectActivityDTO;
+import cr.ac.una.flowfx.model.ProjectActivityViewModel;
+import cr.ac.una.flowfx.model.ProjectDTO;
+import cr.ac.una.flowfx.model.ProjectViewModel;
+import cr.ac.una.flowfx.service.ProjectActivityService;
+import cr.ac.una.flowfx.util.AnimationManager;
+import cr.ac.una.flowfx.util.AppContext;
+import cr.ac.una.flowfx.util.BindingUtils;
+import cr.ac.una.flowfx.util.FlowController;
+import cr.ac.una.flowfx.util.Respuesta;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
+import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -8,21 +22,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import cr.ac.una.flowfx.model.ProjectDTO;
-import cr.ac.una.flowfx.model.ProjectViewModel;
-import cr.ac.una.flowfx.model.ProjectActivityDTO;
-import cr.ac.una.flowfx.model.ProjectActivityViewModel;
-import cr.ac.una.flowfx.util.AppContext;
-import cr.ac.una.flowfx.util.BindingUtils;
-import cr.ac.una.flowfx.util.FlowController;
-import cr.ac.una.flowfx.util.Respuesta;
-import cr.ac.una.flowfx.util.AnimationManager;
-import cr.ac.una.flowfx.service.ProjectActivityService;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
-import io.github.palexdev.materialfx.controls.MFXDatePicker;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -34,11 +33,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
@@ -53,67 +52,115 @@ import javafx.scene.layout.VBox;
  * Controller for the Project Expand view.
  * Ensures status is handled as String ("P","R","S","C") and binds UI to ViewModel.
  */
-public class ProjectExpandController extends Controller implements Initializable {
+public class ProjectExpandController
+    extends Controller
+    implements Initializable {
 
-    @FXML private AnchorPane root;
-    @FXML private VBox vbCover, vbDisplayActivityExpand;
-    @FXML private MFXButton btnReturnManagement;
+    @FXML
+    private AnchorPane root;
 
-    @FXML private MFXTextField txfProjectName;
-    @FXML private MFXTextField txfSponsorId;
-    @FXML private MFXTextField txfLeaderId;
-    @FXML private MFXTextField txfTechLeaderId;
+    @FXML
+    private VBox vbCover, vbDisplayActivityExpand;
 
-    @FXML private MFXDatePicker dpProjectStartDate;   // planned start
-    @FXML private MFXDatePicker dpProjectStartDate1;  // planned end
+    @FXML
+    private MFXButton btnReturnManagement;
 
-    @FXML private MFXCircleToggleNode tgProjectStatusPending;
-    @FXML private MFXCircleToggleNode tgProjectStatusRunning;
-    @FXML private MFXCircleToggleNode tgProjectStatusSuspended;
-    @FXML private MFXCircleToggleNode tgProjectStatusCompleted;
-    @FXML private ToggleGroup ProjectStatus;
+    @FXML
+    private MFXTextField txfProjectName;
 
+    @FXML
+    private MFXTextField txfSponsorId;
+
+    @FXML
+    private MFXTextField txfLeaderId;
+
+    @FXML
+    private MFXTextField txfTechLeaderId;
+
+    @FXML
+    private MFXDatePicker dpProjectStartDate; // planned start
+
+    @FXML
+    private MFXDatePicker dpProjectStartDate1; // planned end
+
+    @FXML
+    private MFXCircleToggleNode tgProjectStatusPending;
+
+    @FXML
+    private MFXCircleToggleNode tgProjectStatusRunning;
+
+    @FXML
+    private MFXCircleToggleNode tgProjectStatusSuspended;
+
+    @FXML
+    private MFXCircleToggleNode tgProjectStatusCompleted;
+
+    @FXML
+    private ToggleGroup ProjectStatus;
 
     private final ProjectViewModel vm = new ProjectViewModel();
-    private final ObservableList<ProjectActivityViewModel> activities = FXCollections.observableArrayList();
+    private final ObservableList<ProjectActivityViewModel> activities =
+        FXCollections.observableArrayList();
     private ProjectActivityViewModel selectedActivity;
 
     @FXML
     private TableView<ProjectActivityViewModel> tbvActivities;
+
     @FXML
     private TableColumn<ProjectActivityViewModel, String> tbcActivityName;
+
     @FXML
     private TableColumn<ProjectActivityViewModel, String> tbcActivityStatus;
+
     @FXML
-    private TableColumn<ProjectActivityViewModel, String> tbcActivityResponsible;
+    private TableColumn<
+        ProjectActivityViewModel,
+        String
+    > tbcActivityResponsible;
+
     @FXML
     private MFXTextField txfResponsible;
+
     @FXML
     private MFXTextField txfCreatedBy;
+
     @FXML
     private MFXDatePicker dpLastUpdate;
+
     @FXML
     private MFXDatePicker dpCreationDate;
+
     @FXML
     private MFXDatePicker dpPlannedStartDate;
+
     @FXML
     private MFXDatePicker dpActualStartDate;
+
     @FXML
     private MFXDatePicker dpPlannedEndDate;
+
     @FXML
     private MFXDatePicker dpActualEndDate;
 
-    private static final DataFormat ACTIVITY_INDEX = new DataFormat("application/x-flowfx-activity-index");
+    private static final DataFormat ACTIVITY_INDEX = new DataFormat(
+        "application/x-flowfx-activity-index"
+    );
+
     @FXML
     private TextArea txaDescription;
+
     @FXML
     private VBox vbDisplayActivityCreation;
+
     @FXML
     private MFXTextField txfResponsableCreation;
+
     @FXML
     private TextArea txaDescriptionCreation;
+
     @FXML
     private MFXDatePicker dpPlannedStartDateCreation;
+
     @FXML
     private MFXDatePicker dpPlannedEndDateCreation;
 
@@ -162,13 +209,23 @@ public class ProjectExpandController extends Controller implements Initializable
     private void onActionBtnSelectActivityResponsible(ActionEvent event) {
         // Allow editing while selecting
         txfResponsableCreation.setEditable(true);
-        FlowController.getInstance().goViewInWindowModal("PersonSelectionView", (javafx.stage.Stage) root.getScene().getWindow(), false);
+        FlowController.getInstance().goViewInWindowModal(
+            "PersonSelectionView",
+            (javafx.stage.Stage) root.getScene().getWindow(),
+            false
+        );
         Object sel = AppContext.getInstance().get("personSelectionResult");
         if (sel instanceof cr.ac.una.flowfx.model.PersonDTO p) {
-            String label = (p.getFirstName() == null ? "" : p.getFirstName().trim()) + " " + (p.getLastName() == null ? "" : p.getLastName().trim());
+            String label =
+                (p.getFirstName() == null ? "" : p.getFirstName().trim()) +
+                " " +
+                (p.getLastName() == null ? "" : p.getLastName().trim());
             txfResponsableCreation.setText(label.trim());
             // Store the actual PersonDTO for later use on creation
-            AppContext.getInstance().set("ProjectExpand.activityResponsible", p);
+            AppContext.getInstance().set(
+                "ProjectExpand.activityResponsible",
+                p
+            );
             txfResponsableCreation.setEditable(false);
         }
     }
@@ -188,7 +245,10 @@ public class ProjectExpandController extends Controller implements Initializable
         tgProjectStatusCompleted.setUserData("C");
 
         // Bind ToggleGroup to ViewModel status (String)
-        BindingUtils.bindToggleGroupToProperty(ProjectStatus, vm.statusProperty());
+        BindingUtils.bindToggleGroupToProperty(
+            ProjectStatus,
+            vm.statusProperty()
+        );
 
         // Default selection if empty
         if (vm.getStatus() == null || vm.getStatus().isBlank()) {
@@ -203,53 +263,96 @@ public class ProjectExpandController extends Controller implements Initializable
 
     private void bindDatePicker(MFXDatePicker picker, boolean isStart) {
         if (isStart) {
-            vm.plannedStartDateProperty().addListener((obs, o, n) -> {
-                LocalDate ld = n == null ? null
-                        : Instant.ofEpochMilli(n.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-                if (ld != picker.getValue()) picker.setValue(ld);
-            });
-            picker.valueProperty().addListener((obs, o, n) -> {
-                Date d = n == null ? null
-                        : Date.from(n.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                if (d == null && vm.getPlannedStartDate() != null) vm.setPlannedStartDate(null);
-                else if (d != null && !d.equals(vm.getPlannedStartDate())) vm.setPlannedStartDate(d);
-            });
+            vm
+                .plannedStartDateProperty()
+                .addListener((obs, o, n) -> {
+                    LocalDate ld = n == null
+                        ? null
+                        : Instant.ofEpochMilli(n.getTime())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    if (ld != picker.getValue()) picker.setValue(ld);
+                });
+            picker
+                .valueProperty()
+                .addListener((obs, o, n) -> {
+                    Date d = n == null
+                        ? null
+                        : Date.from(
+                            n.atStartOfDay(ZoneId.systemDefault()).toInstant()
+                        );
+                    if (
+                        d == null && vm.getPlannedStartDate() != null
+                    ) vm.setPlannedStartDate(null);
+                    else if (
+                        d != null && !d.equals(vm.getPlannedStartDate())
+                    ) vm.setPlannedStartDate(d);
+                });
             if (vm.getPlannedStartDate() != null) {
-                LocalDate ld = Instant.ofEpochMilli(vm.getPlannedStartDate().getTime())
-                        .atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate ld = Instant.ofEpochMilli(
+                    vm.getPlannedStartDate().getTime()
+                )
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
                 picker.setValue(ld);
             }
         } else {
-            vm.plannedEndDateProperty().addListener((obs, o, n) -> {
-                LocalDate ld = n == null ? null
-                        : Instant.ofEpochMilli(n.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-                if (ld != picker.getValue()) picker.setValue(ld);
-            });
-            picker.valueProperty().addListener((obs, o, n) -> {
-                Date d = n == null ? null
-                        : Date.from(n.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                if (d == null && vm.getPlannedEndDate() != null) vm.setPlannedEndDate(null);
-                else if (d != null && !d.equals(vm.getPlannedEndDate())) vm.setPlannedEndDate(d);
-            });
+            vm
+                .plannedEndDateProperty()
+                .addListener((obs, o, n) -> {
+                    LocalDate ld = n == null
+                        ? null
+                        : Instant.ofEpochMilli(n.getTime())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    if (ld != picker.getValue()) picker.setValue(ld);
+                });
+            picker
+                .valueProperty()
+                .addListener((obs, o, n) -> {
+                    Date d = n == null
+                        ? null
+                        : Date.from(
+                            n.atStartOfDay(ZoneId.systemDefault()).toInstant()
+                        );
+                    if (
+                        d == null && vm.getPlannedEndDate() != null
+                    ) vm.setPlannedEndDate(null);
+                    else if (
+                        d != null && !d.equals(vm.getPlannedEndDate())
+                    ) vm.setPlannedEndDate(d);
+                });
             if (vm.getPlannedEndDate() != null) {
-                LocalDate ld = Instant.ofEpochMilli(vm.getPlannedEndDate().getTime())
-                        .atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate ld = Instant.ofEpochMilli(
+                    vm.getPlannedEndDate().getTime()
+                )
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
                 picker.setValue(ld);
             }
         }
     }
 
-    private void bindNumericText(MFXTextField field, boolean isLeader, boolean isSponsor) {
-        field.textProperty().addListener((obs, o, n) -> {
-            try {
-                long v = (n == null || n.trim().isEmpty()) ? 0L : Long.parseLong(n.trim());
-                if (isLeader) vm.setLeaderUserId(v);
-                else if (isSponsor) vm.setSponsorId(v);
-                else vm.setTechLeaderId(v);
-            } catch (NumberFormatException ignored) {
-            }
-        });
-        long init = isLeader ? vm.getLeaderUserId() : (isSponsor ? vm.getSponsorId() : vm.getTechLeaderId());
+    private void bindNumericText(
+        MFXTextField field,
+        boolean isLeader,
+        boolean isSponsor
+    ) {
+        field
+            .textProperty()
+            .addListener((obs, o, n) -> {
+                try {
+                    long v = (n == null || n.trim().isEmpty())
+                        ? 0L
+                        : Long.parseLong(n.trim());
+                    if (isLeader) vm.setLeaderUserId(v);
+                    else if (isSponsor) vm.setSponsorId(v);
+                    else vm.setTechLeaderId(v);
+                } catch (NumberFormatException ignored) {}
+            });
+        long init = isLeader
+            ? vm.getLeaderUserId()
+            : (isSponsor ? vm.getSponsorId() : vm.getTechLeaderId());
         field.setText(init == 0L ? "" : String.valueOf(init));
     }
 
@@ -265,19 +368,35 @@ public class ProjectExpandController extends Controller implements Initializable
 
     @FXML
     private void onActionBtnSelectTechLeader(ActionEvent event) {
-        openPersonSelector(txfTechLeaderId, "ProjectExpand.techleader.selected");
+        openPersonSelector(
+            txfTechLeaderId,
+            "ProjectExpand.techleader.selected"
+        );
     }
 
     private void openPersonSelector(MFXTextField target, String contextKey) {
         target.setEditable(true);
-        FlowController.getInstance().goViewInWindowModal("PersonSelectionView", (javafx.stage.Stage) root.getScene().getWindow(), false);
+        FlowController.getInstance().goViewInWindowModal(
+            "PersonSelectionView",
+            (javafx.stage.Stage) root.getScene().getWindow(),
+            false
+        );
         Object sel = AppContext.getInstance().get("personSelectionResult");
         if (sel instanceof cr.ac.una.flowfx.model.PersonDTO p) {
-            String label = (p.getFirstName() == null ? "" : p.getFirstName().trim()) + " " + (p.getLastName() == null ? "" : p.getLastName().trim());
+            String label =
+                (p.getFirstName() == null ? "" : p.getFirstName().trim()) +
+                " " +
+                (p.getLastName() == null ? "" : p.getLastName().trim());
             target.setText(label.trim());
-            if (target == txfLeaderId) vm.setLeaderUserId(p.getId() == null ? 0L : p.getId());
-            else if (target == txfTechLeaderId) vm.setTechLeaderId(p.getId() == null ? 0L : p.getId());
-            else if (target == txfSponsorId) vm.setSponsorId(p.getId() == null ? 0L : p.getId());
+            if (target == txfLeaderId) vm.setLeaderUserId(
+                p.getId() == null ? 0L : p.getId()
+            );
+            else if (target == txfTechLeaderId) vm.setTechLeaderId(
+                p.getId() == null ? 0L : p.getId()
+            );
+            else if (target == txfSponsorId) vm.setSponsorId(
+                p.getId() == null ? 0L : p.getId()
+            );
             // store entire DTO for optional later use
             AppContext.getInstance().set(contextKey, p);
             target.setEditable(false);
@@ -307,7 +426,9 @@ public class ProjectExpandController extends Controller implements Initializable
         ProjectActivityDTO dto = new ProjectActivityDTO();
         long projectId = vm.getId();
         if (projectId <= 0) {
-            System.out.println("[Activity Create] Project id missing; aborting.");
+            System.out.println(
+                "[Activity Create] Project id missing; aborting."
+            );
             return;
         }
         dto.setProjectId(projectId);
@@ -320,7 +441,9 @@ public class ProjectExpandController extends Controller implements Initializable
 
         // Resolve createdBy/responsible
         Long responsibleId = null;
-        Object respSel = AppContext.getInstance().get("ProjectExpand.activityResponsible");
+        Object respSel = AppContext.getInstance().get(
+            "ProjectExpand.activityResponsible"
+        );
         if (respSel instanceof cr.ac.una.flowfx.model.PersonDTO psel) {
             responsibleId = psel.getId();
         }
@@ -335,11 +458,36 @@ public class ProjectExpandController extends Controller implements Initializable
         Respuesta r = svc.create(dto, projectId, responsibleId);
         if (Boolean.TRUE.equals(r.getEstado())) {
             System.out.println("[Activity Create] Created successfully.");
+            // Optimistic UI update (use server-returned entity if available)
+            Object createdObj = r.getResultado("ProjectActivity");
+            if (createdObj instanceof ProjectActivityDTO createdDto) {
+                // Ensure projectId is set (some WS variants may omit it in payload)
+                if (createdDto.getProjectId() == null) {
+                    createdDto.setProjectId(projectId);
+                }
+                ProjectActivityViewModel vmAct = new ProjectActivityViewModel(
+                    createdDto
+                );
+                if (vmAct.getExecutionOrder() == 0) {
+                    vmAct.setExecutionOrder(activities.size() + 1);
+                }
+                activities.add(vmAct);
+                renumberExecutionOrder();
+                Platform.runLater(() -> {
+                    tbvActivities.refresh();
+                });
+            }
             clearActivityCreationForm();
             AnimationManager.hidePopup(vbDisplayActivityCreation, vbCover);
+            // Defensive full reload to stay in sync with backend ordering / data
             loadActivitiesForProject();
         } else {
-            System.out.println("[Activity Create] Failed: " + r.getMensaje() + " | " + r.getMensajeInterno());
+            System.out.println(
+                "[Activity Create] Failed: " +
+                r.getMensaje() +
+                " | " +
+                r.getMensajeInterno()
+            );
         }
     }
 
@@ -358,19 +506,30 @@ public class ProjectExpandController extends Controller implements Initializable
             selectedActivity.setDescription(txaDescription.getText());
             selectedActivity.setCreatedAt(fromPicker(dpCreationDate));
             selectedActivity.setUpdatedAt(fromPicker(dpLastUpdate));
-            selectedActivity.setPlannedStartDate(fromPicker(dpPlannedStartDate));
+            selectedActivity.setPlannedStartDate(
+                fromPicker(dpPlannedStartDate)
+            );
             selectedActivity.setActualStartDate(fromPicker(dpActualStartDate));
             selectedActivity.setPlannedEndDate(fromPicker(dpPlannedEndDate));
             selectedActivity.setActualEndDate(fromPicker(dpActualEndDate));
 
             // Debug print
-        System.out.println("[Activity Confirm] id=" + selectedActivity.getId()
-            + ", order=" + selectedActivity.getExecutionOrder()
-            + ", desc=" + selectedActivity.getDescription()
-            + ", plannedStart=" + selectedActivity.getPlannedStartDate()
-            + ", plannedEnd=" + selectedActivity.getPlannedEndDate()
-            + ", actualStart=" + selectedActivity.getActualStartDate()
-            + ", actualEnd=" + selectedActivity.getActualEndDate());
+            System.out.println(
+                "[Activity Confirm] id=" +
+                selectedActivity.getId() +
+                ", order=" +
+                selectedActivity.getExecutionOrder() +
+                ", desc=" +
+                selectedActivity.getDescription() +
+                ", plannedStart=" +
+                selectedActivity.getPlannedStartDate() +
+                ", plannedEnd=" +
+                selectedActivity.getPlannedEndDate() +
+                ", actualStart=" +
+                selectedActivity.getActualStartDate() +
+                ", actualEnd=" +
+                selectedActivity.getActualEndDate()
+            );
 
             // Future: persist via WS
             // ProjectActivityService svc = new ProjectActivityService();
@@ -384,15 +543,21 @@ public class ProjectExpandController extends Controller implements Initializable
     private void setupActivitiesTable() {
         // Columns
         if (tbcActivityName.getCellValueFactory() == null) {
-            tbcActivityName.setCellValueFactory(new PropertyValueFactory<>("description"));
+            tbcActivityName.setCellValueFactory(
+                new PropertyValueFactory<>("description")
+            );
         }
         tbcActivityStatus.setCellValueFactory(cd -> {
-            String code = cd.getValue() != null ? cd.getValue().getStatus() : null;
+            String code = cd.getValue() != null
+                ? cd.getValue().getStatus()
+                : null;
             String text = mapStatus(code);
             return Bindings.createStringBinding(() -> text);
         });
         // Responsible name currently not provided by WS payload -> display placeholder
-        tbcActivityResponsible.setCellValueFactory(cd -> Bindings.createStringBinding(() -> "-"));
+        tbcActivityResponsible.setCellValueFactory(cd ->
+            Bindings.createStringBinding(() -> "-")
+        );
 
         // Items and default sort by executionOrder
         tbvActivities.setItems(activities);
@@ -402,7 +567,10 @@ public class ProjectExpandController extends Controller implements Initializable
         tbvActivities.setRowFactory(tv -> {
             TableRow<ProjectActivityViewModel> row = new TableRow<>() {
                 @Override
-                protected void updateItem(ProjectActivityViewModel item, boolean empty) {
+                protected void updateItem(
+                    ProjectActivityViewModel item,
+                    boolean empty
+                ) {
                     super.updateItem(item, empty);
                     if (empty || item == null) {
                         setStyle("");
@@ -412,11 +580,15 @@ public class ProjectExpandController extends Controller implements Initializable
                         int idx = getIndex();
                         String bg;
                         switch (idx % 3) {
-                            case 0 -> bg = "-fx-surface";          // base card surface
-                            case 1 -> bg = "-fx-surface-variant";   // slightly different
-                            default -> bg = "#f6f8ff";               // light pastel fallback
+                            case 0 -> bg = "-fx-surface"; // base card surface
+                            case 1 -> bg = "-fx-surface-variant"; // slightly different
+                            default -> bg = "#f6f8ff"; // light pastel fallback
                         }
-                        setStyle("-fx-background-color: " + bg + "; -fx-background-radius: 12;");
+                        setStyle(
+                            "-fx-background-color: " +
+                            bg +
+                            "; -fx-background-radius: 12;"
+                        );
                         setCursor(Cursor.OPEN_HAND);
                     }
                 }
@@ -439,8 +611,15 @@ public class ProjectExpandController extends Controller implements Initializable
                     cc.put(ACTIVITY_INDEX, index);
                     db.setContent(cc);
                     // Drag view snapshot for smooth UX
-                    WritableImage snapshot = row.snapshot(new SnapshotParameters(), null);
-                    db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
+                    WritableImage snapshot = row.snapshot(
+                        new SnapshotParameters(),
+                        null
+                    );
+                    db.setDragView(
+                        snapshot,
+                        snapshot.getWidth() / 2,
+                        snapshot.getHeight() / 2
+                    );
                     ev.consume();
                 }
             });
@@ -448,7 +627,10 @@ public class ProjectExpandController extends Controller implements Initializable
             row.setOnDragOver((DragEvent ev) -> {
                 Dragboard db = ev.getDragboard();
                 if (db.hasContent(ACTIVITY_INDEX)) {
-                    if (row.getIndex() != ((Integer) db.getContent(ACTIVITY_INDEX)).intValue()) {
+                    if (
+                        row.getIndex() !=
+                        ((Integer) db.getContent(ACTIVITY_INDEX)).intValue()
+                    ) {
                         ev.acceptTransferModes(TransferMode.MOVE);
                         ev.consume();
                     }
@@ -460,7 +642,9 @@ public class ProjectExpandController extends Controller implements Initializable
                 boolean success = false;
                 if (db.hasContent(ACTIVITY_INDEX)) {
                     int draggedIndex = (Integer) db.getContent(ACTIVITY_INDEX);
-                    ProjectActivityViewModel draggedItem = tbvActivities.getItems().remove(draggedIndex);
+                    ProjectActivityViewModel draggedItem = tbvActivities
+                        .getItems()
+                        .remove(draggedIndex);
 
                     int dropIndex;
                     if (row.isEmpty()) {
@@ -475,10 +659,14 @@ public class ProjectExpandController extends Controller implements Initializable
                     tbvActivities.refresh();
 
                     // Debug print of current order
-                    System.out.println("=== Activities new order (index -> id:order) ===");
+                    System.out.println(
+                        "=== Activities new order (index -> id:order) ==="
+                    );
                     for (int i = 0; i < activities.size(); i++) {
                         ProjectActivityViewModel a = activities.get(i);
-                        System.out.println(i + " -> " + a.getId() + ":" + a.getExecutionOrder());
+                        System.out.println(
+                            i + " -> " + a.getId() + ":" + a.getExecutionOrder()
+                        );
                     }
 
                     success = true;
@@ -517,7 +705,9 @@ public class ProjectExpandController extends Controller implements Initializable
                     Object listObj = r.getResultado("ProjectActivities");
                     if (listObj instanceof List<?>) {
                         @SuppressWarnings("unchecked")
-                        List<ProjectActivityDTO> dtos = (List<ProjectActivityDTO>) listObj;
+                        List<ProjectActivityDTO> dtos = (List<
+                            ProjectActivityDTO
+                        >) listObj;
                         return dtos;
                     }
                 }
@@ -526,14 +716,30 @@ public class ProjectExpandController extends Controller implements Initializable
         };
         task.setOnSucceeded(e -> {
             List<ProjectActivityDTO> dtos = task.getValue();
-            System.out.println("[Activities Load] WS returned list size=" + (dtos != null ? dtos.size() : 0) + ", filtering by projectId=" + projectId);
+            System.out.println(
+                "[Activities Load] WS returned list size=" +
+                (dtos != null ? dtos.size() : 0) +
+                ", filtering by projectId=" +
+                projectId
+            );
             activities.clear();
-            dtos.stream()
-                .filter(d -> d.getProjectId() != null && d.getProjectId().longValue() == projectId)
+            dtos
+                .stream()
+                .filter(
+                    d ->
+                        d.getProjectId() != null &&
+                        d.getProjectId().longValue() == projectId
+                )
                 .map(ProjectActivityViewModel::new)
-                .sorted(Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder))
+                .sorted(
+                    Comparator.comparingInt(
+                        ProjectActivityViewModel::getExecutionOrder
+                    )
+                )
                 .forEach(activities::add);
-            System.out.println("[Activities Load] After filter size=" + activities.size());
+            System.out.println(
+                "[Activities Load] After filter size=" + activities.size()
+            );
         });
         task.setOnFailed(e -> {
             activities.clear();
@@ -579,7 +785,9 @@ public class ProjectExpandController extends Controller implements Initializable
         if (picker == null) return;
         LocalDate ld = null;
         if (d != null) {
-            ld = Instant.ofEpochMilli(d.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+            ld = Instant.ofEpochMilli(d.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
         }
         final LocalDate v = ld;
         Platform.runLater(() -> picker.setValue(v));
