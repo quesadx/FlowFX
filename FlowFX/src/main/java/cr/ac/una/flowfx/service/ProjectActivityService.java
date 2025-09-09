@@ -78,21 +78,21 @@ public class ProjectActivityService {
     @Deprecated
     public Respuesta create(ProjectActivityDTO activity) {
         return new Respuesta(false,
-                "Se requieren 'createdBy' y 'responsibleId' para crear la actividad. Usa create(activity, createdBy, responsibleId).",
+                "Se requieren 'projectId' y 'responsibleId' para crear la actividad. Usa create(activity, projectId, responsibleId).",
                 "activity.create.missing-ids");
     }
 
-    public Respuesta create(ProjectActivityDTO activity, Long createdBy, Long responsibleId) {
+    public Respuesta create(ProjectActivityDTO activity, Long projectId, Long responsibleId) {
         try {
             if (activity == null) {
                 return new Respuesta(false, "El parámetro 'activity' es requerido.", "activity.create.null");
             }
-            if (createdBy == null || responsibleId == null) {
-                return new Respuesta(false, "Los parámetros 'createdBy' y 'responsibleId' son requeridos.", "activity.create.ids.null");
+            if (projectId == null || responsibleId == null) {
+                return new Respuesta(false, "Los parámetros 'projectId' y 'responsibleId' son requeridos.", "activity.create.ids.null");
             }
 
             cr.ac.una.flowfx.ws.ProjectActivityDTO wsDto = toWs(activity);
-            cr.ac.una.flowfx.ws.Respuesta wsResp = port.createProjectActivity(wsDto, createdBy, responsibleId);
+            cr.ac.una.flowfx.ws.Respuesta wsResp = port.createProjectActivity(wsDto, projectId, responsibleId);
 
             Respuesta r = mapRespuesta(wsResp);
             if (Boolean.TRUE.equals(r.getEstado())) {

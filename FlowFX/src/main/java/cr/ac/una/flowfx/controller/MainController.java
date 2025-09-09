@@ -1,11 +1,11 @@
 package cr.ac.una.flowfx.controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import cr.ac.una.flowfx.model.PersonDTO;
+import cr.ac.una.flowfx.model.ProjectActivityDTO;
+import cr.ac.una.flowfx.model.ProjectDTO;
 import cr.ac.una.flowfx.service.PersonService;
-import cr.ac.una.flowfx.service.ProjectService;
 import cr.ac.una.flowfx.service.ProjectActivityService;
+import cr.ac.una.flowfx.service.ProjectService;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
@@ -15,6 +15,11 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,18 +29,13 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
-import javafx.scene.control.TableRow;
-import cr.ac.una.flowfx.model.ProjectDTO;
-import cr.ac.una.flowfx.model.ProjectActivityDTO;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Main controller handling login and dashboard.
@@ -43,34 +43,71 @@ import java.util.List;
  */
 public class MainController extends Controller implements Initializable {
 
-    @FXML private AnchorPane root;
-    @FXML private VBox vbCover;
-    @FXML private VBox vbLogInDisplay;
-    @FXML private VBox vbSignUpDisplay;
+    @FXML
+    private AnchorPane root;
 
-    @FXML private MFXTextField txfUsername;
-    @FXML private MFXPasswordField psfUserPassword;
-    @FXML private MFXButton btnLogIn;
+    @FXML
+    private VBox vbCover;
 
-    @FXML private MFXTextField txfPersonId;
-    @FXML private MFXTextField txfPersonFirstName;
-    @FXML private MFXTextField txfPersonLastName;
-    @FXML private MFXTextField txfPersonEmail;
-    @FXML private MFXTextField txfPersonUsername;
-    @FXML private MFXPasswordField pswPersonPassword;
-    @FXML private MFXCheckbox cbIsAdmin;
-    @FXML private MFXCheckbox cbIsActive;
+    @FXML
+    private VBox vbLogInDisplay;
 
-    @FXML private PieChart pcPersonActivities;
+    @FXML
+    private VBox vbSignUpDisplay;
+
+    @FXML
+    private MFXTextField txfUsername;
+
+    @FXML
+    private MFXPasswordField psfUserPassword;
+
+    @FXML
+    private MFXButton btnLogIn;
+
+    @FXML
+    private MFXTextField txfPersonId;
+
+    @FXML
+    private MFXTextField txfPersonFirstName;
+
+    @FXML
+    private MFXTextField txfPersonLastName;
+
+    @FXML
+    private MFXTextField txfPersonEmail;
+
+    @FXML
+    private MFXTextField txfPersonUsername;
+
+    @FXML
+    private MFXPasswordField pswPersonPassword;
+
+    @FXML
+    private MFXCheckbox cbIsAdmin;
+
+    @FXML
+    private MFXCheckbox cbIsActive;
+
+    @FXML
+    private PieChart pcPersonActivities;
 
     private boolean userLoggedIn = false;
     private PersonDTO user;
 
-    @FXML private StackedBarChart<?, ?> sbcActivitiesPerProjects;
-    @FXML private TableView<ProjectDTO> tvProjects;
-    @FXML private TableColumn<ProjectDTO, String> tbcProjectName;
-    @FXML private TableColumn<ProjectDTO, String> tbcProjectStatus;
-    @FXML private ListView<String> lvActivities;
+    @FXML
+    private StackedBarChart<?, ?> sbcActivitiesPerProjects;
+
+    @FXML
+    private TableView<ProjectDTO> tvProjects;
+
+    @FXML
+    private TableColumn<ProjectDTO, String> tbcProjectName;
+
+    @FXML
+    private TableColumn<ProjectDTO, String> tbcProjectStatus;
+
+    @FXML
+    private ListView<String> lvActivities;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -92,15 +129,17 @@ public class MainController extends Controller implements Initializable {
 
         // Configure projects table columns and double-click navigation
         tbcProjectName.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getName() == null ? "-" : data.getValue().getName()
-                )
+            new javafx.beans.property.SimpleStringProperty(
+                data.getValue().getName() == null
+                    ? "-"
+                    : data.getValue().getName()
+            )
         );
         // Status is String; show "-" if null/blank
         tbcProjectStatus.setCellValueFactory(data -> {
             String st = data.getValue().getStatus();
             return new javafx.beans.property.SimpleStringProperty(
-                    (st == null || st.isBlank()) ? "-" : st
+                (st == null || st.isBlank()) ? "-" : st
             );
         });
 
@@ -110,8 +149,12 @@ public class MainController extends Controller implements Initializable {
                 if (!row.isEmpty() && evt.getClickCount() == 2) {
                     ProjectDTO selected = row.getItem();
                     AppContext.getInstance().set("currentProject", selected);
-                    Object navBar = AppContext.getInstance().get("navigationBar");
-                    if (navBar instanceof VBox) ((VBox) navBar).setDisable(true);
+                    Object navBar = AppContext.getInstance().get(
+                        "navigationBar"
+                    );
+                    if (navBar instanceof VBox) ((VBox) navBar).setDisable(
+                        true
+                    );
                     FlowController.getInstance().goView("ProjectExpandView");
                 }
             });
@@ -137,19 +180,34 @@ public class MainController extends Controller implements Initializable {
         String username = getTrimmedText(txfUsername);
         String password = psfUserPassword.getText();
         if (username.isEmpty() || password == null || password.isEmpty()) {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), "Complete todos los campos requeridos.");
+            new Mensaje().showModal(
+                Alert.AlertType.ERROR,
+                "Login",
+                root.getScene().getWindow(),
+                "Complete todos los campos requeridos."
+            );
             return;
         }
         PersonService personService = new PersonService();
-        Respuesta response = personService.validateCredentials(username, password);
+        Respuesta response = personService.validateCredentials(
+            username,
+            password
+        );
         if (Boolean.TRUE.equals(response.getEstado())) {
             user = (PersonDTO) response.getResultado("Person");
             if (user == null) {
                 // Defensive: server reported success but did not include a Person payload.
                 // Likely cause: WS did not set mensajeInterno with a Person JSON.
-                System.out.println("Login success without Person payload. mensajeInterno=" + response.getMensajeInterno());
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(),
-                        "No se recibió información del usuario. Intente de nuevo o contacte al administrador.");
+                System.out.println(
+                    "Login success without Person payload. mensajeInterno=" +
+                    response.getMensajeInterno()
+                );
+                new Mensaje().showModal(
+                    Alert.AlertType.ERROR,
+                    "Login",
+                    root.getScene().getWindow(),
+                    "No se recibió información del usuario. Intente de nuevo o contacte al administrador."
+                );
                 return;
             }
             AppContext.getInstance().set("user", user);
@@ -163,7 +221,12 @@ public class MainController extends Controller implements Initializable {
             clearLogInFields();
             refreshDashboard();
         } else {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), response.getMensaje());
+            new Mensaje().showModal(
+                Alert.AlertType.ERROR,
+                "Login",
+                root.getScene().getWindow(),
+                response.getMensaje()
+            );
         }
     }
 
@@ -177,7 +240,11 @@ public class MainController extends Controller implements Initializable {
     private void onMouseClickedLblPasswordRecovery(MouseEvent event) {
         // Open person selection as a temporary password recovery flow
         Stage stage = (Stage) root.getScene().getWindow();
-        FlowController.getInstance().goViewInWindowModal("PersonSelectionView", stage, false);
+        FlowController.getInstance().goViewInWindowModal(
+            "PersonSelectionView",
+            stage,
+            false
+        );
     }
 
     @FXML
@@ -194,12 +261,22 @@ public class MainController extends Controller implements Initializable {
         PersonService service = new PersonService();
         Respuesta response = service.create(newUser);
         if (Boolean.TRUE.equals(response.getEstado())) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Registro", root.getScene().getWindow(), "Usuario registrado correctamente.");
+            new Mensaje().showModal(
+                Alert.AlertType.INFORMATION,
+                "Registro",
+                root.getScene().getWindow(),
+                "Usuario registrado correctamente."
+            );
             AnimationManager.hidePopup(vbSignUpDisplay);
             AnimationManager.showPopup(vbLogInDisplay, vbCover);
             clearSignUpFields();
         } else {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Registro", root.getScene().getWindow(), response.getMensaje());
+            new Mensaje().showModal(
+                Alert.AlertType.ERROR,
+                "Registro",
+                root.getScene().getWindow(),
+                response.getMensaje()
+            );
         }
     }
 
@@ -233,12 +310,19 @@ public class MainController extends Controller implements Initializable {
         List<String> items = new ArrayList<>();
         if (Boolean.TRUE.equals(ar.getEstado())) {
             @SuppressWarnings("unchecked")
-            List<ProjectActivityDTO> acts = (List<ProjectActivityDTO>) ar.getResultado("Activities");
+            List<ProjectActivityDTO> acts = (List<
+                ProjectActivityDTO
+            >) ar.getResultado("Activities");
             if (acts != null) {
                 for (ProjectActivityDTO a : acts) {
                     String st = safeStatus(a.getStatus());
-                    String label = (a.getDescription() == null ? "Actividad" : a.getDescription()) +
-                                   " [" + st + "]";
+                    String label =
+                        (a.getDescription() == null
+                                ? "Actividad"
+                                : a.getDescription()) +
+                        " [" +
+                        st +
+                        "]";
                     items.add(label);
                 }
             }
@@ -246,15 +330,29 @@ public class MainController extends Controller implements Initializable {
         lvActivities.setItems(FXCollections.observableArrayList(items));
 
         // Pie chart: status distribution across user's projects (based on first char of String)
-        int cntP = 0, cntR = 0, cntS = 0, cntC = 0, cntU = 0;
+        int cntP = 0,
+            cntR = 0,
+            cntS = 0,
+            cntC = 0,
+            cntU = 0;
         for (ProjectDTO p : projects) {
             char sc = firstStatusChar(p.getStatus());
             switch (sc) {
-                case 'P': cntP++; break;
-                case 'R': cntR++; break;
-                case 'S': cntS++; break;
-                case 'C': cntC++; break;
-                default: cntU++; break;
+                case 'P':
+                    cntP++;
+                    break;
+                case 'R':
+                    cntR++;
+                    break;
+                case 'S':
+                    cntS++;
+                    break;
+                case 'C':
+                    cntC++;
+                    break;
+                default:
+                    cntU++;
+                    break;
             }
         }
         var pieData = FXCollections.observableArrayList(
@@ -268,22 +366,33 @@ public class MainController extends Controller implements Initializable {
 
         // Stacked bar: simple per-project activity counts
         List<Long> pids = new ArrayList<>();
-        for (ProjectDTO p : projects) if (p.getId() != null) pids.add(p.getId());
+        for (ProjectDTO p : projects)
+            if (p.getId() != null) pids.add(p.getId());
 
         Respuesta cr = actService.countByProjectIds(pids);
 
         // Safely cast to a typed chart to add typed series
         @SuppressWarnings("unchecked")
-        StackedBarChart<String, Number> chart = (StackedBarChart<String, Number>) (StackedBarChart<?, ?>) sbcActivitiesPerProjects;
+        StackedBarChart<String, Number> chart = (StackedBarChart<
+            String,
+            Number
+        >) (StackedBarChart<?, ?>) sbcActivitiesPerProjects;
         chart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Actividades");
         if (Boolean.TRUE.equals(cr.getEstado())) {
             @SuppressWarnings("unchecked")
-            java.util.Map<Long, Long> counts = (java.util.Map<Long, Long>) cr.getResultado("Counts");
+            java.util.Map<Long, Long> counts = (java.util.Map<
+                Long,
+                Long
+            >) cr.getResultado("Counts");
             for (ProjectDTO p : projects) {
                 long c = 0L;
-                if (counts != null && p.getId() != null && counts.containsKey(p.getId())) c = counts.get(p.getId());
+                if (
+                    counts != null &&
+                    p.getId() != null &&
+                    counts.containsKey(p.getId())
+                ) c = counts.get(p.getId());
                 series.getData().add(new XYChart.Data<>(p.getName(), c));
             }
         }
@@ -300,28 +409,68 @@ public class MainController extends Controller implements Initializable {
             String password = pswPersonPassword.getText();
             char status = cbIsActive.isSelected() ? 'A' : 'I';
             char isAdmin = cbIsAdmin.isSelected() ? 'Y' : 'N';
-            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || id == null) {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Login", root.getScene().getWindow(), "Complete todos los campos requeridos.");
+            if (
+                firstName.isEmpty() ||
+                lastName.isEmpty() ||
+                email.isEmpty() ||
+                id == null
+            ) {
+                new Mensaje().showModal(
+                    Alert.AlertType.ERROR,
+                    "Login",
+                    root.getScene().getWindow(),
+                    "Complete todos los campos requeridos."
+                );
                 return null;
             }
             boolean usernameEmpty = username.isEmpty();
             boolean passwordEmpty = password == null || password.isEmpty();
             if (usernameEmpty && passwordEmpty) {
                 // Both empty: allowed, set as null
-                return new PersonDTO(id, firstName, lastName, email, null, null, status, isAdmin);
+                return new PersonDTO(
+                    id,
+                    firstName,
+                    lastName,
+                    email,
+                    null,
+                    null,
+                    status,
+                    isAdmin
+                );
             } else if (!usernameEmpty && !passwordEmpty) {
                 // Both filled: allowed
-                return new PersonDTO(id, firstName, lastName, email, username, password, status, isAdmin);
+                return new PersonDTO(
+                    id,
+                    firstName,
+                    lastName,
+                    email,
+                    username,
+                    password,
+                    status,
+                    isAdmin
+                );
             } else {
                 // Only one filled: error
-                new Mensaje().showModal(Alert.AlertType.ERROR, "SignUp", root.getScene().getWindow(), "Debe completar usuario y clave o dejar ambos vacíos.");
+                new Mensaje().showModal(
+                    Alert.AlertType.ERROR,
+                    "SignUp",
+                    root.getScene().getWindow(),
+                    "Debe completar usuario y clave o dejar ambos vacíos."
+                );
                 return null;
             }
         } catch (NumberFormatException nfe) {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "SignUp", root.getScene().getWindow(), "La cédula debe ser numérica.");
+            new Mensaje().showModal(
+                Alert.AlertType.ERROR,
+                "SignUp",
+                root.getScene().getWindow(),
+                "La cédula debe ser numérica."
+            );
             return null;
         } catch (Exception e) {
-            System.err.println("Error al crear usuario por falta de datos: " + e.getMessage());
+            System.err.println(
+                "Error al crear usuario por falta de datos: " + e.getMessage()
+            );
             return null;
         }
     }
