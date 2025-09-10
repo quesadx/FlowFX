@@ -12,11 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * objects beyond keeping references.</p>
  *
  * <p>Important behavior notes preserved from the original implementation:
- * - {@link #delete(String)} retains the original semantics (sets the
- *   key's value to {@code null} rather than removing the key). This
- *   avoids changing behavior of callers that rely on presence of the
- *   key with a null value. A separate {@link #remove(String)} convenience
- *   method is provided to actually remove the mapping.</p>
+ * - {@link #delete(String)} retains the original semantics (logically sets the
+ *   key's value to {@code null} rather than removing the key). Because
+ *   {@link ConcurrentHashMap} does not permit storing {@code null} values, a
+ *   private sentinel object is stored instead to represent a logical null.
+ * - A separate {@link #remove(String)} convenience method is provided to
+ *   actually remove the mapping.</p>
  *
  * This class is final to prevent subclassing and uses the
  * initialization-on-demand holder idiom to provide a thread-safe
@@ -25,8 +26,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class AppContext {
 
     /**
+     * Sentinel object used to represent a logical null value because
+     * ConcurrentHashMap does not allow storing nulls.
+     */
+    private static final Object NULL_SENTINEL = new Object();
+
+    /**
      * Internal context storage. Uses ConcurrentHashMap for safe
      * concurrent access without external synchronization.
+     * Values equal to NULL_SENTINEL represent a logical null mapping.
      */
     private final ConcurrentHashMap<String, Object> context =
         new ConcurrentHashMap<>();
@@ -67,10 +75,11 @@ public final class AppContext {
      * Retrieves the object associated with the specified key.
      *
      * @param key the key whose value is to be returned (may be {@code null})
-     * @return the object associated with {@code key}, or {@code null} if none
+     * @return the object associated with {@code key}, or {@code null} if none or if logically null
      */
     public Object get(String key) {
-        return context.get(key);
+        Object v = context.get(key);
+        return v == NULL_SENTINEL ? null : v;
     }
 
     /**
@@ -84,41 +93,44 @@ public final class AppContext {
      */
     public void set(String key, Object value) {
         Objects.requireNonNull(key, "key must not be null");
-        context.put(key, value);
+        context.put(key, value == null ? NULL_SENTINEL : value);
     }
 
     /**
-     * Preserves historical behavior: sets the mapping for {@code key} to {@code null}.
+     * Preserves historical behavior: logically sets the mapping for {@code key} to {@code null}.
      *
-     * <p>Note: this intentionally does not remove the mapping. Callers that expect
-     * the original semantics should continue to use this method. To actually remove
-     * the mapping, use {@link #remove(String)}.</p>
+     * <p>Note: this intentionally does not remove the mapping. A sentinel object
+     * is stored internally to represent the logical null so that callers relying
+     * on key presence continue to function without triggering a NullPointerException
+     * from the underlying ConcurrentHashMap.</p>
      *
-     * @param key the key whose mapping should be set to {@code null}
+     * @param key the key whose mapping should be logically set to {@code null}
      * @throws NullPointerException if {@code key} is {@code null}
      */
     public void delete(String key) {
         Objects.requireNonNull(key, "key must not be null");
-        context.put(key, null);
+        context.put(key, NULL_SENTINEL);
     }
 
     /**
      * Removes the mapping for a key from this context if it is present.
      *
      * @param key the key whose mapping is to be removed
-     * @return the previous value associated with {@code key}, or {@code null} if there was no mapping
+     * @return the previous (logical) value associated with {@code key}, or {@code null}
+     *         if there was no mapping or if the mapping represented a logical null
      * @throws NullPointerException if {@code key} is {@code null}
      */
     public Object remove(String key) {
         Objects.requireNonNull(key, "key must not be null");
-        return context.remove(key);
+        Object prev = context.remove(key);
+        return prev == NULL_SENTINEL ? null : prev;
     }
 
     /**
      * Returns {@code true} if this context contains a mapping for the specified key.
      *
      * @param key the key whose presence is to be tested
-     * @return {@code true} if a mapping for {@code key} exists (even if value is {@code null})
+     * @return {@code true} if a mapping for {@code key} exists (even if value is logically null)
      */
     public boolean containsKey(String key) {
         return context.containsKey(key);

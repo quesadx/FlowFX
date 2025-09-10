@@ -12,9 +12,8 @@ import jakarta.json.JsonReader;
 import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import jakarta.xml.ws.BindingProvider;
-
 import java.io.StringReader;
-import java.lang.reflect.Method; // added
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -25,74 +24,157 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Client service for ProjectActivity operations against the FlowFX web service.
+ *
+ * <p>
+ * This class prepares the web service port and provides CRUD and query helper
+ * methods. It also contains robust JSON parsing utilities for converting the
+ * web service's internal {@code mensajeInterno} payload into
+ * {@link ProjectActivityDTO} instances.
+ * </p>
+ *
+ * <p>
+ * The public methods perform parameter validation and map web service responses
+ * (of type {@code cr.ac.una.flowfx.ws.Respuesta}) into application {@link Respuesta}.
+ * If the generated WS stub uses different operation names, adapt the port calls
+ * accordingly.
+ * </p>
+ */
 public class ProjectActivityService {
 
-    private static final Logger LOG = Logger.getLogger(ProjectActivityService.class.getName());
+    private static final Logger LOG = Logger.getLogger(
+        ProjectActivityService.class.getName()
+    );
     private static final String ENTITY_KEY = "ProjectActivity";
     private static final String LIST_KEY = "ProjectActivities";
 
     private FlowFXWS port;
 
+    /**
+     * Constructs the client and configures the default endpoint address.
+     * Adjust the endpoint if your deployment uses a different URL.
+     */
     public ProjectActivityService() {
         try {
             FlowFXWS_Service service = new FlowFXWS_Service();
             port = service.getFlowFXWSPort();
             if (port instanceof BindingProvider) {
                 ((BindingProvider) port).getRequestContext().put(
-                        BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                        "http://localhost:8080/FlowFXWS/FlowFXWS"
+                    BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                    "http://localhost:8080/FlowFXWS/FlowFXWS"
                 );
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Error inicializando port del WS", e);
+            LOG.log(Level.SEVERE, "Error initializing FlowFXWS port", e);
         }
     }
 
+    /**
+     * Finds a ProjectActivity by its id.
+     *
+     * @param id activity identifier (required)
+     * @return a Respuesta containing the result or an error state
+     */
     public Respuesta find(Long id) {
         try {
             if (id == null) {
-                return new Respuesta(false, "El parámetro 'id' es requerido.", "activity.find.id.null");
+                return new Respuesta(
+                    false,
+                    "The parameter 'id' is required.",
+                    "activity.find.id.null"
+                );
             }
             cr.ac.una.flowfx.ws.Respuesta wsResp = port.getProjectActivity(id);
             Respuesta r = mapRespuesta(wsResp);
-            if (Boolean.TRUE.equals(r.getEstado())) fillSingleFromMensajeInterno(r);
+            if (
+                Boolean.TRUE.equals(r.getEstado())
+            ) fillSingleFromMensajeInterno(r);
             return r;
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error obteniendo actividad [" + id + "]", ex);
-            return new Respuesta(false, "Error obteniendo la actividad.", "activity.find " + ex.getMessage());
+            LOG.log(Level.SEVERE, "Error retrieving activity [" + id + "]", ex);
+            return new Respuesta(
+                false,
+                "Error retrieving the activity.",
+                "activity.find " + ex.getMessage()
+            );
         }
     }
 
+    /**
+     * Retrieves all project activities.
+     *
+     * @return a Respuesta with a list of activities or an error
+     */
     public Respuesta findAll() {
         try {
-            cr.ac.una.flowfx.ws.Respuesta wsResp = port.getAllProjectActivities();
+            cr.ac.una.flowfx.ws.Respuesta wsResp =
+                port.getAllProjectActivities();
             Respuesta r = mapRespuesta(wsResp);
-            if (Boolean.TRUE.equals(r.getEstado())) fillListFromMensajeInterno(r);
+            if (Boolean.TRUE.equals(r.getEstado())) fillListFromMensajeInterno(
+                r
+            );
             return r;
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error obteniendo actividades", ex);
-            return new Respuesta(false, "Error obteniendo actividades.", "activity.findAll " + ex.getMessage());
+            LOG.log(Level.SEVERE, "Error retrieving activities", ex);
+            return new Respuesta(
+                false,
+                "Error retrieving activities.",
+                "activity.findAll " + ex.getMessage()
+            );
         }
     }
 
+    /**
+     * Deprecated create method. Use {@link #create(ProjectActivityDTO, Long, Long)}.
+     *
+     * @param activity ignored
+     * @return an error Respuesta indicating required parameters
+     */
     @Deprecated
     public Respuesta create(ProjectActivityDTO activity) {
-        return new Respuesta(false,
-                "Se requieren 'projectId' y 'responsibleId' para crear la actividad. Usa create(activity, projectId, responsibleId).",
-                "activity.create.missing-ids");
+        return new Respuesta(
+            false,
+            "projectId and responsibleId are required to create an activity. Use create(activity, projectId, responsibleId).",
+            "activity.create.missing-ids"
+        );
     }
 
-    public Respuesta create(ProjectActivityDTO activity, Long projectId, Long responsibleId) {
+    /**
+     * Creates a project activity associated with a project and responsible person.
+     *
+     * @param activity      the activity DTO to create (required)
+     * @param projectId     the project id (required)
+     * @param responsibleId the responsible person id (required)
+     * @return a Respuesta with the created activity or an error
+     */
+    public Respuesta create(
+        ProjectActivityDTO activity,
+        Long projectId,
+        Long responsibleId
+    ) {
         try {
             if (activity == null) {
-                return new Respuesta(false, "El parámetro 'activity' es requerido.", "activity.create.null");
+                return new Respuesta(
+                    false,
+                    "The parameter 'activity' is required.",
+                    "activity.create.null"
+                );
             }
             if (projectId == null || responsibleId == null) {
-                return new Respuesta(false, "Los parámetros 'projectId' y 'responsibleId' son requeridos.", "activity.create.ids.null");
+                return new Respuesta(
+                    false,
+                    "The parameters 'projectId' and 'responsibleId' are required.",
+                    "activity.create.ids.null"
+                );
             }
 
             cr.ac.una.flowfx.ws.ProjectActivityDTO wsDto = toWs(activity);
-            cr.ac.una.flowfx.ws.Respuesta wsResp = port.createProjectActivity(wsDto, projectId, responsibleId);
+            cr.ac.una.flowfx.ws.Respuesta wsResp = port.createProjectActivity(
+                wsDto,
+                projectId,
+                responsibleId
+            );
 
             Respuesta r = mapRespuesta(wsResp);
             if (Boolean.TRUE.equals(r.getEstado())) {
@@ -100,63 +182,140 @@ public class ProjectActivityService {
             }
             return r;
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error creando actividad", ex);
-            return new Respuesta(false, "Error creando actividad.", "activity.create " + ex.getMessage());
+            LOG.log(Level.SEVERE, "Error creating activity", ex);
+            return new Respuesta(
+                false,
+                "Error creating activity.",
+                "activity.create " + ex.getMessage()
+            );
         }
     }
 
+    /**
+     * Updates an existing project activity.
+     *
+     * @param activity the activity DTO to update (required, must contain id)
+     * @return a Respuesta with the updated activity or an error
+     */
     public Respuesta update(ProjectActivityDTO activity) {
         try {
             if (activity == null || activity.getId() == null) {
-                return new Respuesta(false, "La actividad y su 'id' son requeridos.", "activity.update.null");
+                return new Respuesta(
+                    false,
+                    "The activity and its 'id' are required.",
+                    "activity.update.null"
+                );
             }
             cr.ac.una.flowfx.ws.ProjectActivityDTO wsDto = toWs(activity);
-            cr.ac.una.flowfx.ws.Respuesta wsResp = port.updateProjectActivity(wsDto);
+            cr.ac.una.flowfx.ws.Respuesta wsResp = port.updateProjectActivity(
+                wsDto
+            );
             Respuesta r = mapRespuesta(wsResp);
-            if (Boolean.TRUE.equals(r.getEstado())) fillSingleFromMensajeInterno(r);
+            if (
+                Boolean.TRUE.equals(r.getEstado())
+            ) fillSingleFromMensajeInterno(r);
             return r;
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error actualizando actividad [" + (activity != null ? activity.getId() : null) + "]", ex);
-            return new Respuesta(false, "Error actualizando actividad.", "activity.update " + ex.getMessage());
+            LOG.log(
+                Level.SEVERE,
+                "Error updating activity [" +
+                (activity != null ? activity.getId() : null) +
+                "]",
+                ex
+            );
+            return new Respuesta(
+                false,
+                "Error updating activity.",
+                "activity.update " + ex.getMessage()
+            );
         }
     }
 
+    /**
+     * Deletes a project activity by id.
+     *
+     * @param id the activity id (required)
+     * @return a Respuesta describing the outcome
+     */
     public Respuesta delete(Long id) {
         try {
             if (id == null) {
-                return new Respuesta(false, "El parámetro 'id' es requerido.", "activity.delete.id.null");
+                return new Respuesta(
+                    false,
+                    "The parameter 'id' is required.",
+                    "activity.delete.id.null"
+                );
             }
-            cr.ac.una.flowfx.ws.Respuesta wsResp = port.deleteProjectActivity(id);
+            cr.ac.una.flowfx.ws.Respuesta wsResp = port.deleteProjectActivity(
+                id
+            );
             return mapRespuesta(wsResp);
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error eliminando actividad [" + id + "]", ex);
-            return new Respuesta(false, "Error eliminando actividad.", "activity.delete " + ex.getMessage());
+            LOG.log(Level.SEVERE, "Error deleting activity [" + id + "]", ex);
+            return new Respuesta(
+                false,
+                "Error deleting activity.",
+                "activity.delete " + ex.getMessage()
+            );
         }
     }
 
+    /**
+     * Retrieves recent activities for a user.
+     *
+     * @param userId     the user id (required)
+     * @param maxResults maximum number of results (if <= 0 defaults to 10)
+     * @return a Respuesta with a list of recent activities or an error
+     */
     public Respuesta findRecentForUser(Long userId, int maxResults) {
         try {
             if (userId == null) {
-                return new Respuesta(false, "El parámetro 'userId' es requerido.", "activity.recent.userId.null");
+                return new Respuesta(
+                    false,
+                    "The parameter 'userId' is required.",
+                    "activity.recent.userId.null"
+                );
             }
             if (maxResults <= 0) maxResults = 10;
 
-            cr.ac.una.flowfx.ws.Respuesta wsResp = port.getRecentActivitiesForUser(userId, maxResults);
+            cr.ac.una.flowfx.ws.Respuesta wsResp =
+                port.getRecentActivitiesForUser(userId, maxResults);
             Respuesta r = mapRespuesta(wsResp);
-            if (Boolean.TRUE.equals(r.getEstado())) fillListFromMensajeInterno(r);
+            if (Boolean.TRUE.equals(r.getEstado())) fillListFromMensajeInterno(
+                r
+            );
             return r;
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error obteniendo actividades recientes para userId=" + userId, ex);
-            return new Respuesta(false, "Error obteniendo actividades recientes.", "activity.recent " + ex.getMessage());
+            LOG.log(
+                Level.SEVERE,
+                "Error retrieving recent activities for userId=" + userId,
+                ex
+            );
+            return new Respuesta(
+                false,
+                "Error retrieving recent activities.",
+                "activity.recent " + ex.getMessage()
+            );
         }
     }
 
+    /**
+     * Counts activities grouped by the provided project ids.
+     *
+     * @param projectIds list of project ids (required)
+     * @return a Respuesta containing a count under key 'count' or an error
+     */
     public Respuesta countByProjectIds(List<Long> projectIds) {
         try {
             if (projectIds == null || projectIds.isEmpty()) {
-                return new Respuesta(false, "La lista 'projectIds' es requerida.", "activity.count.projectIds.null");
+                return new Respuesta(
+                    false,
+                    "The list 'projectIds' is required.",
+                    "activity.count.projectIds.null"
+                );
             }
-            cr.ac.una.flowfx.ws.Respuesta wsResp = port.countActivitiesByProjectIds(projectIds);
+            cr.ac.una.flowfx.ws.Respuesta wsResp =
+                port.countActivitiesByProjectIds(projectIds);
             Respuesta r = mapRespuesta(wsResp);
             if (Boolean.TRUE.equals(r.getEstado())) {
                 Long count = tryParseCount(r.getMensajeInterno());
@@ -164,23 +323,43 @@ public class ProjectActivityService {
             }
             return r;
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error contando actividades por proyectos " + projectIds, ex);
-            return new Respuesta(false, "Error obteniendo conteo de actividades.", "activity.count " + ex.getMessage());
+            LOG.log(
+                Level.SEVERE,
+                "Error counting activities by projects " + projectIds,
+                ex
+            );
+            return new Respuesta(
+                false,
+                "Error obtaining activity count.",
+                "activity.count " + ex.getMessage()
+            );
         }
     }
 
-    private cr.ac.una.flowfx.ws.ProjectActivityDTO toWs(ProjectActivityDTO dto) {
-        cr.ac.una.flowfx.ws.ProjectActivityDTO w = new cr.ac.una.flowfx.ws.ProjectActivityDTO();
+    /**
+     * Converts an application DTO to the generated WS DTO.
+     * Uses reflection for optional setters (for instance projectId) so the code
+     * remains resilient to stub variations.
+     *
+     * @param dto source DTO
+     * @return generated WS DTO
+     */
+    private cr.ac.una.flowfx.ws.ProjectActivityDTO toWs(
+        ProjectActivityDTO dto
+    ) {
+        cr.ac.una.flowfx.ws.ProjectActivityDTO w =
+            new cr.ac.una.flowfx.ws.ProjectActivityDTO();
         w.setId(dto.getId());
-        // Was: w.setProjectId(dto.getProjectId());
         // Use reflection so code compiles even if WS stub lacks setProjectId(Long)
         trySetLong(w, "setProjectId", dto.getProjectId());
 
         w.setDescription(dto.getDescription());
         if (dto.getStatus() != null) w.setStatus(dto.getStatus());
-        if (dto.getExecutionOrder() != null) w.setExecutionOrder(dto.getExecutionOrder());
+        if (dto.getExecutionOrder() != null) w.setExecutionOrder(
+            dto.getExecutionOrder()
+        );
 
-        // If the WS DTO defines date setters, you can enable them:
+        // If your WS stub includes date setters, enable them here:
         // w.setPlannedStartDate(dto.getPlannedStartDate());
         // w.setPlannedEndDate(dto.getPlannedEndDate());
         // w.setActualStartDate(dto.getActualStartDate());
@@ -190,11 +369,31 @@ public class ProjectActivityService {
         return w;
     }
 
+    /**
+     * Maps the generated web service response to the application Respuesta.
+     *
+     * @param ws the web service response
+     * @return mapped Respuesta
+     */
     private Respuesta mapRespuesta(cr.ac.una.flowfx.ws.Respuesta ws) {
-        if (ws == null) return new Respuesta(false, "Respuesta nula del WS", "ws.response.null");
-        return new Respuesta(ws.isEstado(), ws.getMensaje(), ws.getMensajeInterno());
+        if (ws == null) return new Respuesta(
+            false,
+            "Null response from WS",
+            "ws.response.null"
+        );
+        return new Respuesta(
+            ws.isEstado(),
+            ws.getMensaje(),
+            ws.getMensajeInterno()
+        );
     }
 
+    /**
+     * Parses mensajeInterno and populates a single ProjectActivityDTO in the Respuesta.
+     * Handles value as object or array; recognizes common wrappers.
+     *
+     * @param r response container to populate
+     */
     private void fillSingleFromMensajeInterno(Respuesta r) {
         String mi = r.getMensajeInterno();
         if (mi == null || mi.isBlank()) return;
@@ -204,10 +403,14 @@ public class ProjectActivityService {
             switch (val.getValueType()) {
                 case OBJECT: {
                     JsonObject obj = (JsonObject) val;
-                    obj = unwrapObject(obj,
-                            "activity", "Activity",
-                            "projectActivity", "ProjectActivity",
-                            "PROJECT_ACTIVITY", "PROJECTACTIVITY"
+                    obj = unwrapObject(
+                        obj,
+                        "activity",
+                        "Activity",
+                        "projectActivity",
+                        "ProjectActivity",
+                        "PROJECT_ACTIVITY",
+                        "PROJECTACTIVITY"
                     );
                     ProjectActivityDTO dto = fromJsonActivity(obj);
                     if (dto != null) {
@@ -218,8 +421,13 @@ public class ProjectActivityService {
                 }
                 case ARRAY: {
                     JsonArray arr = (JsonArray) val;
-                    if (!arr.isEmpty() && arr.get(0).getValueType() == JsonValue.ValueType.OBJECT) {
-                        ProjectActivityDTO dto = fromJsonActivity(arr.getJsonObject(0));
+                    if (
+                        !arr.isEmpty() &&
+                        arr.get(0).getValueType() == JsonValue.ValueType.OBJECT
+                    ) {
+                        ProjectActivityDTO dto = fromJsonActivity(
+                            arr.getJsonObject(0)
+                        );
                         if (dto != null) {
                             r.setResultado(ENTITY_KEY, dto);
                             return;
@@ -230,60 +438,86 @@ public class ProjectActivityService {
                 default:
                     break;
             }
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) {}
 
+        // Fallback: try strict object parse
         try (JsonReader jr = Json.createReader(new StringReader(mi))) {
             JsonObject obj = jr.readObject();
-            obj = unwrapObject(obj,
-                    "activity", "Activity",
-                    "projectActivity", "ProjectActivity",
-                    "PROJECT_ACTIVITY", "PROJECTACTIVITY"
+            obj = unwrapObject(
+                obj,
+                "activity",
+                "Activity",
+                "projectActivity",
+                "ProjectActivity",
+                "PROJECT_ACTIVITY",
+                "PROJECTACTIVITY"
             );
             ProjectActivityDTO dto = fromJsonActivity(obj);
             if (dto != null) {
                 r.setResultado(ENTITY_KEY, dto);
             }
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) {}
     }
 
+    /**
+     * Parses mensajeInterno and populates a list of ProjectActivityDTO in the Respuesta.
+     *
+     * @param r response container to populate
+     */
     private void fillListFromMensajeInterno(Respuesta r) {
         String mi = r.getMensajeInterno();
         if (mi == null || mi.isBlank()) return;
 
         List<ProjectActivityDTO> list = new ArrayList<>();
 
+        // 1) Try direct array
         try (JsonReader jr = Json.createReader(new StringReader(mi))) {
             JsonArray arr = jr.readArray();
             for (int i = 0; i < arr.size(); i++) {
                 if (arr.get(i).getValueType() == JsonValue.ValueType.OBJECT) {
-                    ProjectActivityDTO dto = fromJsonActivity(arr.getJsonObject(i));
+                    ProjectActivityDTO dto = fromJsonActivity(
+                        arr.getJsonObject(i)
+                    );
                     if (dto != null) list.add(dto);
                 }
             }
             r.setResultado(LIST_KEY, list);
             return;
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) {}
 
+        // 2) Try object with array inside under common wrapper keys
         try (JsonReader jr = Json.createReader(new StringReader(mi))) {
             JsonObject root = jr.readObject();
-            JsonArray arr = unwrapArray(root,
-                    "activities", "Activities", "ACTIVITIES",
-                    "projectActivities", "ProjectActivities", "PROJECT_ACTIVITIES", "PROJECTACTIVITIES",
-                    "data", "list"
+            JsonArray arr = unwrapArray(
+                root,
+                "activities",
+                "Activities",
+                "ACTIVITIES",
+                "projectActivities",
+                "ProjectActivities",
+                "PROJECT_ACTIVITIES",
+                "PROJECTACTIVITIES",
+                "data",
+                "list"
             );
             if (arr != null) {
                 for (int i = 0; i < arr.size(); i++) {
-                    if (arr.get(i).getValueType() == JsonValue.ValueType.OBJECT) {
-                        ProjectActivityDTO dto = fromJsonActivity(arr.getJsonObject(i));
+                    if (
+                        arr.get(i).getValueType() == JsonValue.ValueType.OBJECT
+                    ) {
+                        ProjectActivityDTO dto = fromJsonActivity(
+                            arr.getJsonObject(i)
+                        );
                         if (dto != null) list.add(dto);
                     }
                 }
             }
         } catch (Exception ex) {
-            LOG.log(Level.WARNING, "No se pudo parsear mensajeInterno a List<ProjectActivityDTO>", ex);
+            LOG.log(
+                Level.WARNING,
+                "Unable to parse mensajeInterno into List<ProjectActivityDTO>",
+                ex
+            );
         }
 
         r.setResultado(LIST_KEY, list);
@@ -291,7 +525,10 @@ public class ProjectActivityService {
 
     private JsonObject unwrapObject(JsonObject obj, String... keys) {
         for (String k : keys) {
-            if (obj.containsKey(k) && obj.get(k).getValueType() == JsonValue.ValueType.OBJECT) {
+            if (
+                obj.containsKey(k) &&
+                obj.get(k).getValueType() == JsonValue.ValueType.OBJECT
+            ) {
                 return obj.getJsonObject(k);
             }
         }
@@ -300,7 +537,10 @@ public class ProjectActivityService {
 
     private JsonArray unwrapArray(JsonObject obj, String... keys) {
         for (String k : keys) {
-            if (obj.containsKey(k) && obj.get(k).getValueType() == JsonValue.ValueType.ARRAY) {
+            if (
+                obj.containsKey(k) &&
+                obj.get(k).getValueType() == JsonValue.ValueType.ARRAY
+            ) {
                 return obj.getJsonArray(k);
             }
         }
@@ -338,6 +578,13 @@ public class ProjectActivityService {
         return dto;
     }
 
+    /**
+     * Tries to parse a count value from a mensajeInterno that may be a number,
+     * a string with the numeric, or an object containing a count/total/value key.
+     *
+     * @param mi the mensajeInterno string
+     * @return parsed count as Long or null if not parseable
+     */
     private Long tryParseCount(String mi) {
         if (mi == null || mi.isBlank()) return null;
 
@@ -359,14 +606,12 @@ public class ProjectActivityService {
                 default:
                     break;
             }
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) {}
 
         try (JsonReader jr = Json.createReader(new StringReader(mi))) {
             JsonObject obj = jr.readObject();
             return getLong(obj, "count", "total", "value");
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) {}
         return null;
     }
 
@@ -402,11 +647,17 @@ public class ProjectActivityService {
                             return obj.getJsonNumber(k).longValue();
                         case STRING:
                             String s = obj.getString(k);
-                            if (s != null && !s.isBlank()) return Long.parseLong(s.trim());
+                            if (
+                                s != null && !s.isBlank()
+                            ) return Long.parseLong(s.trim());
                             break;
                         default:
                             String raw = v.toString();
-                            if (raw != null && !raw.isBlank()) return Long.parseLong(raw.replace("\"", "").trim());
+                            if (
+                                raw != null && !raw.isBlank()
+                            ) return Long.parseLong(
+                                raw.replace("\"", "").trim()
+                            );
                     }
                 } catch (Exception ignore) {}
             }
@@ -424,11 +675,17 @@ public class ProjectActivityService {
                             return obj.getJsonNumber(k).intValue();
                         case STRING:
                             String s = obj.getString(k);
-                            if (s != null && !s.isBlank()) return Integer.parseInt(s.trim());
+                            if (
+                                s != null && !s.isBlank()
+                            ) return Integer.parseInt(s.trim());
                             break;
                         default:
                             String raw = v.toString();
-                            if (raw != null && !raw.isBlank()) return Integer.parseInt(raw.replace("\"", "").trim());
+                            if (
+                                raw != null && !raw.isBlank()
+                            ) return Integer.parseInt(
+                                raw.replace("\"", "").trim()
+                            );
                     }
                 } catch (Exception ignore) {}
             }
@@ -442,33 +699,38 @@ public class ProjectActivityService {
             try {
                 Instant inst = Instant.parse(s);
                 return Date.from(inst);
-            } catch (DateTimeParseException ignore) {
-            }
+            } catch (DateTimeParseException ignore) {}
             try {
                 return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
-            } catch (ParseException ignore) {
-            }
+            } catch (ParseException ignore) {}
             try {
                 return new SimpleDateFormat("yyyy-MM-dd").parse(s);
-            } catch (ParseException ignore) {
-            }
+            } catch (ParseException ignore) {}
         }
         for (String k : keys) {
-            if (obj.containsKey(k) && obj.get(k).getValueType() == JsonValue.ValueType.NUMBER) {
+            if (
+                obj.containsKey(k) &&
+                obj.get(k).getValueType() == JsonValue.ValueType.NUMBER
+            ) {
                 try {
                     long epoch = obj.getJsonNumber(k).longValue();
                     if (String.valueOf(epoch).length() <= 10) {
                         epoch = epoch * 1000L;
                     }
                     return new Date(epoch);
-                } catch (Exception ignore) {
-                }
+                } catch (Exception ignore) {}
             }
         }
         return null;
     }
 
-    // Reflection helper to set optional Long fields on WS DTOs without compile-time dependency
+    /**
+     * Reflection helper to set optional Long fields on WS DTOs without compile-time dependency.
+     *
+     * @param target     the generated WS DTO
+     * @param setterName setter name to try (e.g. "setProjectId")
+     * @param value      Long value to set
+     */
     private void trySetLong(Object target, String setterName, Long value) {
         if (target == null || value == null || setterName == null) return;
         Class<?> cls = target.getClass();
@@ -481,10 +743,8 @@ public class ProjectActivityService {
                 Method m2 = cls.getMethod(setterName, long.class);
                 m2.invoke(target, value.longValue());
                 return;
-            } catch (Exception ignore) {
-            }
-        } catch (Exception ignore) {
-        }
+            } catch (Exception ignore) {}
+        } catch (Exception ignore) {}
         // If neither exists, just skip silently
     }
 }
