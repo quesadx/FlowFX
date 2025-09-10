@@ -796,8 +796,20 @@ public class ProjectExpandController
             }
         }
         txfResponsible.setText(responsibleLabel);
-        // createdBy not yet exposed in DTO mapping; placeholder retained
-        txfCreatedBy.setText("-");
+        // Resolve createdBy label from cache if present, otherwise show ID or "-"
+        long cbid = item.getCreatedById();
+        String createdByLabel = "-";
+        if (cbid > 0) {
+            Object cbl = AppContext.getInstance().get(
+                "person." + cbid + ".label"
+            );
+            if (cbl instanceof String s2 && !s2.isBlank()) {
+                createdByLabel = s2;
+            } else {
+                createdByLabel = String.valueOf(cbid);
+            }
+        }
+        txfCreatedBy.setText(createdByLabel);
         txaDescription.setText(item.getDescription());
 
         // Dates

@@ -23,6 +23,7 @@ public class ProjectActivityViewModel {
     private final LongProperty id = new SimpleLongProperty();
     private final LongProperty projectId = new SimpleLongProperty();
     private final LongProperty responsibleId = new SimpleLongProperty(); // NEW: responsible FK
+    private final LongProperty createdById = new SimpleLongProperty(); // NEW: creator FK
     private final StringProperty description = new SimpleStringProperty();
     private final ObjectProperty<String> status = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> plannedStartDate =
@@ -56,6 +57,9 @@ public class ProjectActivityViewModel {
             setResponsibleId(
                 dto.getResponsibleId() == null ? 0L : dto.getResponsibleId()
             );
+            setCreatedById(
+                dto.getCreatedById() == null ? 0L : dto.getCreatedById()
+            );
             setDescription(dto.getDescription());
             setStatus(dto.getStatus());
             setPlannedStartDate(dto.getPlannedStartDate());
@@ -82,6 +86,7 @@ public class ProjectActivityViewModel {
         dto.setResponsibleId(
             getResponsibleId() == 0L ? null : getResponsibleId()
         );
+        dto.setCreatedById(getCreatedById() == 0L ? null : getCreatedById());
         dto.setDescription(getDescription());
         dto.setStatus(getStatus());
         dto.setPlannedStartDate(getPlannedStartDate());
@@ -130,6 +135,20 @@ public class ProjectActivityViewModel {
 
     public LongProperty responsibleIdProperty() {
         return responsibleId;
+    }
+
+    // --- CreatedById ---
+
+    public long getCreatedById() {
+        return createdById.get();
+    }
+
+    public void setCreatedById(long value) {
+        createdById.set(value);
+    }
+
+    public LongProperty createdByIdProperty() {
+        return createdById;
     }
 
     public String getDescription() {
@@ -269,6 +288,8 @@ public class ProjectActivityViewModel {
             (getProjectId() == 0L ? "null" : getProjectId()) +
             ", responsibleId=" +
             (getResponsibleId() == 0L ? "null" : getResponsibleId()) +
+            ", createdById=" +
+            (getCreatedById() == 0L ? "null" : getCreatedById()) +
             ", description=" +
             getDescription() +
             "}"

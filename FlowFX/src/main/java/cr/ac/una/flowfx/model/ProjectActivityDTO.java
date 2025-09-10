@@ -15,6 +15,7 @@ public class ProjectActivityDTO {
     private Long id;
     private Long projectId;
     private Long responsibleId; // Newly added FK to responsible Person
+    private Long createdById; // Newly added FK to creator Person
     private String description;
     private String status;
     private Integer executionOrder;
@@ -146,6 +147,14 @@ public class ProjectActivityDTO {
         this.responsibleId = responsibleId;
     }
 
+    public Long getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(Long createdById) {
+        this.createdById = createdById;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -250,6 +259,8 @@ public class ProjectActivityDTO {
             projectId +
             ", responsibleId=" +
             responsibleId +
+            ", createdById=" +
+            createdById +
             ", description=" +
             description +
             "}"

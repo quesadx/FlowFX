@@ -592,20 +592,52 @@ public class ProjectActivityService {
         );
         if (respId != null) {
             try {
-                // Use reflection in case DTO evolved
                 var m = dto
                     .getClass()
                     .getMethod("setResponsibleId", Long.class);
                 m.invoke(dto, respId);
             } catch (Exception ignore) {
-                // No-op: field absent in older client versions
+                // Field might not exist in older client DTOs
             }
-            // Cache human-readable label if name present
             if (respName != null && !respName.isBlank()) {
                 AppContext.getInstance().set(
                     "person." + respId + ".label",
                     respName.trim()
                 );
+            }
+        }
+
+        // Extract createdById & createdByName (newly added)
+        Long createdById = getLong(
+            obj,
+            "created_by_id",
+            "createdById",
+            "CREATED_BY_ID",
+            "CREATEDBYID"
+        );
+        String createdByName = getString(
+            obj,
+            "createdByName",
+            "created_by_name",
+            "CREATED_BY_NAME"
+        );
+        if (createdById != null) {
+            try {
+                var m = dto.getClass().getMethod("setCreatedById", Long.class);
+                m.invoke(dto, createdById);
+            } catch (Exception ignore) {
+                // Field might not exist in older client DTOs
+            }
+            if (createdByName != null && !createdByName.isBlank()) {
+                // Only set label if not already cached (responsible/creator can overlap)
+                String cacheKey = "person." + createdById + ".label";
+                Object existing = AppContext.getInstance().get(cacheKey);
+                if (existing == null || String.valueOf(existing).isBlank()) {
+                    AppContext.getInstance().set(
+                        cacheKey,
+                        createdByName.trim()
+                    );
+                }
             }
         }
 
