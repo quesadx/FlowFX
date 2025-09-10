@@ -16,17 +16,21 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public final class DockOverlayManager {
+
     private static final double EDGE_TRIGGER_PX = 25.0;
     private static final double DOCK_BOTTOM_MARGIN = 16.0;
     private static final double SHOW_START_TRANSLATE_Y = 24.0;
     private static final double HIDE_END_TRANSLATE_Y = 18.0;
     private static final Duration SHOW_DURATION = Duration.millis(500);
     private static final Duration HIDE_DURATION = Duration.millis(300);
-    private static final Interpolator OVERLAY_INTERPOLATOR = Interpolator.EASE_BOTH;
-    private static final Interpolator DOCK_IN_INTERPOLATOR = Interpolator.SPLINE(0.2, 0.7, 0.2, 1.0);
-    private static final Interpolator DOCK_OUT_INTERPOLATOR = Interpolator.SPLINE(0.3, 0.0, 0.7, 1.0);
+    private static final Interpolator OVERLAY_INTERPOLATOR =
+        Interpolator.EASE_BOTH;
+    private static final Interpolator DOCK_IN_INTERPOLATOR =
+        Interpolator.SPLINE(0.2, 0.7, 0.2, 1.0);
+    private static final Interpolator DOCK_OUT_INTERPOLATOR =
+        Interpolator.SPLINE(0.3, 0.0, 0.7, 1.0);
 
-    private DockOverlayManager() { }
+    private DockOverlayManager() {}
 
     public static void attach(Stage stage, StackPane rootStack) {
         if (rootStack == null || stage == null) return;
@@ -74,13 +78,17 @@ public final class DockOverlayManager {
             if (!dock.isHover()) hideOverlay(overlayRoot, dock);
         });
 
-        overlayRoot.visibleProperty().addListener((obs, ov, nv) -> {
-            if (nv) overlayRoot.toFront();
-        });
+        overlayRoot
+            .visibleProperty()
+            .addListener((obs, ov, nv) -> {
+                if (nv) overlayRoot.toFront();
+            });
 
-        stage.focusedProperty().addListener((obs, ov, nv) -> {
-            if (!nv) hideOverlay(overlayRoot, dock);
-        });
+        stage
+            .focusedProperty()
+            .addListener((obs, ov, nv) -> {
+                if (!nv) hideOverlay(overlayRoot, dock);
+            });
     }
 
     private static void showOverlay(StackPane overlayRoot, Node dockBar) {
@@ -92,15 +100,41 @@ public final class DockOverlayManager {
         dockBar.setOpacity(0);
 
         Timeline inTl = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(overlayRoot.opacityProperty(), 0, Interpolator.EASE_OUT),
-                new KeyValue(dockBar.opacityProperty(), 0, Interpolator.EASE_OUT),
-                new KeyValue(dockBar.translateYProperty(), SHOW_START_TRANSLATE_Y, Interpolator.EASE_OUT)
+            new KeyFrame(
+                Duration.ZERO,
+                new KeyValue(
+                    overlayRoot.opacityProperty(),
+                    0,
+                    Interpolator.EASE_OUT
+                ),
+                new KeyValue(
+                    dockBar.opacityProperty(),
+                    0,
+                    Interpolator.EASE_OUT
+                ),
+                new KeyValue(
+                    dockBar.translateYProperty(),
+                    SHOW_START_TRANSLATE_Y,
+                    Interpolator.EASE_OUT
+                )
             ),
-            new KeyFrame(SHOW_DURATION,
-                new KeyValue(overlayRoot.opacityProperty(), 1, OVERLAY_INTERPOLATOR),
-                new KeyValue(dockBar.opacityProperty(), 1, DOCK_IN_INTERPOLATOR),
-                new KeyValue(dockBar.translateYProperty(), 0, DOCK_IN_INTERPOLATOR)
+            new KeyFrame(
+                SHOW_DURATION,
+                new KeyValue(
+                    overlayRoot.opacityProperty(),
+                    1,
+                    OVERLAY_INTERPOLATOR
+                ),
+                new KeyValue(
+                    dockBar.opacityProperty(),
+                    1,
+                    DOCK_IN_INTERPOLATOR
+                ),
+                new KeyValue(
+                    dockBar.translateYProperty(),
+                    0,
+                    DOCK_IN_INTERPOLATOR
+                )
             )
         );
         inTl.play();
@@ -110,13 +144,31 @@ public final class DockOverlayManager {
         if (!overlayRoot.isVisible()) return;
 
         Timeline outTl = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(dockBar.opacityProperty(), 1, Interpolator.EASE_OUT),
-                new KeyValue(dockBar.translateYProperty(), 0, Interpolator.EASE_OUT)
+            new KeyFrame(
+                Duration.ZERO,
+                new KeyValue(
+                    dockBar.opacityProperty(),
+                    1,
+                    Interpolator.EASE_OUT
+                ),
+                new KeyValue(
+                    dockBar.translateYProperty(),
+                    0,
+                    Interpolator.EASE_OUT
+                )
             ),
-            new KeyFrame(HIDE_DURATION,
-                new KeyValue(dockBar.opacityProperty(), 0, OVERLAY_INTERPOLATOR),
-                new KeyValue(dockBar.translateYProperty(), HIDE_END_TRANSLATE_Y, DOCK_OUT_INTERPOLATOR)
+            new KeyFrame(
+                HIDE_DURATION,
+                new KeyValue(
+                    dockBar.opacityProperty(),
+                    0,
+                    OVERLAY_INTERPOLATOR
+                ),
+                new KeyValue(
+                    dockBar.translateYProperty(),
+                    HIDE_END_TRANSLATE_Y,
+                    DOCK_OUT_INTERPOLATOR
+                )
             )
         );
         outTl.setOnFinished(e -> {

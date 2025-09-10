@@ -1,28 +1,32 @@
-
 package cr.ac.una.flowfx.controller;
 
+import cr.ac.una.flowfx.util.FlowController;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import cr.ac.una.flowfx.util.AppContext;
-import cr.ac.una.flowfx.util.FlowController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class PrincipalController extends Controller implements Initializable {
 
-    @FXML private BorderPane root;
-    @FXML private MFXButton btnClose;
-    @FXML private MFXButton btnMaximize;
-    @FXML private MFXButton btnMinimize;
-    @FXML private HBox hbLateralHandlebar;
+    @FXML
+    private BorderPane root;
+
+    @FXML
+    private MFXButton btnClose;
+
+    @FXML
+    private MFXButton btnMaximize;
+
+    @FXML
+    private MFXButton btnMinimize;
+
+    @FXML
+    private HBox hbLateralHandlebar;
 
     private static final int RESIZE_MARGIN = 8;
     private boolean resizingLeft;
@@ -91,7 +95,9 @@ public class PrincipalController extends Controller implements Initializable {
         root.setOnMouseReleased(this::handleMouseReleasedForResize);
     }
 
-    private void handleMouseMovedForResize(javafx.scene.input.MouseEvent event) {
+    private void handleMouseMovedForResize(
+        javafx.scene.input.MouseEvent event
+    ) {
         double mouseX = event.getX();
         double mouseY = event.getY();
         double width = root.getWidth();
@@ -99,7 +105,8 @@ public class PrincipalController extends Controller implements Initializable {
         boolean onLeftEdge = mouseX >= 0 && mouseX < RESIZE_MARGIN;
         boolean onRightEdge = mouseX > width - RESIZE_MARGIN && mouseX <= width;
         boolean onTopEdge = mouseY >= 0 && mouseY < RESIZE_MARGIN;
-        boolean onBottomEdge = mouseY > height - RESIZE_MARGIN && mouseY <= height;
+        boolean onBottomEdge =
+            mouseY > height - RESIZE_MARGIN && mouseY <= height;
         if (onLeftEdge && onTopEdge) {
             root.setCursor(javafx.scene.Cursor.NW_RESIZE);
         } else if (onRightEdge && onTopEdge) {
@@ -121,7 +128,9 @@ public class PrincipalController extends Controller implements Initializable {
         }
     }
 
-    private void handleMousePressedForResize(javafx.scene.input.MouseEvent event) {
+    private void handleMousePressedForResize(
+        javafx.scene.input.MouseEvent event
+    ) {
         double mouseX = event.getX();
         double mouseY = event.getY();
         double width = root.getWidth();
@@ -142,7 +151,9 @@ public class PrincipalController extends Controller implements Initializable {
         }
     }
 
-    private void handleMouseDraggedForResize(javafx.scene.input.MouseEvent event) {
+    private void handleMouseDraggedForResize(
+        javafx.scene.input.MouseEvent event
+    ) {
         Stage stage = (Stage) root.getScene().getWindow();
         boolean resized = false;
         double minWidth = stage.getMinWidth();
@@ -190,20 +201,36 @@ public class PrincipalController extends Controller implements Initializable {
             stage.setY(newY);
             stage.setWidth(newWidth);
             stage.setHeight(newHeight);
-            if ((resizingLeft && resizingTop) || (resizingRight && resizingBottom)) {
+            if (
+                (resizingLeft && resizingTop) ||
+                (resizingRight && resizingBottom)
+            ) {
                 root.setCursor(javafx.scene.Cursor.NW_RESIZE);
-            } else if ((resizingRight && resizingTop) || (resizingLeft && resizingBottom)) {
+            } else if (
+                (resizingRight && resizingTop) ||
+                (resizingLeft && resizingBottom)
+            ) {
                 root.setCursor(javafx.scene.Cursor.NE_RESIZE);
             } else if (resizingLeft || resizingRight) {
-                root.setCursor(resizingLeft ? javafx.scene.Cursor.W_RESIZE : javafx.scene.Cursor.E_RESIZE);
+                root.setCursor(
+                    resizingLeft
+                        ? javafx.scene.Cursor.W_RESIZE
+                        : javafx.scene.Cursor.E_RESIZE
+                );
             } else if (resizingTop || resizingBottom) {
-                root.setCursor(resizingTop ? javafx.scene.Cursor.N_RESIZE : javafx.scene.Cursor.S_RESIZE);
+                root.setCursor(
+                    resizingTop
+                        ? javafx.scene.Cursor.N_RESIZE
+                        : javafx.scene.Cursor.S_RESIZE
+                );
             }
         }
         event.consume();
     }
 
-    private void handleMouseReleasedForResize(javafx.scene.input.MouseEvent event) {
+    private void handleMouseReleasedForResize(
+        javafx.scene.input.MouseEvent event
+    ) {
         resizingLeft = false;
         resizingRight = false;
         resizingTop = false;
@@ -213,7 +240,12 @@ public class PrincipalController extends Controller implements Initializable {
 
     private void setupWindowDragHandlers() {
         hbLateralHandlebar.setOnMousePressed(event -> {
-            if (!(resizingLeft || resizingRight || resizingTop || resizingBottom)) {
+            if (
+                !(resizingLeft ||
+                    resizingRight ||
+                    resizingTop ||
+                    resizingBottom)
+            ) {
                 Stage stage = (Stage) root.getScene().getWindow();
                 dragOffsetX = event.getScreenX() - stage.getX();
                 dragOffsetY = event.getScreenY() - stage.getY();
@@ -221,14 +253,24 @@ public class PrincipalController extends Controller implements Initializable {
             }
         });
         hbLateralHandlebar.setOnMouseDragged(event -> {
-            if (!(resizingLeft || resizingRight || resizingTop || resizingBottom)) {
+            if (
+                !(resizingLeft ||
+                    resizingRight ||
+                    resizingTop ||
+                    resizingBottom)
+            ) {
                 Stage stage = (Stage) root.getScene().getWindow();
                 stage.setX(event.getScreenX() - dragOffsetX);
                 stage.setY(event.getScreenY() - dragOffsetY);
             }
         });
         hbLateralHandlebar.setOnMouseReleased(event -> {
-            if (!(resizingLeft || resizingRight || resizingTop || resizingBottom)) {
+            if (
+                !(resizingLeft ||
+                    resizingRight ||
+                    resizingTop ||
+                    resizingBottom)
+            ) {
                 hbLateralHandlebar.setCursor(javafx.scene.Cursor.DEFAULT);
             }
         });

@@ -10,7 +10,6 @@ import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -148,7 +147,7 @@ public class PersonExpandController
         // Active status: 'A' selected, 'I' not selected
         cbIsActive.setSelected(
             vm.getStatus() != null &&
-            Character.toUpperCase(vm.getStatus()) == 'A'
+                Character.toUpperCase(vm.getStatus()) == 'A'
         );
         cbIsActive
             .selectedProperty()
@@ -163,7 +162,7 @@ public class PersonExpandController
         // Admin flag: 'Y' selected, 'N' not selected
         cbIsAdmin.setSelected(
             vm.getIsAdmin() != null &&
-            Character.toUpperCase(vm.getIsAdmin()) == 'Y'
+                Character.toUpperCase(vm.getIsAdmin()) == 'Y'
         );
         cbIsAdmin
             .selectedProperty()

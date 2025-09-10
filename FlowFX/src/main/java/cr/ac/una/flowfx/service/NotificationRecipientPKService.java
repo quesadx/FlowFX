@@ -127,6 +127,7 @@ public class NotificationRecipientPKService {
      * @param ws the web service response instance
      * @return a mapped {@link Respuesta} instance
      */
+    @SuppressWarnings("unused")
     private Respuesta mapRespuesta(cr.ac.una.flowfx.ws.Respuesta ws) {
         if (ws == null) {
             return new Respuesta(

@@ -9,7 +9,6 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import jakarta.json.JsonString;
-import jakarta.json.JsonValue;
 import jakarta.xml.ws.BindingProvider;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -153,8 +152,8 @@ public class PersonService {
             LOG.log(
                 Level.SEVERE,
                 "Error updating person [" +
-                (person != null ? person.getId() : null) +
-                "]",
+                    (person != null ? person.getId() : null) +
+                    "]",
                 ex
             );
             return new Respuesta(
