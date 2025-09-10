@@ -489,9 +489,9 @@ public class ProjectExpandController
         } else {
             LOGGER.warning(
                 "[Activity Create] Failed: " +
-                r.getMensaje() +
-                " | " +
-                r.getMensajeInterno()
+                    r.getMensaje() +
+                    " | " +
+                    r.getMensajeInterno()
             );
         }
     }
@@ -521,19 +521,19 @@ public class ProjectExpandController
             // Debug print
             LOGGER.fine(
                 "[Activity Confirm] id=" +
-                selectedActivity.getId() +
-                ", order=" +
-                selectedActivity.getExecutionOrder() +
-                ", desc=" +
-                selectedActivity.getDescription() +
-                ", plannedStart=" +
-                selectedActivity.getPlannedStartDate() +
-                ", plannedEnd=" +
-                selectedActivity.getPlannedEndDate() +
-                ", actualStart=" +
-                selectedActivity.getActualStartDate() +
-                ", actualEnd=" +
-                selectedActivity.getActualEndDate()
+                    selectedActivity.getId() +
+                    ", order=" +
+                    selectedActivity.getExecutionOrder() +
+                    ", desc=" +
+                    selectedActivity.getDescription() +
+                    ", plannedStart=" +
+                    selectedActivity.getPlannedStartDate() +
+                    ", plannedEnd=" +
+                    selectedActivity.getPlannedEndDate() +
+                    ", actualStart=" +
+                    selectedActivity.getActualStartDate() +
+                    ", actualEnd=" +
+                    selectedActivity.getActualEndDate()
             );
 
             // Future: persist via WS
@@ -559,10 +559,22 @@ public class ProjectExpandController
             String text = mapStatus(code);
             return Bindings.createStringBinding(() -> text);
         });
-        // Responsible name currently not provided by WS payload -> display placeholder
-        tbcActivityResponsible.setCellValueFactory(cd ->
-            Bindings.createStringBinding(() -> "-")
-        );
+        // Responsible column now shows resolved name (if cached) or the responsibleId; fallback "-"
+        tbcActivityResponsible.setCellValueFactory(cd -> {
+            ProjectActivityViewModel vmAct = cd.getValue();
+            return Bindings.createStringBinding(() -> {
+                if (vmAct == null) return "-";
+                long rid = vmAct.getResponsibleId();
+                if (rid <= 0) return "-";
+                Object label = AppContext.getInstance().get(
+                    "person." + rid + ".label"
+                );
+                if (label instanceof String s && !s.isBlank()) {
+                    return s;
+                }
+                return String.valueOf(rid);
+            });
+        });
 
         // Items and default sort by executionOrder
         tbvActivities.setItems(activities);
@@ -591,8 +603,8 @@ public class ProjectExpandController
                         }
                         setStyle(
                             "-fx-background-color: " +
-                            bg +
-                            "; -fx-background-radius: 12;"
+                                bg +
+                                "; -fx-background-radius: 12;"
                         );
                         setCursor(Cursor.OPEN_HAND);
                     }
@@ -723,9 +735,9 @@ public class ProjectExpandController
             List<ProjectActivityDTO> dtos = task.getValue();
             LOGGER.fine(
                 "[Activities Load] WS returned list size=" +
-                (dtos != null ? dtos.size() : 0) +
-                ", filtering by projectId=" +
-                projectId
+                    (dtos != null ? dtos.size() : 0) +
+                    ", filtering by projectId=" +
+                    projectId
             );
             activities.clear();
             dtos
@@ -770,8 +782,21 @@ public class ProjectExpandController
         this.selectedActivity = item;
         if (item == null) return;
 
-        // Simple text fields (placeholders as WS JSON doesn't include names yet)
-        txfResponsible.setText("-");
+        // Resolve responsible label from cache if present, otherwise show ID or "-"
+        long rid = item.getResponsibleId();
+        String responsibleLabel = "-";
+        if (rid > 0) {
+            Object lbl = AppContext.getInstance().get(
+                "person." + rid + ".label"
+            );
+            if (lbl instanceof String s && !s.isBlank()) {
+                responsibleLabel = s;
+            } else {
+                responsibleLabel = String.valueOf(rid);
+            }
+        }
+        txfResponsible.setText(responsibleLabel);
+        // createdBy not yet exposed in DTO mapping; placeholder retained
         txfCreatedBy.setText("-");
         txaDescription.setText(item.getDescription());
 

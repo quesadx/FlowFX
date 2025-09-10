@@ -1,6 +1,7 @@
 package cr.ac.una.flowfx.service;
 
 import cr.ac.una.flowfx.model.ProjectActivityDTO;
+import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.Respuesta;
 import cr.ac.una.flowfx.ws.FlowFXWS;
 import cr.ac.una.flowfx.ws.FlowFXWS_Service;
@@ -219,8 +220,8 @@ public class ProjectActivityService {
             LOG.log(
                 Level.SEVERE,
                 "Error updating activity [" +
-                (activity != null ? activity.getId() : null) +
-                "]",
+                    (activity != null ? activity.getId() : null) +
+                    "]",
                 ex
             );
             return new Respuesta(
@@ -574,6 +575,39 @@ public class ProjectActivityService {
         dto.setActualEndDate(aed);
         dto.setCreatedAt(cat);
         dto.setUpdatedAt(uat);
+
+        // Extract responsibleId & responsibleName (server now includes them)
+        Long respId = getLong(
+            obj,
+            "responsible_id",
+            "responsibleId",
+            "RESPONSIBLE_ID",
+            "RESPONSIBLEID"
+        );
+        String respName = getString(
+            obj,
+            "responsibleName",
+            "responsible_name",
+            "RESPONSIBLE_NAME"
+        );
+        if (respId != null) {
+            try {
+                // Use reflection in case DTO evolved
+                var m = dto
+                    .getClass()
+                    .getMethod("setResponsibleId", Long.class);
+                m.invoke(dto, respId);
+            } catch (Exception ignore) {
+                // No-op: field absent in older client versions
+            }
+            // Cache human-readable label if name present
+            if (respName != null && !respName.isBlank()) {
+                AppContext.getInstance().set(
+                    "person." + respId + ".label",
+                    respName.trim()
+                );
+            }
+        }
 
         return dto;
     }

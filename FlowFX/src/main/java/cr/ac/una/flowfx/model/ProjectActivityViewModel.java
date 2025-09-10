@@ -22,6 +22,7 @@ public class ProjectActivityViewModel {
 
     private final LongProperty id = new SimpleLongProperty();
     private final LongProperty projectId = new SimpleLongProperty();
+    private final LongProperty responsibleId = new SimpleLongProperty(); // NEW: responsible FK
     private final StringProperty description = new SimpleStringProperty();
     private final ObjectProperty<String> status = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> plannedStartDate =
@@ -52,6 +53,9 @@ public class ProjectActivityViewModel {
         if (dto != null) {
             setId(dto.getId() == null ? 0L : dto.getId());
             setProjectId(dto.getProjectId() == null ? 0L : dto.getProjectId());
+            setResponsibleId(
+                dto.getResponsibleId() == null ? 0L : dto.getResponsibleId()
+            );
             setDescription(dto.getDescription());
             setStatus(dto.getStatus());
             setPlannedStartDate(dto.getPlannedStartDate());
@@ -75,6 +79,9 @@ public class ProjectActivityViewModel {
         ProjectActivityDTO dto = new ProjectActivityDTO();
         dto.setId(getId() == 0L ? null : getId());
         dto.setProjectId(getProjectId() == 0L ? null : getProjectId());
+        dto.setResponsibleId(
+            getResponsibleId() == 0L ? null : getResponsibleId()
+        );
         dto.setDescription(getDescription());
         dto.setStatus(getStatus());
         dto.setPlannedStartDate(getPlannedStartDate());
@@ -109,6 +116,20 @@ public class ProjectActivityViewModel {
 
     public LongProperty projectIdProperty() {
         return projectId;
+    }
+
+    // --- ResponsibleId ---
+
+    public long getResponsibleId() {
+        return responsibleId.get();
+    }
+
+    public void setResponsibleId(long value) {
+        responsibleId.set(value);
+    }
+
+    public LongProperty responsibleIdProperty() {
+        return responsibleId;
     }
 
     public String getDescription() {
@@ -244,6 +265,10 @@ public class ProjectActivityViewModel {
         return (
             "ProjectActivityViewModel{id=" +
             (getId() == 0L ? "null" : getId()) +
+            ", projectId=" +
+            (getProjectId() == 0L ? "null" : getProjectId()) +
+            ", responsibleId=" +
+            (getResponsibleId() == 0L ? "null" : getResponsibleId()) +
             ", description=" +
             getDescription() +
             "}"
