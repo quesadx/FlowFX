@@ -85,6 +85,7 @@ public class ProjectManagementController
         clearForm();
         loadUserProjects();
         loadUserProjects();
+        //FlowController.getInstance().limpiarLoader("ProjectExpandView");
     }
 
     @FXML

@@ -1,10 +1,13 @@
 package cr.ac.una.flowfx.controller;
 
+import cr.ac.una.flowfx.model.PersonDTO;
 import cr.ac.una.flowfx.model.ProjectActivityDTO;
 import cr.ac.una.flowfx.model.ProjectActivityViewModel;
 import cr.ac.una.flowfx.model.ProjectDTO;
 import cr.ac.una.flowfx.model.ProjectViewModel;
+import cr.ac.una.flowfx.service.PersonService;
 import cr.ac.una.flowfx.service.ProjectActivityService;
+import cr.ac.una.flowfx.service.ProjectService;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.BindingUtils;
@@ -86,7 +89,7 @@ public class ProjectExpandController
     private MFXDatePicker dpProjectStartDate; // planned start
 
     @FXML
-    private MFXDatePicker dpProjectStartDate1; // planned end
+    private MFXDatePicker dpProjectActualStartDate; // planned end
 
     @FXML
     private MFXCircleToggleNode tgProjectStatusPending;
@@ -243,7 +246,7 @@ public class ProjectExpandController
 
         // Dates
         bindDatePicker(dpProjectStartDate, true);
-        bindDatePicker(dpProjectStartDate1, false);
+        bindDatePicker(dpProjectActualStartDate, false);
 
         // Status as String tokens
         tgProjectStatusPending.setUserData("P");
@@ -262,10 +265,66 @@ public class ProjectExpandController
             ProjectStatus.selectToggle(tgProjectStatusPending);
         }
 
-        // Numeric bindings for related IDs
-        bindNumericText(txfLeaderId, true, false);
-        bindNumericText(txfTechLeaderId, false, false);
-        bindNumericText(txfSponsorId, false, true);
+        // Configure person display fields as non-editable and show resolved names
+        txfLeaderId.setEditable(false);
+        txfTechLeaderId.setEditable(false);
+        txfSponsorId.setEditable(false);
+        refreshLeaderLabel();
+        refreshTechLeaderLabel();
+        refreshSponsorLabel();
+        // Keep labels in sync if any id changes later (e.g., after a reload)
+        vm.leaderUserIdProperty().addListener((obs, o, n) -> refreshLeaderLabel());
+        vm.techLeaderIdProperty().addListener((obs, o, n) -> refreshTechLeaderLabel());
+        vm.sponsorIdProperty().addListener((obs, o, n) -> refreshSponsorLabel());
+        // Info popup is handled via @FXML onAction methods
+    }
+
+    private void refreshLeaderLabel() {
+        updatePersonLabelIntoField(vm.getLeaderUserId(), txfLeaderId);
+    }
+
+    private void refreshTechLeaderLabel() {
+        updatePersonLabelIntoField(vm.getTechLeaderId(), txfTechLeaderId);
+    }
+
+    private void refreshSponsorLabel() {
+        updatePersonLabelIntoField(vm.getSponsorId(), txfSponsorId);
+    }
+
+    private void updatePersonLabelIntoField(long personId, MFXTextField target) {
+        if (target == null) return;
+        if (personId <= 0) {
+            target.setText("");
+            return;
+        }
+        String cacheKey = "person." + personId + ".label";
+        Object lbl = AppContext.getInstance().get(cacheKey);
+        if (lbl instanceof String s && !s.isBlank()) {
+            target.setText(s);
+            return;
+        }
+        // Not in cache: fetch asynchronously and update. Avoid showing raw id.
+        target.setText("");
+        new Thread(() -> {
+            try {
+                PersonService ps = new PersonService();
+                Respuesta r = ps.find(personId);
+                if (Boolean.TRUE.equals(r.getEstado())) {
+                    Object po = r.getResultado("Person");
+                    if (po instanceof PersonDTO pp) {
+                        String nm = ((pp.getFirstName() == null ? "" : pp.getFirstName().trim()) +
+                                     " " +
+                                     (pp.getLastName() == null ? "" : pp.getLastName().trim())).trim();
+                        if (!nm.isBlank()) {
+                            AppContext.getInstance().set(cacheKey, nm);
+                            Platform.runLater(() -> target.setText(nm));
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                LOGGER.fine("Async person label fetch failed for id=" + personId + ": " + ex.getMessage());
+            }
+        }, "person-label-fetch-" + personId).start();
     }
 
     private void bindDatePicker(MFXDatePicker picker, boolean isStart) {
@@ -404,9 +463,79 @@ public class ProjectExpandController
             else if (target == txfSponsorId) vm.setSponsorId(
                 p.getId() == null ? 0L : p.getId()
             );
-            // store entire DTO for optional later use
+            // store entire DTO for optional later use and cache label for later lookups
             AppContext.getInstance().set(contextKey, p);
+            if (p.getId() != null) {
+                AppContext.getInstance().set(
+                    "person." + p.getId() + ".label",
+                    label.trim()
+                );
+            }
             target.setEditable(false);
+        }
+    }
+
+    private void openPersonInformation(long personId, String roleLabel) {
+        if (personId <= 0) {
+            LOGGER.warning("[Person Info] Invalid person id: " + personId);
+            return;
+        }
+        PersonService service = new PersonService();
+        Respuesta r = service.find(personId);
+        if (!Boolean.TRUE.equals(r.getEstado())) {
+            LOGGER.warning(
+                "[Person Info] Could not retrieve person id=" +
+                    personId +
+                    " | " +
+                    (r != null ? r.getMensaje() : "null response")
+            );
+            return;
+        }
+        Object personObj = r.getResultado("Person");
+        if (!(personObj instanceof PersonDTO p)) {
+            LOGGER.warning(
+                "[Person Info] Service did not return a valid PersonDTO for id=" +
+                    personId
+            );
+            return;
+        }
+        AppContext.getInstance().set("personInformation.person", p);
+        AppContext.getInstance().set("personInformation.role", roleLabel);
+        try {
+            FlowController.getInstance().goViewInWindowModal(
+                "PersonInformationView",
+                (javafx.stage.Stage) root.getScene().getWindow(),
+                false
+            );
+        } finally {
+            AppContext.getInstance().delete("personInformation.person");
+            AppContext.getInstance().delete("personInformation.role");
+        }
+    }
+
+    /**
+     * Updates the project status locally and persists it via the web service.
+     *
+     * @param statusCode one of "P","R","S","C"
+     */
+    private void updateProjectStatus(String statusCode) {
+        LOGGER.info("[Project Status] Toggling to status=" + statusCode + " for project id=" + vm.getId());
+        vm.setStatus(statusCode);
+        ProjectService svc = new ProjectService();
+        Respuesta r = svc.update(vm.toDTO());
+        if (!Boolean.TRUE.equals(r.getEstado())) {
+            LOGGER.warning(
+                "[Project Status] Update failed: " +
+                    (r != null ? r.getMensaje() : "null") +
+                    " | " +
+                    (r != null ? r.getMensajeInterno() : "null")
+            );
+        } else {
+            LOGGER.info("[Project Status] Update OK. mensaje=" + r.getMensaje() + ", mensajeInterno=" + r.getMensajeInterno());
+            Object updated = r.getResultado("Project");
+            if (updated instanceof ProjectDTO p) {
+                AppContext.getInstance().set("currentProject", p);
+            }
         }
     }
 
@@ -536,9 +665,24 @@ public class ProjectExpandController
                     selectedActivity.getActualEndDate()
             );
 
-            // Future: persist via WS
-            // ProjectActivityService svc = new ProjectActivityService();
-            // svc.update(selectedActivity.toDTO());
+            // Persist via WS
+            try {
+                ProjectActivityService svc = new ProjectActivityService();
+                Respuesta r = svc.update(selectedActivity.toDTO());
+                if (!Boolean.TRUE.equals(r.getEstado())) {
+                    LOGGER.warning(
+                        "[Activity Update] Persist failed: " +
+                        (r != null ? r.getMensaje() : "null") +
+                        " | " +
+                        (r != null ? r.getMensajeInterno() : "null")
+                    );
+                }
+            } catch (Exception ex) {
+                LOGGER.warning(
+                    "[Activity Update] Exception while persisting: " +
+                    ex.getMessage()
+                );
+            }
         }
         AnimationManager.hidePopup(vbDisplayActivityExpand, vbCover);
     }
@@ -572,6 +716,25 @@ public class ProjectExpandController
                 if (label instanceof String s && !s.isBlank()) {
                     return s;
                 }
+                // Kick off async fetch so next refresh shows the name
+                new Thread(() -> {
+                    try {
+                        PersonService ps = new PersonService();
+                        Respuesta r = ps.find(rid);
+                        if (Boolean.TRUE.equals(r.getEstado())) {
+                            Object po = r.getResultado("Person");
+                            if (po instanceof PersonDTO pp) {
+                                String nm = ((pp.getFirstName() == null ? "" : pp.getFirstName().trim()) +
+                                             " " +
+                                             (pp.getLastName() == null ? "" : pp.getLastName().trim())).trim();
+                                if (!nm.isBlank()) {
+                                    AppContext.getInstance().set("person." + rid + ".label", nm);
+                                    Platform.runLater(() -> tbvActivities.refresh());
+                                }
+                            }
+                        }
+                    } catch (Exception ignore) {}
+                }, "resp-label-fetch-" + rid).start();
                 return String.valueOf(rid);
             });
         });
@@ -579,6 +742,20 @@ public class ProjectExpandController
         // Items and default sort by executionOrder
         tbvActivities.setItems(activities);
         tbvActivities.getSortOrder().clear();
+        tbvActivities.setSortPolicy(tv -> false);
+        // Enforce execution-order display and disable column-based sorting
+        tbcActivityName.setSortable(false);
+        tbcActivityStatus.setSortable(false);
+        tbcActivityResponsible.setSortable(false);
+        activities.sort(
+            Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder)
+        );
+
+        // Extra debug for status toggle group selection changes
+        ProjectStatus.selectedToggleProperty().addListener((obs, old, neu) -> {
+            String code = neu != null && neu.getUserData() != null ? neu.getUserData().toString() : null;
+            LOGGER.info("[Project Status] ToggleGroup selection changed to=" + code);
+        });
 
         // Row factory for double click, DnD and pastel coloring
         tbvActivities.setRowFactory(tv -> {
@@ -697,11 +874,41 @@ public class ProjectExpandController
     }
 
     private void renumberExecutionOrder() {
+        boolean anyChanged = false;
         for (int i = 0; i < activities.size(); i++) {
             ProjectActivityViewModel a = activities.get(i);
             int newOrder = i + 1; // 1-based ordering
             if (a.getExecutionOrder() != newOrder) {
                 a.setExecutionOrder(newOrder);
+                anyChanged = true;
+            }
+        }
+        activities.sort(
+            Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder)
+        );
+        tbvActivities.refresh();
+
+        if (anyChanged) {
+            ProjectActivityService svc = new ProjectActivityService();
+            for (ProjectActivityViewModel a : activities) {
+                try {
+                    Respuesta r = svc.update(a.toDTO());
+                    if (!Boolean.TRUE.equals(r.getEstado())) {
+                        LOGGER.fine(
+                            "[Activity Reorder] Persist failed id=" +
+                            a.getId() +
+                            ": " +
+                            (r != null ? r.getMensaje() : "null")
+                        );
+                    }
+                } catch (Exception ex) {
+                    LOGGER.fine(
+                        "[Activity Reorder] Exception persisting id=" +
+                        a.getId() +
+                        ": " +
+                        ex.getMessage()
+                    );
+                }
             }
         }
     }
@@ -754,6 +961,12 @@ public class ProjectExpandController
                     )
                 )
                 .forEach(activities::add);
+            activities.sort(
+                Comparator.comparingInt(
+                    ProjectActivityViewModel::getExecutionOrder
+                )
+            );
+            tbvActivities.refresh();
             LOGGER.fine(
                 "[Activities Load] After filter size=" + activities.size()
             );
@@ -840,5 +1053,40 @@ public class ProjectExpandController
         LocalDate ld = picker.getValue();
         if (ld == null) return null;
         return Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    @FXML
+    private void onActionTxfSponsorId(ActionEvent event) {
+        openPersonInformation(vm.getSponsorId(), "Sponsor");
+    }
+
+    @FXML
+    private void onActionTxfLeaderId(ActionEvent event) {
+        openPersonInformation(vm.getLeaderUserId(), "Project Leader");
+    }
+
+    @FXML
+    private void onActionTechLeaderId(ActionEvent event) {
+        openPersonInformation(vm.getTechLeaderId(), "Technical Leader");
+    }
+
+    @FXML
+    private void onActionTgProjectStatusPending(ActionEvent event) {
+        updateProjectStatus("P");
+    }
+
+    @FXML
+    private void onActionTgProjectStatusRunning(ActionEvent event) {
+        updateProjectStatus("R");
+    }
+
+    @FXML
+    private void onActionTgProjectStatusSuspended(ActionEvent event) {
+        updateProjectStatus("S");
+    }
+
+    @FXML
+    private void onActionTgProjectStatusCompleted(ActionEvent event) {
+        updateProjectStatus("C");
     }
 }

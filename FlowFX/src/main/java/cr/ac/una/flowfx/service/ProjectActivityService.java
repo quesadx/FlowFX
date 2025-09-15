@@ -360,13 +360,13 @@ public class ProjectActivityService {
             dto.getExecutionOrder()
         );
 
-        // If your WS stub includes date setters, enable them here:
-        // w.setPlannedStartDate(dto.getPlannedStartDate());
-        // w.setPlannedEndDate(dto.getPlannedEndDate());
-        // w.setActualStartDate(dto.getActualStartDate());
-        // w.setActualEndDate(dto.getActualEndDate());
-        // w.setCreatedAt(dto.getCreatedAt());
-        // w.setUpdatedAt(dto.getUpdatedAt());
+        // Attempt to set date fields using XMLGregorianCalendar if the stub exposes them
+        trySetXmlCal(w, "setPlannedStartDate", dto.getPlannedStartDate());
+        trySetXmlCal(w, "setPlannedEndDate", dto.getPlannedEndDate());
+        trySetXmlCal(w, "setActualStartDate", dto.getActualStartDate());
+        trySetXmlCal(w, "setActualEndDate", dto.getActualEndDate());
+        trySetXmlCal(w, "setCreatedAt", dto.getCreatedAt());
+        trySetXmlCal(w, "setUpdatedAt", dto.getUpdatedAt());
         return w;
     }
 
@@ -812,5 +812,46 @@ public class ProjectActivityService {
             } catch (Exception ignore) {}
         } catch (Exception ignore) {}
         // If neither exists, just skip silently
+    }
+
+    /**
+     * Reflection helper to set XMLGregorianCalendar fields if present in the stub.
+     */
+    private void trySetXmlCal(
+        Object target,
+        String setterName,
+        Date value
+    ) {
+        if (target == null || value == null || setterName == null) return;
+        try {
+            javax.xml.datatype.XMLGregorianCalendar xgc = toXmlDate(value);
+            Method m = target.getClass()
+                .getMethod(
+                    setterName,
+                    javax.xml.datatype.XMLGregorianCalendar.class
+                );
+            m.invoke(target, xgc);
+        } catch (NoSuchMethodException nsme) {
+            // Try java.util.Date signature if stub happens to use that
+            try {
+                Method m2 = target.getClass().getMethod(
+                    setterName,
+                    java.util.Date.class
+                );
+                m2.invoke(target, value);
+            } catch (Exception ignore) {}
+        } catch (Exception ignore) {}
+    }
+
+    private javax.xml.datatype.XMLGregorianCalendar toXmlDate(Date date) {
+        try {
+            java.util.GregorianCalendar gc = new java.util.GregorianCalendar();
+            gc.setTime(date);
+            return javax.xml.datatype.DatatypeFactory
+                .newInstance()
+                .newXMLGregorianCalendar(gc);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

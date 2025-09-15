@@ -12,34 +12,72 @@ import javafx.scene.control.ToggleGroup;
  */
 public final class BindingUtils {
 
-    static ChangeListener<Toggle> changeListener = (ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
-    };
+    static ChangeListener<Toggle> changeListener = (
+        ObservableValue<? extends Toggle> observable,
+        Toggle oldValue,
+        Toggle newValue
+    ) -> {};
 
-    private BindingUtils() {
-    }
+    private BindingUtils() {}
 
-    public static <T> void bindToggleGroupToProperty(final ToggleGroup toggleGroup, final ObjectProperty<T> property) {
+    public static <T> void bindToggleGroupToProperty(
+        final ToggleGroup toggleGroup,
+        final ObjectProperty<T> property
+    ) {
         // Check all toggles for required user data
-        toggleGroup.getToggles().forEach(toggle -> {
-            if (toggle.getUserData() == null) {
-                throw new IllegalArgumentException("The ToggleGroup contains at least one Toggle without user data!");
-            }
-        });
+        toggleGroup
+            .getToggles()
+            .forEach(toggle -> {
+                if (toggle.getUserData() == null) {
+                    throw new IllegalArgumentException(
+                        "The ToggleGroup contains at least one Toggle without user data!"
+                    );
+                }
+            });
         // Select initial toggle for current property state
         for (Toggle toggle : toggleGroup.getToggles()) {
-            if (property.getValue() != null && property.getValue().equals(toggle.getUserData())) {
+            if (
+                property.getValue() != null &&
+                property.getValue().equals(toggle.getUserData())
+            ) {
                 toggleGroup.selectToggle(toggle);
                 break;
             }
         }
         // Update property value on toggle selection changes
-        changeListener = (ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
-            property.setValue((T) newValue.getUserData());
+        changeListener = (
+            ObservableValue<? extends Toggle> observable,
+            Toggle oldValue,
+            Toggle newValue
+        ) -> {
+            if (newValue == null) {
+                // Keep property unchanged and restore a valid selection
+                if (oldValue != null) {
+                    toggleGroup.selectToggle(oldValue);
+                } else {
+                    for (Toggle t : toggleGroup.getToggles()) {
+                        if (
+                            property.getValue() != null &&
+                            property.getValue().equals(t.getUserData())
+                        ) {
+                            toggleGroup.selectToggle(t);
+                            break;
+                        }
+                    }
+                }
+                return;
+            }
+            @SuppressWarnings("unchecked")
+            T val = (T) newValue.getUserData();
+            property.setValue(val);
         };
         toggleGroup.selectedToggleProperty().addListener(changeListener);
     }
 
-    public static <T> void unbindToggleGroupToProperty(final ToggleGroup toggleGroup, final ObjectProperty<T> property) {
+    public static <T> void unbindToggleGroupToProperty(
+        final ToggleGroup toggleGroup,
+        final ObjectProperty<T> property
+    ) {
         toggleGroup.selectedToggleProperty().removeListener(changeListener);
     }
 }

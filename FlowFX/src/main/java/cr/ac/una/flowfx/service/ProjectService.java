@@ -65,6 +65,12 @@ public class ProjectService {
                     BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
                     DEFAULT_ENDPOINT
                 );
+                try {
+                    Object ep = ((BindingProvider) port)
+                        .getRequestContext()
+                        .get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY);
+                    LOG.log(Level.INFO, "[ProjectService] WS endpoint set to: {0}", ep);
+                } catch (Exception ignore) {}
             }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Error initializing FlowFXWS port", e);
@@ -306,6 +312,22 @@ public class ProjectService {
                 );
             }
 
+            LOG.log(
+                Level.INFO,
+                "[Project.update] id={0}, status={1}, plannedStart={2}, plannedEnd={3}, actualStart={4}, actualEnd={5}, leaderId={6}, techLeaderId={7}, sponsorId={8}",
+                new Object[] {
+                    project.getId(),
+                    project.getStatus(),
+                    project.getPlannedStartDate(),
+                    project.getPlannedEndDate(),
+                    project.getActualStartDate(),
+                    project.getActualEndDate(),
+                    project.getLeaderUserId(),
+                    project.getTechLeaderId(),
+                    project.getSponsorId(),
+                }
+            );
+
             cr.ac.una.flowfx.ws.ProjectDTO wsProject = toWs(
                 project,
                 project.getLeaderUserId(),
@@ -317,6 +339,16 @@ public class ProjectService {
                 wsProject
             );
             Respuesta r = mapRespuesta(wsResp);
+
+            LOG.log(
+                Level.INFO,
+                "[Project.update] WS response estado={0}, mensaje={1}, mensajeInterno={2}",
+                new Object[] {
+                    (wsResp != null ? wsResp.isEstado() : null),
+                    (wsResp != null ? wsResp.getMensaje() : null),
+                    (wsResp != null ? wsResp.getMensajeInterno() : null),
+                }
+            );
 
             if (Boolean.TRUE.equals(r.getEstado())) {
                 fillSingleFromMensajeInterno(r);
@@ -698,6 +730,57 @@ public class ProjectService {
         if (dto.getPlannedEndDate() != null) {
             w.setPlannedEndDate(toXmlDate(dto.getPlannedEndDate()));
         }
+        // Ensure actual dates and status are propagated to the WS DTO so updates persist
+        if (dto.getActualStartDate() != null) {
+            try {
+                w.getClass()
+                    .getMethod(
+                        "setActualStartDate",
+                        javax.xml.datatype.XMLGregorianCalendar.class
+                    )
+                    .invoke(w, toXmlDate(dto.getActualStartDate()));
+            } catch (Exception ignore) {
+                // Optional in some stubs
+            }
+        }
+        if (dto.getActualEndDate() != null) {
+            try {
+                w.getClass()
+                    .getMethod(
+                        "setActualEndDate",
+                        javax.xml.datatype.XMLGregorianCalendar.class
+                    )
+                    .invoke(w, toXmlDate(dto.getActualEndDate()));
+            } catch (Exception ignore) {
+                // Optional in some stubs
+            }
+        }
+        if (dto.getStatus() != null) {
+            try {
+                w.getClass().getMethod("setStatus", String.class).invoke(
+                        w,
+                        dto.getStatus()
+                    );
+            } catch (Exception ignore) {
+                // Optional in some stubs
+            }
+        }
+
+        LOG.log(
+            Level.FINE,
+            "[ProjectService.toWs] id={0}, status={1}, plannedStart={2}, plannedEnd={3}, actualStart={4}, actualEnd={5}, leaderId={6}, techLeaderId={7}, sponsorId={8}",
+            new Object[] {
+                dto.getId(),
+                dto.getStatus(),
+                dto.getPlannedStartDate(),
+                dto.getPlannedEndDate(),
+                dto.getActualStartDate(),
+                dto.getActualEndDate(),
+                leaderId,
+                techLeaderId,
+                sponsorId,
+            }
+        );
 
         setPersonRelation(
             w,

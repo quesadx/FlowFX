@@ -53,9 +53,9 @@
                            <children>
                               <HBox alignment="CENTER" styleClass="filler-rounded" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <VBox alignment="TOP_CENTER" fillWidth="false" maxWidth="1.7976931348623157E308" spacing="12.0" HBox.hgrow="ALWAYS">
+                                    <VBox alignment="CENTER_LEFT" fillWidth="false" spacing="12.0" HBox.hgrow="NEVER">
                                        <children>
-                                          <VBox>
+                                          <VBox maxWidth="1.7976931348623157E308">
                                              <children>
                                                 <Label styleClass="jfx-label" text="Nombre del proyecto" />
                                                 <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
@@ -74,7 +74,7 @@
                                                 </HBox>
                                              </children>
                                           </VBox>
-                                          <VBox>
+                                          <VBox maxWidth="1.7976931348623157E308">
                                              <children>
                                                 <Label styleClass="jfx-label" text="Fecha de inicio pleaneada" />
                                                 <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
@@ -107,7 +107,7 @@
                                                             </ImageView>
                                                          </children>
                                                       </VBox>
-                                                      <MFXDatePicker fx:id="dpProjectStartDate1" prefWidth="200.0" />
+                                                      <MFXDatePicker fx:id="dpProjectActualStartDate" prefWidth="200.0" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -115,18 +115,22 @@
                                           <VBox>
                                              <children>
                                                 <Label styleClass="jfx-label" text="Patrocinador del proyecto" />
-                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                <HBox alignment="CENTER" spacing="4.0">
                                                    <children>
-                                                      <VBox alignment="CENTER">
+                                                      <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
                                                          <children>
-                                                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                               <image>
-                                                                  <Image url="@../resources/icons/lucide--heart.png" />
-                                                               </image>
-                                                            </ImageView>
+                                                            <VBox alignment="CENTER">
+                                                               <children>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--heart.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </children>
+                                                            </VBox>
+                                                            <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" onAction="#onActionTxfSponsorId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                                          </children>
-                                                      </VBox>
-                                                      <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      </HBox>
                                                       <MFXButton onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Seleccionar">
                                                          <tooltip>
                                                             <Tooltip text="Abrir selector de persona" />
@@ -139,18 +143,22 @@
                                           <VBox>
                                              <children>
                                                 <Label styleClass="jfx-label" text="Lider usuario asignado" />
-                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                <HBox alignment="CENTER" spacing="4.0">
                                                    <children>
-                                                      <VBox alignment="CENTER">
+                                                      <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
                                                          <children>
-                                                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                               <image>
-                                                                  <Image url="@../resources/icons/lucide--shield-user.png" />
-                                                               </image>
-                                                            </ImageView>
+                                                            <VBox alignment="CENTER">
+                                                               <children>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--shield-user.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </children>
+                                                            </VBox>
+                                                            <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" onAction="#onActionTxfLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                                          </children>
-                                                      </VBox>
-                                                      <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      </HBox>
                                                       <MFXButton onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Seleccionar">
                                                          <tooltip>
                                                             <Tooltip text="Abrir selector de persona" />
@@ -163,18 +171,22 @@
                                           <VBox>
                                              <children>
                                                 <Label styleClass="jfx-label" text="Lider técnico asignado" />
-                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                <HBox alignment="CENTER" spacing="4.0">
                                                    <children>
-                                                      <VBox alignment="CENTER">
+                                                      <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
                                                          <children>
-                                                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                               <image>
-                                                                  <Image url="@../resources/icons/lucide--graduation-cap.png" />
-                                                               </image>
-                                                            </ImageView>
+                                                            <VBox alignment="CENTER">
+                                                               <children>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--graduation-cap.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </children>
+                                                            </VBox>
+                                                            <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" onAction="#onActionTechLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                                          </children>
-                                                      </VBox>
-                                                      <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      </HBox>
                                                       <MFXButton onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Seleccionar">
                                                          <tooltip>
                                                             <Tooltip text="Abrir selector de persona" />
@@ -198,13 +210,13 @@
                                                    <children>
                                                       <HBox alignment="CENTER" spacing="12.0">
                                                          <children>
-                                                            <MFXCircleToggleNode fx:id="tgProjectStatusPending" prefWidth="37.0" size="16.0" text="Pendiente">
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusPending" onAction="#onActionTgProjectStatusPending" prefWidth="37.0" size="16.0" text="Pendiente">
                                                                <toggleGroup>
                                                                   <ToggleGroup fx:id="ProjectStatus" />
                                                                </toggleGroup></MFXCircleToggleNode>
-                                                            <MFXCircleToggleNode fx:id="tgProjectStatusRunning" prefWidth="37.0" size="16.0" text="En proceso" toggleGroup="$ProjectStatus" />
-                                                            <MFXCircleToggleNode fx:id="tgProjectStatusSuspended" prefWidth="37.0" size="16.0" text="Suspendido" toggleGroup="$ProjectStatus" />
-                                                            <MFXCircleToggleNode fx:id="tgProjectStatusCompleted" prefWidth="37.0" size="16.0" text="Completado" toggleGroup="$ProjectStatus" />
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusRunning" onAction="#onActionTgProjectStatusRunning" prefWidth="37.0" size="16.0" text="En proceso" toggleGroup="$ProjectStatus" />
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusSuspended" onAction="#onActionTgProjectStatusSuspended" prefWidth="37.0" size="16.0" text="Suspendido" toggleGroup="$ProjectStatus" />
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusCompleted" onAction="#onActionTgProjectStatusCompleted" prefWidth="37.0" size="16.0" text="Completado" toggleGroup="$ProjectStatus" />
                                                          </children>
                                                       </HBox>
                                                    </children></VBox>
@@ -215,14 +227,7 @@
                                                 <Label styleClass="jfx-label" text="Actividades" />
                                              </children>
                                           </VBox>
-                                          <MFXButton onAction="#onActionCreateActivity" styleClass="jfx-button" text="">
-                                             <graphic>
-                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/lucide--circle-plus.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
+                                          <MFXButton onAction="#onActionCreateActivity" styleClass="jfx-button" text="Nueva actividad">
                                              <tooltip>
                                                 <Tooltip text="Crear nueva actividad" />
                                              </tooltip>
