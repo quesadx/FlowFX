@@ -69,7 +69,26 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Controller for the Project Expand view.
- * Ensures status is handled as String ("P","R","S","C") and binds UI to ViewModel.
+ * 
+ * <p>Key Features:</p>
+ * <ul>
+ *   <li>Displays and edits project details with proper person name resolution</li>
+ *   <li>Automatically syncs status changes with web service</li>
+ *   <li>Provides drag-and-drop activity reordering</li>
+ *   <li>Exports project schedules to Excel format</li>
+ * </ul>
+ * 
+ * <p>Status Management:</p>
+ * Status is handled as String codes ("P","R","S","C") and automatically persisted 
+ * when changed through UI binding. Status changes trigger web service updates 
+ * in the background to maintain UI responsiveness.
+ * 
+ * <p>Person Name Display:</p>
+ * Leader, tech leader, and sponsor fields display full names (First Last) instead 
+ * of raw IDs. Names are cached in AppContext for performance and consistency.
+ * 
+ * @author quesadx
+ * @version 2.0 - Enhanced with proper name display and automatic status persistence
  */
 public class ProjectExpandController
     extends Controller
@@ -298,6 +317,15 @@ public class ProjectExpandController
                 (p.getFirstName() == null ? "" : p.getFirstName().trim()) +
                 " " +
                 (p.getLastName() == null ? "" : p.getLastName().trim());
+            
+            // Cache the label for consistency
+            if (p.getId() != null) {
+                AppContext.getInstance().set(
+                    "person." + p.getId() + ".label",
+                    label.trim()
+                );
+            }
+            
             txfResponsableCreation.setText(label.trim());
             // Store the actual PersonDTO for later use on creation
             AppContext.getInstance().set(
@@ -322,19 +350,25 @@ public class ProjectExpandController
         tgProjectStatusSuspended.setUserData("S");
         tgProjectStatusCompleted.setUserData("C");
 
-        // Bind ToggleGroup to ViewModel status (String)
+        // Bind ToggleGroup to ViewModel status (String) with automatic WS persistence
+        vm.statusProperty().addListener((obs, oldStatus, newStatus) -> {
+            if (newStatus != null && !newStatus.equals(oldStatus) && !statusPersistInProgress) {
+                // Only persist if this is a real change (not initialization)
+                if (oldStatus != null) {
+                    updateProjectStatusSilent(newStatus);
+                }
+            }
+        });
+        
         BindingUtils.bindToggleGroupToProperty(ProjectStatus, vm.statusProperty());
 
         // Default selection if empty
         if (vm.getStatus() == null || vm.getStatus().isBlank()) {
-            ProjectStatus.selectToggle(tgProjectStatusPending);
+            vm.setStatus("P"); // This will trigger the listener and persist
         } else {
             // Ensure toggle reflects current status on load
             selectToggleForStatus(vm.getStatus());
         }
-
-        // Note: persistence is handled by each toggle's onAction handler, ensuring
-        // only user-initiated changes perform WS updates.
 
         // Configure person display fields as non-editable and show resolved names
         txfLeaderId.setEditable(false);
@@ -374,8 +408,8 @@ public class ProjectExpandController
             target.setText(s);
             return;
         }
-        // Not in cache: fetch asynchronously and update. Avoid showing raw id.
-        target.setText("");
+        // Not in cache: fetch asynchronously and update. Show loading placeholder instead of empty.
+        target.setText("Loading...");
         new Thread(() -> {
             try {
                 PersonService ps = new PersonService();
@@ -389,11 +423,18 @@ public class ProjectExpandController
                         if (!nm.isBlank()) {
                             AppContext.getInstance().set(cacheKey, nm);
                             Platform.runLater(() -> target.setText(nm));
+                        } else {
+                            Platform.runLater(() -> target.setText("ID: " + personId));
                         }
+                    } else {
+                        Platform.runLater(() -> target.setText("ID: " + personId));
                     }
+                } else {
+                    Platform.runLater(() -> target.setText("ID: " + personId));
                 }
             } catch (Exception ex) {
                 LOGGER.fine("Async person label fetch failed for id=" + personId + ": " + ex.getMessage());
+                Platform.runLater(() -> target.setText("ID: " + personId));
             }
         }, "person-label-fetch-" + personId).start();
     }
@@ -530,24 +571,26 @@ public class ProjectExpandController
                 (p.getFirstName() == null ? "" : p.getFirstName().trim()) +
                 " " +
                 (p.getLastName() == null ? "" : p.getLastName().trim());
-            target.setText(label.trim());
-            if (target == txfLeaderId) vm.setLeaderUserId(
-                p.getId() == null ? 0L : p.getId()
-            );
-            else if (target == txfTechLeaderId) vm.setTechLeaderId(
-                p.getId() == null ? 0L : p.getId()
-            );
-            else if (target == txfSponsorId) vm.setSponsorId(
-                p.getId() == null ? 0L : p.getId()
-            );
-            // store entire DTO for optional later use and cache label for later lookups
-            AppContext.getInstance().set(contextKey, p);
+            
+            // Cache the label BEFORE setting the ID to prevent async overwrite
             if (p.getId() != null) {
                 AppContext.getInstance().set(
                     "person." + p.getId() + ".label",
                     label.trim()
                 );
             }
+            
+            // Update the ViewModel (this will trigger listeners but now cache is populated)
+            if (target == txfLeaderId) {
+                vm.setLeaderUserId(p.getId() == null ? 0L : p.getId());
+            } else if (target == txfTechLeaderId) {
+                vm.setTechLeaderId(p.getId() == null ? 0L : p.getId());
+            } else if (target == txfSponsorId) {
+                vm.setSponsorId(p.getId() == null ? 0L : p.getId());
+            }
+            
+            // Store entire DTO for optional later use
+            AppContext.getInstance().set(contextKey, p);
             target.setEditable(false);
         }
     }
@@ -866,59 +909,69 @@ public class ProjectExpandController
 
     /**
      * Updates the project status locally and persists it via the web service.
+     * This version is called by automatic binding and handles sync properly.
      *
      * @param statusCode one of "P","R","S","C"
      */
-    private void updateProjectStatus(String statusCode) {
+    private void updateProjectStatusSilent(String statusCode) {
         if (statusPersistInProgress) {
-            LOGGER.fine("[Project Status] Update already in progress; ignoring click.");
+            LOGGER.fine("[Project Status] Update already in progress; ignoring change.");
             return;
         }
-        if (statusCode == null || statusCode.isBlank() || statusCode.equalsIgnoreCase(vm.getStatus())) {
-            LOGGER.fine("[Project Status] No-op status change to " + statusCode);
+        if (statusCode == null || statusCode.isBlank()) {
+            LOGGER.fine("[Project Status] Invalid status code provided: " + statusCode);
             return;
         }
-        LOGGER.info("[Project Status] Toggling to status=" + statusCode + " for project id=" + vm.getId());
+        LOGGER.info("[Project Status] Updating to status=" + statusCode + " for project id=" + vm.getId());
         statusPersistInProgress = true;
-        try {
-            String old = vm.getStatus();
-            vm.setStatus(statusCode);
-            ProjectService svc = new ProjectService();
-            Respuesta r = svc.update(vm.toDTO());
-            if (!Boolean.TRUE.equals(r.getEstado())) {
-                LOGGER.warning(
-                    "[Project Status] Update failed: " +
-                        (r != null ? r.getMensaje() : "null") +
-                        " | " +
-                        (r != null ? r.getMensajeInterno() : "null")
-                );
-                // Revert client VM to previous status since persistence failed
-                vm.setStatus(old);
-                selectToggleForStatus(old);
-            } else {
-                LOGGER.info("[Project Status] Update OK. mensaje=" + r.getMensaje() + ", mensajeInterno=" + r.getMensajeInterno());
-                Object updated = r.getResultado("Project");
-                if (updated instanceof ProjectDTO p) {
-                    // Refresh VM from server-confirmed DTO to keep client in sync
-                    AppContext.getInstance().set("currentProject", p);
-                    vm.setName(p.getName());
-                    vm.setPlannedStartDate(p.getPlannedStartDate());
-                    vm.setPlannedEndDate(p.getPlannedEndDate());
-                    vm.setActualStartDate(p.getActualStartDate());
-                    vm.setActualEndDate(p.getActualEndDate());
-                    vm.setStatus(p.getStatus());
-                    vm.setCreatedAt(p.getCreatedAt());
-                    vm.setUpdatedAt(p.getUpdatedAt());
-                    vm.setLeaderUserId(p.getLeaderUserId() == null ? 0L : p.getLeaderUserId());
-                    vm.setTechLeaderId(p.getTechLeaderId() == null ? 0L : p.getTechLeaderId());
-                    vm.setSponsorId(p.getSponsorId() == null ? 0L : p.getSponsorId());
-                    selectToggleForStatus(p.getStatus());
-                }
+        
+        // Perform update in background to keep UI responsive
+        new Thread(() -> {
+            try {
+                ProjectService svc = new ProjectService();
+                Respuesta r = svc.update(vm.toDTO());
+                
+                Platform.runLater(() -> {
+                    if (!Boolean.TRUE.equals(r.getEstado())) {
+                        LOGGER.warning(
+                            "[Project Status] Update failed: " +
+                                (r != null ? r.getMensaje() : "null") +
+                                " | " +
+                                (r != null ? r.getMensajeInterno() : "null")
+                        );
+                        // Note: Don't revert here as the ViewModel status was already set by binding
+                        // The binding should reflect user's intended change
+                    } else {
+                        LOGGER.info("[Project Status] Update OK. mensaje=" + r.getMensaje());
+                        Object updated = r.getResultado("Project");
+                        if (updated instanceof ProjectDTO p) {
+                            // Refresh VM from server-confirmed DTO to keep client in sync
+                            AppContext.getInstance().set("currentProject", p);
+                            // Update all other fields but keep status as-is since it's already set
+                            vm.setName(p.getName());
+                            vm.setPlannedStartDate(p.getPlannedStartDate());
+                            vm.setPlannedEndDate(p.getPlannedEndDate());
+                            vm.setActualStartDate(p.getActualStartDate());
+                            vm.setActualEndDate(p.getActualEndDate());
+                            vm.setCreatedAt(p.getCreatedAt());
+                            vm.setUpdatedAt(p.getUpdatedAt());
+                            vm.setLeaderUserId(p.getLeaderUserId() == null ? 0L : p.getLeaderUserId());
+                            vm.setTechLeaderId(p.getTechLeaderId() == null ? 0L : p.getTechLeaderId());
+                            vm.setSponsorId(p.getSponsorId() == null ? 0L : p.getSponsorId());
+                        }
+                    }
+                    statusPersistInProgress = false;
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    LOGGER.warning("[Project Status] Exception during update: " + ex.getMessage());
+                    statusPersistInProgress = false;
+                });
             }
-        } finally {
-            statusPersistInProgress = false;
-        }
+        }, "project-status-update").start();
     }
+
+
 
     private void selectToggleForStatus(String status) {
         if (ProjectStatus == null) return;
@@ -1479,21 +1532,25 @@ public class ProjectExpandController
 
     @FXML
     private void onActionTgProjectStatusPending(ActionEvent event) {
-        updateProjectStatus("P");
+        // Status changes are now handled automatically by binding
+        // This method is kept for FXML compatibility but does nothing
     }
 
     @FXML
     private void onActionTgProjectStatusRunning(ActionEvent event) {
-        updateProjectStatus("R");
+        // Status changes are now handled automatically by binding
+        // This method is kept for FXML compatibility but does nothing
     }
 
     @FXML
     private void onActionTgProjectStatusSuspended(ActionEvent event) {
-        updateProjectStatus("S");
+        // Status changes are now handled automatically by binding
+        // This method is kept for FXML compatibility but does nothing
     }
 
     @FXML
     private void onActionTgProjectStatusCompleted(ActionEvent event) {
-        updateProjectStatus("C");
+        // Status changes are now handled automatically by binding
+        // This method is kept for FXML compatibility but does nothing
     }
 }
