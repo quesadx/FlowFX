@@ -1,6 +1,7 @@
 package cr.ac.una.flowfx.service;
 
 import cr.ac.una.flowfx.model.PersonDTO;
+import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.Respuesta;
 import cr.ac.una.flowfx.ws.FlowFXWS;
 import cr.ac.una.flowfx.ws.FlowFXWS_Service;
@@ -323,6 +324,7 @@ public class PersonService {
             PersonDTO dto = fromJsonPerson(obj);
             if (dto != null) {
                 r.setResultado(ENTITY_KEY, dto);
+                cachePersonLabel(dto);
                 return;
             }
         } catch (Exception ignore) {
@@ -337,6 +339,7 @@ public class PersonService {
                 PersonDTO dto = fromJsonPerson(obj);
                 if (dto != null) {
                     r.setResultado(ENTITY_KEY, dto);
+                    cachePersonLabel(dto);
                 }
             }
         } catch (Exception ignore) {
@@ -364,7 +367,10 @@ public class PersonService {
             for (int i = 0; i < arr.size(); i++) {
                 JsonObject obj = arr.getJsonObject(i);
                 PersonDTO dto = fromJsonPerson(obj);
-                if (dto != null) list.add(dto);
+                if (dto != null) {
+                    list.add(dto);
+                    cachePersonLabel(dto);
+                }
             }
             r.setResultado(LIST_KEY, list);
             return;
@@ -407,7 +413,10 @@ public class PersonService {
                 for (int i = 0; i < arr.size(); i++) {
                     JsonObject obj = arr.getJsonObject(i);
                     PersonDTO dto = fromJsonPerson(obj);
-                    if (dto != null) list.add(dto);
+                    if (dto != null) {
+                        list.add(dto);
+                        cachePersonLabel(dto);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -534,5 +543,15 @@ public class PersonService {
             if (!s.isEmpty()) return s.charAt(0);
         }
         return null;
+    }
+
+    private void cachePersonLabel(PersonDTO p) {
+        if (p == null || p.getId() == null) return;
+        String first = p.getFirstName() == null ? "" : p.getFirstName().trim();
+        String last = p.getLastName() == null ? "" : p.getLastName().trim();
+        String nm = (first + " " + last).trim();
+        if (!nm.isBlank()) {
+            AppContext.getInstance().set("person." + p.getId() + ".label", nm);
+        }
     }
 }

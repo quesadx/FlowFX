@@ -1,5 +1,6 @@
 package cr.ac.una.flowfx.service;
 
+import cr.ac.una.flowfx.model.PersonDTO;
 import cr.ac.una.flowfx.model.ProjectActivityDTO;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.Respuesta;
@@ -640,6 +641,43 @@ public class ProjectActivityService {
                 }
             }
         }
+
+        // If names were not provided by the WS, opportunistically fetch and cache them once.
+        try {
+            PersonService ps = new PersonService();
+            if (respId != null) {
+                String key = "person." + respId + ".label";
+                Object lbl = AppContext.getInstance().get(key);
+                if (!(lbl instanceof String s) || s.isBlank()) {
+                    Respuesta rr = ps.find(respId);
+                    if (Boolean.TRUE.equals(rr.getEstado())) {
+                        Object po = rr.getResultado("Person");
+                        if (po instanceof PersonDTO pp) {
+                            String nm = ((pp.getFirstName() == null ? "" : pp.getFirstName().trim()) +
+                                         " " +
+                                         (pp.getLastName() == null ? "" : pp.getLastName().trim())).trim();
+                            if (!nm.isBlank()) AppContext.getInstance().set(key, nm);
+                        }
+                    }
+                }
+            }
+            if (createdById != null) {
+                String key = "person." + createdById + ".label";
+                Object lbl = AppContext.getInstance().get(key);
+                if (!(lbl instanceof String s) || s.isBlank()) {
+                    Respuesta rr = ps.find(createdById);
+                    if (Boolean.TRUE.equals(rr.getEstado())) {
+                        Object po = rr.getResultado("Person");
+                        if (po instanceof PersonDTO pp) {
+                            String nm = ((pp.getFirstName() == null ? "" : pp.getFirstName().trim()) +
+                                         " " +
+                                         (pp.getLastName() == null ? "" : pp.getLastName().trim())).trim();
+                            if (!nm.isBlank()) AppContext.getInstance().set(key, nm);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignore) {}
 
         return dto;
     }

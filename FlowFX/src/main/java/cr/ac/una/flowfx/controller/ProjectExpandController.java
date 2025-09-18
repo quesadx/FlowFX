@@ -655,9 +655,9 @@ public class ProjectExpandController
                 gv.setCellValue(now);
 
                 // Stakeholders (Leader, Tech Leader, Sponsor)
-                String leaderName = resolvePersonLabel(vm.getLeaderUserId());
-                String techLeaderName = resolvePersonLabel(vm.getTechLeaderId());
-                String sponsorName = resolvePersonLabel(vm.getSponsorId());
+                String leaderName = resolvePersonNameSync(vm.getLeaderUserId());
+                String techLeaderName = resolvePersonNameSync(vm.getTechLeaderId());
+                String sponsorName = resolvePersonNameSync(vm.getSponsorId());
 
                 Row lr = sheet.createRow(r++);
                 Cell ll = lr.createCell(0);
@@ -706,7 +706,7 @@ public class ProjectExpandController
 
                 // Responsible ID and Name: use project leader
                 long leaderId = vm.getLeaderUserId();
-                String leaderLabel = resolvePersonLabel(leaderId);
+                String leaderLabel = resolvePersonNameSync(leaderId);
                 Cell pc1 = prow.createCell(c++);
                 pc1.setCellValue(leaderId > 0 ? String.valueOf(leaderId) : "");
                 pc1.setCellStyle(textCell);
@@ -737,7 +737,7 @@ public class ProjectExpandController
                     c0.setCellStyle(textCell);
 
                     long rid = a.getResponsibleId();
-                    String respName = resolvePersonLabel(rid);
+                    String respName = resolvePersonNameSync(rid);
                     Cell c1 = row.createCell(cc++);
                     c1.setCellValue(rid > 0 ? String.valueOf(rid) : "");
                     c1.setCellStyle(textCell);
@@ -785,10 +785,33 @@ public class ProjectExpandController
         return s.replaceAll("[\\\\/:*?\"<>|]", "_");
     }
 
-    private String resolvePersonLabel(long personId) {
+    /**
+     * Resolves a person's display name synchronously, returning "First Last" when available.
+     * Falls back to cached label or ID string if the service is unavailable.
+     */
+    private String resolvePersonNameSync(long personId) {
         if (personId <= 0) return null;
-        Object lbl = AppContext.getInstance().get("person." + personId + ".label");
+        String cacheKey = "person." + personId + ".label";
+        Object lbl = AppContext.getInstance().get(cacheKey);
         if (lbl instanceof String s && !s.isBlank()) return s;
+        try {
+            PersonService ps = new PersonService();
+            Respuesta r = ps.find(personId);
+            if (Boolean.TRUE.equals(r.getEstado())) {
+                Object po = r.getResultado("Person");
+                if (po instanceof PersonDTO pp) {
+                    String nm = ((pp.getFirstName() == null ? "" : pp.getFirstName().trim()) +
+                                 " " +
+                                 (pp.getLastName() == null ? "" : pp.getLastName().trim())).trim();
+                    if (!nm.isBlank()) {
+                        AppContext.getInstance().set(cacheKey, nm);
+                        return nm;
+                    }
+                }
+            }
+        } catch (Exception ignore) {
+            // service not reachable; will fallback to id
+        }
         return String.valueOf(personId);
     }
 
@@ -1075,7 +1098,7 @@ public class ProjectExpandController
             String text = mapStatus(code);
             return Bindings.createStringBinding(() -> text);
         });
-        // Responsible column now shows resolved name (if cached) or the responsibleId; fallback "-"
+        // Responsible column: show full name; if not cached yet, trigger async fetch and temporarily show "-"
         tbcActivityResponsible.setCellValueFactory(cd -> {
             ProjectActivityViewModel vmAct = cd.getValue();
             return Bindings.createStringBinding(() -> {
@@ -1107,7 +1130,7 @@ public class ProjectExpandController
                         }
                     } catch (Exception ignore) {}
                 }, "resp-label-fetch-" + rid).start();
-                return String.valueOf(rid);
+                return "-";
             });
         });
 
@@ -1338,6 +1361,8 @@ public class ProjectExpandController
             LOGGER.fine(
                 "[Activities Load] After filter size=" + activities.size()
             );
+            // Prefetch person labels for a clean UI without ID fallbacks
+            prefetchResponsibleLabels();
         });
         task.setOnFailed(e -> {
             activities.clear();
@@ -1345,6 +1370,40 @@ public class ProjectExpandController
         Thread t = new Thread(task, "load-activities");
         t.setDaemon(true);
         t.start();
+    }
+
+    private void prefetchResponsibleLabels() {
+        List<Long> ids = activities.stream()
+            .map(ProjectActivityViewModel::getResponsibleId)
+            .filter(id -> id > 0)
+            .distinct()
+            .toList();
+        if (ids.isEmpty()) return;
+        new Thread(() -> {
+            PersonService ps = new PersonService();
+            boolean any = false;
+            for (Long id : ids) {
+                String cacheKey = "person." + id + ".label";
+                Object lbl = AppContext.getInstance().get(cacheKey);
+                if (lbl instanceof String s && !s.isBlank()) continue;
+                try {
+                    Respuesta r = ps.find(id);
+                    if (Boolean.TRUE.equals(r.getEstado())) {
+                        Object po = r.getResultado("Person");
+                        if (po instanceof PersonDTO pp) {
+                            String nm = ((pp.getFirstName() == null ? "" : pp.getFirstName().trim()) +
+                                         " " +
+                                         (pp.getLastName() == null ? "" : pp.getLastName().trim())).trim();
+                            if (!nm.isBlank()) {
+                                AppContext.getInstance().set(cacheKey, nm);
+                                any = true;
+                            }
+                        }
+                    }
+                } catch (Exception ignore) {}
+            }
+            if (any) Platform.runLater(() -> tbvActivities.refresh());
+        }, "prefetch-person-labels").start();
     }
 
     private String mapStatus(String code) {
@@ -1363,33 +1422,13 @@ public class ProjectExpandController
         this.selectedActivity = item;
         if (item == null) return;
 
-        // Resolve responsible label from cache if present, otherwise show ID or "-"
+        // Resolve responsible label; synchronous lookup to avoid showing raw IDs
         long rid = item.getResponsibleId();
-        String responsibleLabel = "-";
-        if (rid > 0) {
-            Object lbl = AppContext.getInstance().get(
-                "person." + rid + ".label"
-            );
-            if (lbl instanceof String s && !s.isBlank()) {
-                responsibleLabel = s;
-            } else {
-                responsibleLabel = String.valueOf(rid);
-            }
-        }
+        String responsibleLabel = rid > 0 ? resolvePersonNameSync(rid) : "-";
         txfResponsible.setText(responsibleLabel);
-        // Resolve createdBy label from cache if present, otherwise show ID or "-"
+        // Resolve createdBy label synchronously
         long cbid = item.getCreatedById();
-        String createdByLabel = "-";
-        if (cbid > 0) {
-            Object cbl = AppContext.getInstance().get(
-                "person." + cbid + ".label"
-            );
-            if (cbl instanceof String s2 && !s2.isBlank()) {
-                createdByLabel = s2;
-            } else {
-                createdByLabel = String.valueOf(cbid);
-            }
-        }
+        String createdByLabel = cbid > 0 ? resolvePersonNameSync(cbid) : "-";
         txfCreatedBy.setText(createdByLabel);
         txaDescription.setText(item.getDescription());
 

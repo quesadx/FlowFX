@@ -151,10 +151,16 @@ public class PersonSelectionController
             row.setOnMouseClicked(ev -> {
                 if (ev.getClickCount() == 2 && !row.isEmpty()) {
                     PersonDTO selected = row.getItem();
-                    AppContext.getInstance().set(
-                        "personSelectionResult",
-                        selected
-                    );
+                    AppContext.getInstance().set("personSelectionResult", selected);
+                    // Cache full name label for global reuse
+                    if (selected != null && selected.getId() != null) {
+                        String first = selected.getFirstName() == null ? "" : selected.getFirstName().trim();
+                        String last = selected.getLastName() == null ? "" : selected.getLastName().trim();
+                        String nm = (first + " " + last).trim();
+                        if (!nm.isBlank()) {
+                            AppContext.getInstance().set("person." + selected.getId() + ".label", nm);
+                        }
+                    }
                     Stage stage = (Stage) root.getScene().getWindow();
                     stage.close();
                 }
