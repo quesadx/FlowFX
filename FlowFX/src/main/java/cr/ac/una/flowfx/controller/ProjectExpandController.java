@@ -924,7 +924,6 @@ public class ProjectExpandController
         }
         LOGGER.info("[Project Status] Updating to status=" + statusCode + " for project id=" + vm.getId());
         statusPersistInProgress = true;
-        
         // Perform update in background to keep UI responsive
         new Thread(() -> {
             try {
