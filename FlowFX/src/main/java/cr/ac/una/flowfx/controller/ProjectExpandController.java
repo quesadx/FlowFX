@@ -20,7 +20,9 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +52,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Controller for the Project Expand view.
@@ -111,9 +127,8 @@ public class ProjectExpandController
         FXCollections.observableArrayList();
     private ProjectActivityViewModel selectedActivity;
 
-    // Guards for status toggle updates to avoid feedback loops and duplicate calls
+    // Guard to avoid concurrent WS calls when rapidly toggling
     private boolean statusPersistInProgress = false;
-    private boolean statusListenerArmed = false;
 
     @FXML
     private TableView<ProjectActivityViewModel> tbvActivities;
@@ -234,30 +249,22 @@ public class ProjectExpandController
                 Object obj = r.getResultado("Project");
                 if (obj instanceof ProjectDTO p) {
                     AppContext.getInstance().set("currentProject", p);
-                    // Temporarily disarm listener to avoid recursion while updating fields
-                    boolean prevArmed = statusListenerArmed;
-                    statusListenerArmed = false;
-                    try {
-                        vm.setName(p.getName());
-                        vm.setPlannedStartDate(p.getPlannedStartDate());
-                        vm.setPlannedEndDate(p.getPlannedEndDate());
-                        vm.setActualStartDate(p.getActualStartDate());
-                        vm.setActualEndDate(p.getActualEndDate());
-                        vm.setStatus(p.getStatus());
-                        vm.setCreatedAt(p.getCreatedAt());
-                        vm.setUpdatedAt(p.getUpdatedAt());
-                        vm.setLeaderUserId(p.getLeaderUserId() == null ? 0L : p.getLeaderUserId());
-                        vm.setTechLeaderId(p.getTechLeaderId() == null ? 0L : p.getTechLeaderId());
-                        vm.setSponsorId(p.getSponsorId() == null ? 0L : p.getSponsorId());
-                        // Ensure toggle reflects refreshed status
-                        selectToggleForStatus(p.getStatus());
-                        // Refresh leader/tech/sponsor labels
-                        refreshLeaderLabel();
-                        refreshTechLeaderLabel();
-                        refreshSponsorLabel();
-                    } finally {
-                        statusListenerArmed = prevArmed;
-                    }
+                    // Update fields and ensure toggle reflects refreshed status
+                    vm.setName(p.getName());
+                    vm.setPlannedStartDate(p.getPlannedStartDate());
+                    vm.setPlannedEndDate(p.getPlannedEndDate());
+                    vm.setActualStartDate(p.getActualStartDate());
+                    vm.setActualEndDate(p.getActualEndDate());
+                    vm.setStatus(p.getStatus());
+                    vm.setCreatedAt(p.getCreatedAt());
+                    vm.setUpdatedAt(p.getUpdatedAt());
+                    vm.setLeaderUserId(p.getLeaderUserId() == null ? 0L : p.getLeaderUserId());
+                    vm.setTechLeaderId(p.getTechLeaderId() == null ? 0L : p.getTechLeaderId());
+                    vm.setSponsorId(p.getSponsorId() == null ? 0L : p.getSponsorId());
+                    selectToggleForStatus(p.getStatus());
+                    refreshLeaderLabel();
+                    refreshTechLeaderLabel();
+                    refreshSponsorLabel();
                 }
             } else {
                 LOGGER.fine("[Project Refresh] No update from server. estado=" + (r != null ? r.getEstado() : null));
@@ -316,10 +323,7 @@ public class ProjectExpandController
         tgProjectStatusCompleted.setUserData("C");
 
         // Bind ToggleGroup to ViewModel status (String)
-        BindingUtils.bindToggleGroupToProperty(
-            ProjectStatus,
-            vm.statusProperty()
-        );
+        BindingUtils.bindToggleGroupToProperty(ProjectStatus, vm.statusProperty());
 
         // Default selection if empty
         if (vm.getStatus() == null || vm.getStatus().isBlank()) {
@@ -329,19 +333,8 @@ public class ProjectExpandController
             selectToggleForStatus(vm.getStatus());
         }
 
-        // Listener to persist status when user changes the toggle
-        ProjectStatus
-            .selectedToggleProperty()
-            .addListener((obs, oldT, newT) -> {
-                if (!statusListenerArmed) return; // ignore during init/programmatic changes
-                if (newT == null || newT.getUserData() == null) return;
-                String code = newT.getUserData().toString();
-                if (statusPersistInProgress) return; // an update is in-flight
-                String current = vm.getStatus();
-                if (code == null || (current != null && current.equals(code))) return; // no-op
-                updateProjectStatus(code);
-            });
-        statusListenerArmed = true;
+        // Note: persistence is handled by each toggle's onAction handler, ensuring
+        // only user-initiated changes perform WS updates.
 
         // Configure person display fields as non-editable and show resolved names
         txfLeaderId.setEditable(false);
@@ -519,6 +512,11 @@ public class ProjectExpandController
         );
     }
 
+    @FXML
+    private void onActionBtnPrintReport(ActionEvent event){
+        exportScheduleToExcel();
+    }
+
     private void openPersonSelector(MFXTextField target, String contextKey) {
         target.setEditable(true);
         FlowController.getInstance().goViewInWindowModal(
@@ -552,6 +550,257 @@ public class ProjectExpandController
             }
             target.setEditable(false);
         }
+    }
+
+    /**
+     * Exports the simplified project schedule to an .xlsx Excel file using Apache POI.
+     * Opens a FileChooser for the user to pick the destination file.
+     */
+    private void exportScheduleToExcel() {
+        try {
+            // Ensure this named module can read classes from the unnamed module (classpath),
+            // so Apache POI (which is not modularized) can be accessed without JVM flags.
+            try {
+                Module myModule = ProjectExpandController.class.getModule();
+                Module unnamed = ProjectExpandController.class.getClassLoader().getUnnamedModule();
+                if (myModule != null && unnamed != null) {
+                    myModule.addReads(unnamed);
+                }
+            } catch (Throwable ignore) {
+                // Best-effort; if this fails, the build/run should be configured with --add-reads
+            }
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Save Project Schedule (.xlsx)");
+            chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Excel Workbook (*.xlsx)", "*.xlsx")
+            );
+            String defaultName = sanitizeFileName(vm.getName());
+            if (defaultName == null || defaultName.isBlank()) defaultName = "project-schedule";
+            chooser.setInitialFileName(defaultName + "-schedule.xlsx");
+            Stage stage = (Stage) root.getScene().getWindow();
+            java.io.File file = chooser.showSaveDialog(stage);
+            if (file == null) return; // user cancelled
+
+            // Ensure .xlsx extension
+            if (!file.getName().toLowerCase().endsWith(".xlsx")) {
+                file = new java.io.File(file.getParentFile(), file.getName() + ".xlsx");
+            }
+
+            // Build workbook
+            try (XSSFWorkbook wb = new XSSFWorkbook();
+                 java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {
+
+                Sheet sheet = wb.createSheet("Schedule");
+
+                // Styles
+                Font titleFont = wb.createFont();
+                if (titleFont instanceof XSSFFont tf) {
+                    tf.setBold(true);
+                    tf.setFontHeightInPoints((short) 14);
+                } else {
+                    titleFont.setBold(true);
+                }
+                CellStyle titleStyle = wb.createCellStyle();
+                titleStyle.setFont(titleFont);
+                titleStyle.setAlignment(HorizontalAlignment.LEFT);
+                titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+                Font headerFont = wb.createFont();
+                headerFont.setBold(true);
+                CellStyle headerStyle = wb.createCellStyle();
+                headerStyle.setFont(headerFont);
+                headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                headerStyle.setAlignment(HorizontalAlignment.CENTER);
+                headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+                headerStyle.setBorderTop(BorderStyle.THIN);
+                headerStyle.setBorderBottom(BorderStyle.THIN);
+                headerStyle.setBorderLeft(BorderStyle.THIN);
+                headerStyle.setBorderRight(BorderStyle.THIN);
+
+                CellStyle textCell = wb.createCellStyle();
+                textCell.setBorderTop(BorderStyle.THIN);
+                textCell.setBorderBottom(BorderStyle.THIN);
+                textCell.setBorderLeft(BorderStyle.THIN);
+                textCell.setBorderRight(BorderStyle.THIN);
+                textCell.setVerticalAlignment(VerticalAlignment.TOP);
+
+                // Bold label for metadata rows
+                Font metaFont = wb.createFont();
+                metaFont.setBold(true);
+                CellStyle metaLabel = wb.createCellStyle();
+                metaLabel.setFont(metaFont);
+                metaLabel.setVerticalAlignment(VerticalAlignment.CENTER);
+
+                CellStyle dateCell = wb.createCellStyle();
+                dateCell.cloneStyleFrom(textCell);
+                short df = wb.getCreationHelper().createDataFormat().getFormat("yyyy-mm-dd");
+                dateCell.setDataFormat(df);
+
+                int r = 0;
+                // Title row
+                Row titleRow = sheet.createRow(r++);
+                String projectName = vm.getName() == null ? "" : vm.getName().trim();
+                Cell tCell = titleRow.createCell(0);
+                tCell.setCellValue("Project Schedule: " + projectName);
+                tCell.setCellStyle(titleStyle);
+
+                // Generation date row
+                Row genRow = sheet.createRow(r++);
+                Cell gl = genRow.createCell(0);
+                gl.setCellValue("Generated:");
+                gl.setCellStyle(metaLabel);
+                Cell gv = genRow.createCell(1);
+                String now = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(LocalDateTime.now());
+                gv.setCellValue(now);
+
+                // Stakeholders (Leader, Tech Leader, Sponsor)
+                String leaderName = resolvePersonLabel(vm.getLeaderUserId());
+                String techLeaderName = resolvePersonLabel(vm.getTechLeaderId());
+                String sponsorName = resolvePersonLabel(vm.getSponsorId());
+
+                Row lr = sheet.createRow(r++);
+                Cell ll = lr.createCell(0);
+                ll.setCellValue("Project Leader:");
+                ll.setCellStyle(metaLabel);
+                lr.createCell(1).setCellValue(leaderName == null ? "" : leaderName);
+
+                Row tr = sheet.createRow(r++);
+                Cell tl = tr.createCell(0);
+                tl.setCellValue("Technical Leader:");
+                tl.setCellStyle(metaLabel);
+                tr.createCell(1).setCellValue(techLeaderName == null ? "" : techLeaderName);
+
+                Row sr = sheet.createRow(r++);
+                Cell sl = sr.createCell(0);
+                sl.setCellValue("Sponsor:");
+                sl.setCellStyle(metaLabel);
+                sr.createCell(1).setCellValue(sponsorName == null ? "" : sponsorName);
+
+                r++; // empty spacer row
+
+                // Header row
+                Row header = sheet.createRow(r++);
+                String[] headers = new String[] {
+                    "Activity",
+                    "Responsible (ID)",
+                    "Responsible Name",
+                    "Status",
+                    "Planned Start",
+                    "Planned End",
+                    "Actual Start",
+                    "Actual End"
+                };
+                for (int c = 0; c < headers.length; c++) {
+                    Cell hc = header.createCell(c);
+                    hc.setCellValue(headers[c]);
+                    hc.setCellStyle(headerStyle);
+                }
+
+                // First row for the project itself
+                Row prow = sheet.createRow(r++);
+                int c = 0;
+                Cell pc0 = prow.createCell(c++);
+                pc0.setCellValue(projectName);
+                pc0.setCellStyle(textCell);
+
+                // Responsible ID and Name: use project leader
+                long leaderId = vm.getLeaderUserId();
+                String leaderLabel = resolvePersonLabel(leaderId);
+                Cell pc1 = prow.createCell(c++);
+                pc1.setCellValue(leaderId > 0 ? String.valueOf(leaderId) : "");
+                pc1.setCellStyle(textCell);
+                Cell pc1n = prow.createCell(c++);
+                pc1n.setCellValue(leaderLabel == null ? "" : leaderLabel);
+                pc1n.setCellStyle(textCell);
+
+                String prjStatus = mapStatusForExport(vm.getStatus());
+                Cell pc2 = prow.createCell(c++);
+                pc2.setCellValue(prjStatus);
+                pc2.setCellStyle(textCell);
+
+                // Dates
+                writeDateCell(prow.createCell(c++), vm.getPlannedStartDate(), dateCell);
+                writeDateCell(prow.createCell(c++), vm.getPlannedEndDate(), dateCell);
+                writeDateCell(prow.createCell(c++), vm.getActualStartDate(), dateCell);
+                writeDateCell(prow.createCell(c++), vm.getActualEndDate(), dateCell);
+
+                // Activity rows, keep current execution order
+                List<ProjectActivityViewModel> list = activities.stream()
+                    .sorted(Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder))
+                    .toList();
+                for (ProjectActivityViewModel a : list) {
+                    Row row = sheet.createRow(r++);
+                    int cc = 0;
+                    Cell c0 = row.createCell(cc++);
+                    c0.setCellValue(a.getDescription() == null ? "" : a.getDescription());
+                    c0.setCellStyle(textCell);
+
+                    long rid = a.getResponsibleId();
+                    String respName = resolvePersonLabel(rid);
+                    Cell c1 = row.createCell(cc++);
+                    c1.setCellValue(rid > 0 ? String.valueOf(rid) : "");
+                    c1.setCellStyle(textCell);
+                    Cell c1n = row.createCell(cc++);
+                    c1n.setCellValue(respName == null ? "" : respName);
+                    c1n.setCellStyle(textCell);
+
+                    Cell c2 = row.createCell(cc++);
+                    c2.setCellValue(mapStatusForExport(a.getStatus()));
+                    c2.setCellStyle(textCell);
+
+                    writeDateCell(row.createCell(cc++), a.getPlannedStartDate(), dateCell);
+                    writeDateCell(row.createCell(cc++), a.getPlannedEndDate(), dateCell);
+                    writeDateCell(row.createCell(cc++), a.getActualStartDate(), dateCell);
+                    writeDateCell(row.createCell(cc++), a.getActualEndDate(), dateCell);
+                }
+
+                // Freeze the header row and autosize columns (cover metadata and data columns)
+                sheet.createFreezePane(0, header.getRowNum() + 1);
+                int cols = Math.max(3, headers.length);
+                for (int i = 0; i < cols; i++) sheet.autoSizeColumn(i);
+
+                wb.write(fos);
+                LOGGER.info("[Excel Export] Schedule exported to: " + file.getAbsolutePath());
+            }
+        } catch (Exception ex) {
+            LOGGER.warning("[Excel Export] Failed: " + ex.getMessage());
+        }
+    }
+
+    private void writeDateCell(Cell cell, Date value, CellStyle dateStyle) {
+        if (value == null) {
+            cell.setBlank();
+        } else {
+            cell.setCellValue(value);
+            cell.setCellStyle(dateStyle);
+        }
+    }
+
+    private String sanitizeFileName(String name) {
+        if (name == null) return null;
+        String s = name.trim();
+        if (s.isEmpty()) return s;
+        // Remove illegal filename chars
+        return s.replaceAll("[\\\\/:*?\"<>|]", "_");
+    }
+
+    private String resolvePersonLabel(long personId) {
+        if (personId <= 0) return null;
+        Object lbl = AppContext.getInstance().get("person." + personId + ".label");
+        if (lbl instanceof String s && !s.isBlank()) return s;
+        return String.valueOf(personId);
+    }
+
+    private String mapStatusForExport(String code) {
+        if (code == null || code.isBlank()) return "";
+        return switch (code.trim().toUpperCase()) {
+            case "P" -> "Planificada";
+            case "R" -> "En curso";
+            case "S" -> "Postergada";
+            case "C" -> "Finalizada";
+            default -> code.trim();
+        };
     }
 
     private void openPersonInformation(long personId, String roleLabel) {
@@ -598,6 +847,14 @@ public class ProjectExpandController
      * @param statusCode one of "P","R","S","C"
      */
     private void updateProjectStatus(String statusCode) {
+        if (statusPersistInProgress) {
+            LOGGER.fine("[Project Status] Update already in progress; ignoring click.");
+            return;
+        }
+        if (statusCode == null || statusCode.isBlank() || statusCode.equalsIgnoreCase(vm.getStatus())) {
+            LOGGER.fine("[Project Status] No-op status change to " + statusCode);
+            return;
+        }
         LOGGER.info("[Project Status] Toggling to status=" + statusCode + " for project id=" + vm.getId());
         statusPersistInProgress = true;
         try {
@@ -648,17 +905,10 @@ public class ProjectExpandController
             return;
         }
         String code = status.trim().toUpperCase();
-        // Temporarily disarm listener to avoid recursion
-        boolean prevArmed = statusListenerArmed;
-        statusListenerArmed = false;
-        try {
-            ProjectStatus.getToggles().stream()
-                .filter(t -> t.getUserData() != null && code.equalsIgnoreCase(t.getUserData().toString()))
-                .findFirst()
-                .ifPresent(ProjectStatus::selectToggle);
-        } finally {
-            statusListenerArmed = prevArmed;
-        }
+        ProjectStatus.getToggles().stream()
+            .filter(t -> t.getUserData() != null && code.equalsIgnoreCase(t.getUserData().toString()))
+            .findFirst()
+            .ifPresent(ProjectStatus::selectToggle);
     }
 
     @FXML
@@ -1190,21 +1440,21 @@ public class ProjectExpandController
 
     @FXML
     private void onActionTgProjectStatusPending(ActionEvent event) {
-        // No-op: ToggleGroup listener handles persistence
+        updateProjectStatus("P");
     }
 
     @FXML
     private void onActionTgProjectStatusRunning(ActionEvent event) {
-        // No-op: ToggleGroup listener handles persistence
+        updateProjectStatus("R");
     }
 
     @FXML
     private void onActionTgProjectStatusSuspended(ActionEvent event) {
-        // No-op: ToggleGroup listener handles persistence
+        updateProjectStatus("S");
     }
 
     @FXML
     private void onActionTgProjectStatusCompleted(ActionEvent event) {
-        // No-op: ToggleGroup listener handles persistence
+        updateProjectStatus("C");
     }
 }

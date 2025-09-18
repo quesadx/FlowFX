@@ -45,6 +45,19 @@
                                           <String fx:value="jfx-button" />
                                        </styleClass>
                                     </MFXButton>
+                                    <HBox HBox.hgrow="ALWAYS" />
+                                    <MFXButton onAction="#onActionBtnPrintReport" styleClass="jfx-button" text="">
+                                       <graphic>
+                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../resources/icons/lucide--printer.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip text="Retornar a vista de proyectos" />
+                                       </tooltip>
+                                    </MFXButton>
                                  </children>
                               </HBox>
                            </children>
@@ -53,7 +66,7 @@
                            <children>
                               <HBox alignment="CENTER" styleClass="filler-rounded" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <VBox alignment="CENTER_LEFT" fillWidth="false" spacing="12.0" HBox.hgrow="NEVER">
+                                    <VBox alignment="CENTER_LEFT" spacing="12.0" HBox.hgrow="NEVER">
                                        <children>
                                           <VBox maxWidth="1.7976931348623157E308">
                                              <children>

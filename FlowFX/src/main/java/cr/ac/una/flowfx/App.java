@@ -58,6 +58,17 @@ public class App extends Application {
      * @param args command-line arguments forwarded to the JavaFX runtime
      */
     public static void main(String[] args) {
+        // Ensure this named module can read classes from the classpath (unnamed module),
+        // so non-modular libraries like Apache POI are accessible at runtime without JVM flags.
+        try {
+            Module myModule = App.class.getModule();
+            Module unnamed = App.class.getClassLoader().getUnnamedModule();
+            if (myModule != null && unnamed != null) {
+                myModule.addReads(unnamed);
+            }
+        } catch (Throwable ignore) {
+            // Best-effort: if this fails, the app can still be launched with --add-reads
+        }
         launch(args);
     }
 }
