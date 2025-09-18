@@ -32,9 +32,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-public class PersonSignUpController
-    extends Controller
-    implements Initializable {
+/**
+ * Controller to sign up a new Person. Allows optional id (server generates).
+ */
+public class PersonSignUpController extends Controller implements Initializable {
 
     @FXML
     private AnchorPane root;
@@ -84,16 +85,12 @@ public class PersonSignUpController
     @FXML
     private TableColumn<PersonViewModel, String> tbvPersonMail;
 
-    private static final Logger LOGGER = Logger.getLogger(
-        PersonSignUpController.class.getName()
-    );
+    private static final Logger LOGGER = Logger.getLogger(PersonSignUpController.class.getName());
 
-    private final ObservableList<PersonViewModel> persons =
-        FXCollections.observableArrayList();
+    private final ObservableList<PersonViewModel> persons = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Input limits similar to MainController
         setTextFieldLimit(txfPersonId, 9);
         setTextFieldLimit(txfPersonFirstName, 20);
         setTextFieldLimit(txfPersonLastName, 20);
@@ -101,30 +98,16 @@ public class PersonSignUpController
         setTextFieldLimit(txfPersonUsername, 20);
         setTextFieldLimit(pswPersonPassword, 20);
 
-        // Table setup
-        tbvPersonid.setCellValueFactory(data ->
-            new ReadOnlyObjectWrapper<Number>(data.getValue().getId())
-        );
-        tbvPersonName.setCellValueFactory(data ->
-            data.getValue().firstNameProperty()
-        );
-        tbcPersonLastName.setCellValueFactory(data ->
-            data.getValue().lastNameProperty()
-        );
-        tbvPersonMail.setCellValueFactory(data ->
-            data.getValue().emailProperty()
-        );
+        tbvPersonid.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getId()));
+        tbvPersonName.setCellValueFactory(data -> data.getValue().firstNameProperty());
+        tbcPersonLastName.setCellValueFactory(data -> data.getValue().lastNameProperty());
+        tbvPersonMail.setCellValueFactory(data -> data.getValue().emailProperty());
         tbvPersons.setItems(persons);
 
-        // Double-click handler
         tbvPersons.setRowFactory(tv -> {
             TableRow<PersonViewModel> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (
-                    !row.isEmpty() &&
-                    event.getButton() == MouseButton.PRIMARY &&
-                    event.getClickCount() == 2
-                ) {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     PersonViewModel vm = row.getItem();
                     AppContext.getInstance().set("selectedPerson", vm.toDTO());
                     FlowController.getInstance().goView("PersonExpandView");
@@ -133,7 +116,6 @@ public class PersonSignUpController
             return row;
         });
 
-        // Initial load
         refreshPersons();
     }
 
@@ -144,17 +126,13 @@ public class PersonSignUpController
 
     private void setTextFieldLimit(MFXTextField txf, int i) {
         txf.addEventFilter(KeyEvent.KEY_TYPED, e -> {
-            if (
-                txf.getText() != null && txf.getText().length() >= i
-            ) e.consume();
+            if (txf.getText() != null && txf.getText().length() >= i) e.consume();
         });
     }
 
     private void setTextFieldLimit(MFXPasswordField txf, int i) {
         txf.addEventFilter(KeyEvent.KEY_TYPED, e -> {
-            if (
-                txf.getText() != null && txf.getText().length() >= i
-            ) e.consume();
+            if (txf.getText() != null && txf.getText().length() >= i) e.consume();
         });
     }
 
@@ -162,29 +140,10 @@ public class PersonSignUpController
         persons.clear();
         PersonService s = new PersonService();
         Respuesta r = s.findAll();
-        if (r == null) {
-            LOGGER.log(
-                Level.WARNING,
-                "refreshPersons: service returned null Respuesta"
-            );
-            return;
-        }
-        if (!Boolean.TRUE.equals(r.getEstado())) {
-            LOGGER.log(
-                Level.WARNING,
-                "refreshPersons: service returned failure estado={0}, mensaje={1}",
-                new Object[] { r.getEstado(), r.getMensaje() }
-            );
-            return;
-        }
+        if (r == null || !Boolean.TRUE.equals(r.getEstado())) return;
         @SuppressWarnings("unchecked")
         List<PersonDTO> list = (List<PersonDTO>) r.getResultado("Persons");
-        if (list == null) {
-            LOGGER.fine(
-                "refreshPersons: empty person list returned from service"
-            );
-            return;
-        }
+        if (list == null) return;
         List<PersonViewModel> vms = new ArrayList<>();
         for (PersonDTO dto : list) vms.add(new PersonViewModel(dto));
         persons.addAll(vms);
@@ -216,9 +175,9 @@ public class PersonSignUpController
         if (Boolean.TRUE.equals(r.getEstado())) {
             new Mensaje().showModal(
                 Alert.AlertType.INFORMATION,
-                "Registro",
+                "Registration",
                 root.getScene().getWindow(),
-                "Usuario registrado correctamente."
+                "User registered successfully."
             );
             AnimationManager.hidePopup(vbSignUpDisplay, vbCover);
             clearSignUpFields();
@@ -227,16 +186,13 @@ public class PersonSignUpController
             LOGGER.log(
                 Level.WARNING,
                 "Person signup failed. mensaje={0}, mensajeInterno={1}",
-                new Object[] {
-                    r == null ? null : r.getMensaje(),
-                    r == null ? null : r.getMensajeInterno(),
-                }
+                new Object[] { r == null ? null : r.getMensaje(), r == null ? null : r.getMensajeInterno() }
             );
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Registro",
+                "Registration",
                 root.getScene().getWindow(),
-                r == null ? "Error desconocido." : r.getMensaje()
+                r == null ? "Unknown error." : r.getMensaje()
             );
         }
     }
@@ -249,52 +205,31 @@ public class PersonSignUpController
             String email = getTrimmedText(txfPersonEmail);
             String username = getTrimmedText(txfPersonUsername);
             String password = pswPersonPassword.getText();
-            char status = cbIsActive.isSelected() ? 'A' : 'I';
-            char isAdmin = cbIsAdmin.isSelected() ? 'Y' : 'N';
-            if (
-                firstName.isEmpty() ||
-                lastName.isEmpty() ||
-                email.isEmpty() ||
-                id == null
-            ) {
+            Character status = cbIsActive.isSelected() ? 'A' : 'I';
+            Character isAdmin = cbIsAdmin.isSelected() ? 'Y' : 'N';
+
+            if (id == null || firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()) {
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
                     "SignUp",
                     root.getScene().getWindow(),
-                    "Complete todos los campos requeridos."
+                    "Please complete all required fields (ID, First name, Last name, Email)."
                 );
                 return null;
             }
+
             boolean usernameEmpty = username.isEmpty();
             boolean passwordEmpty = password == null || password.isEmpty();
             if (usernameEmpty && passwordEmpty) {
-                return new PersonDTO(
-                    id,
-                    firstName,
-                    lastName,
-                    email,
-                    null,
-                    null,
-                    status,
-                    isAdmin
-                );
+                return new PersonDTO(id, firstName, lastName, email, null, null, status, isAdmin);
             } else if (!usernameEmpty && !passwordEmpty) {
-                return new PersonDTO(
-                    id,
-                    firstName,
-                    lastName,
-                    email,
-                    username,
-                    password,
-                    status,
-                    isAdmin
-                );
+                return new PersonDTO(id, firstName, lastName, email, username, password, status, isAdmin);
             } else {
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
                     "SignUp",
                     root.getScene().getWindow(),
-                    "Debe completar usuario y clave o dejar ambos vacíos."
+                    "Either provide both Username and Password, or leave both empty."
                 );
                 return null;
             }
@@ -304,7 +239,7 @@ public class PersonSignUpController
                 Alert.AlertType.ERROR,
                 "SignUp",
                 root.getScene().getWindow(),
-                "Error validando datos: " + (e == null ? "?" : e.getMessage())
+                "Error validating data: " + (e == null ? "?" : e.getMessage())
             );
             return null;
         }

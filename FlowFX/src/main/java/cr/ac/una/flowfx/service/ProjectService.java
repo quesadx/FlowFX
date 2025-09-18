@@ -312,6 +312,16 @@ public class ProjectService {
                 );
             }
 
+            // Read-before-write merge: fill missing required fields to satisfy server validation
+            try {
+                ProjectDTO merged = mergeWithCurrent(project);
+                if (merged != null) {
+                    project = merged;
+                }
+            } catch (Exception mergeEx) {
+                LOG.log(Level.FINE, "[Project.update] Merge with current failed (continuing)", mergeEx);
+            }
+
             LOG.log(
                 Level.INFO,
                 "[Project.update] id={0}, status={1}, plannedStart={2}, plannedEnd={3}, actualStart={4}, actualEnd={5}, leaderId={6}, techLeaderId={7}, sponsorId={8}",
@@ -367,6 +377,62 @@ public class ProjectService {
                 "Error updating project.",
                 "update " + ex.getMessage()
             );
+        }
+    }
+
+    /**
+     * Merge the provided patch DTO with the current server-side state to ensure required
+     * fields (e.g., name, planned dates) are present for validation on update.
+     * Only null fields in the patch are populated from the current state; non-null values
+     * in {@code patch} take precedence.
+     */
+    private ProjectDTO mergeWithCurrent(ProjectDTO patch) {
+        try {
+            Respuesta curResp = find(patch.getId());
+            if (!Boolean.TRUE.equals(curResp.getEstado())) {
+                return patch; // cannot fetch current, proceed as-is
+            }
+            Object curObj = curResp.getResultado("Project");
+            if (!(curObj instanceof ProjectDTO current)) {
+                return patch;
+            }
+
+            ProjectDTO merged = new ProjectDTO();
+            merged.setId(patch.getId());
+
+            // Preserve existing values unless patch overrides
+            merged.setName(patch.getName() != null ? patch.getName() : current.getName());
+            merged.setPlannedStartDate(
+                patch.getPlannedStartDate() != null ? patch.getPlannedStartDate() : current.getPlannedStartDate()
+            );
+            merged.setPlannedEndDate(
+                patch.getPlannedEndDate() != null ? patch.getPlannedEndDate() : current.getPlannedEndDate()
+            );
+            merged.setActualStartDate(
+                patch.getActualStartDate() != null ? patch.getActualStartDate() : current.getActualStartDate()
+            );
+            merged.setActualEndDate(
+                patch.getActualEndDate() != null ? patch.getActualEndDate() : current.getActualEndDate()
+            );
+            merged.setStatus(patch.getStatus() != null ? patch.getStatus() : current.getStatus());
+            merged.setCreatedAt(current.getCreatedAt());
+            merged.setUpdatedAt(new Date());
+
+            // Relations: keep current if not provided in patch
+            merged.setLeaderUserId(
+                patch.getLeaderUserId() != null ? patch.getLeaderUserId() : current.getLeaderUserId()
+            );
+            merged.setTechLeaderId(
+                patch.getTechLeaderId() != null ? patch.getTechLeaderId() : current.getTechLeaderId()
+            );
+            merged.setSponsorId(
+                patch.getSponsorId() != null ? patch.getSponsorId() : current.getSponsorId()
+            );
+
+            return merged;
+        } catch (Exception ex) {
+            LOG.log(Level.FINE, "mergeWithCurrent failed", ex);
+            return patch;
         }
     }
 

@@ -520,6 +520,7 @@ public class ProjectExpandController
      */
     private void updateProjectStatus(String statusCode) {
         LOGGER.info("[Project Status] Toggling to status=" + statusCode + " for project id=" + vm.getId());
+        String old = vm.getStatus();
         vm.setStatus(statusCode);
         ProjectService svc = new ProjectService();
         Respuesta r = svc.update(vm.toDTO());
@@ -530,11 +531,25 @@ public class ProjectExpandController
                     " | " +
                     (r != null ? r.getMensajeInterno() : "null")
             );
+            // Revert client VM to previous status since persistence failed
+            vm.setStatus(old);
         } else {
             LOGGER.info("[Project Status] Update OK. mensaje=" + r.getMensaje() + ", mensajeInterno=" + r.getMensajeInterno());
             Object updated = r.getResultado("Project");
             if (updated instanceof ProjectDTO p) {
+                // Refresh VM from server-confirmed DTO to keep client in sync
                 AppContext.getInstance().set("currentProject", p);
+                vm.setName(p.getName());
+                vm.setPlannedStartDate(p.getPlannedStartDate());
+                vm.setPlannedEndDate(p.getPlannedEndDate());
+                vm.setActualStartDate(p.getActualStartDate());
+                vm.setActualEndDate(p.getActualEndDate());
+                vm.setStatus(p.getStatus());
+                vm.setCreatedAt(p.getCreatedAt());
+                vm.setUpdatedAt(p.getUpdatedAt());
+                vm.setLeaderUserId(p.getLeaderUserId() == null ? 0L : p.getLeaderUserId());
+                vm.setTechLeaderId(p.getTechLeaderId() == null ? 0L : p.getTechLeaderId());
+                vm.setSponsorId(p.getSponsorId() == null ? 0L : p.getSponsorId());
             }
         }
     }

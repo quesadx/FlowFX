@@ -34,6 +34,7 @@ CREATE SEQUENCE seq_tracking_id
     NOCACHE
     NOCYCLE;
 
+
 CREATE TABLE notification 
     ( 
      notification_id NUMBER  NOT NULL , 
@@ -389,6 +390,7 @@ BEGIN
         :NEW.notification_id := seq_notification_id.NEXTVAL;
     END IF;
 END;
+
 
 CREATE OR REPLACE TRIGGER trg_project_id
 BEFORE INSERT ON project
