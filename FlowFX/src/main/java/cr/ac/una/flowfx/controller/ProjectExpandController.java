@@ -111,6 +111,10 @@ public class ProjectExpandController
         FXCollections.observableArrayList();
     private ProjectActivityViewModel selectedActivity;
 
+    // Guards for status toggle updates to avoid feedback loops and duplicate calls
+    private boolean statusPersistInProgress = false;
+    private boolean statusListenerArmed = false;
+
     @FXML
     private TableView<ProjectActivityViewModel> tbvActivities;
 
@@ -206,6 +210,63 @@ public class ProjectExpandController
         bindFields();
         setupActivitiesTable();
         loadActivitiesForProject();
+        // Proactively refresh project from server to reflect any out-of-band DB changes
+        refreshProjectFromServer();
+    }
+
+    /**
+     * Fetches the latest project from the server and updates the ViewModel + UI.
+     * Runs asynchronously to keep UI responsive.
+     */
+    private void refreshProjectFromServer() {
+        long id = vm.getId();
+        if (id <= 0) return;
+        Task<Respuesta> task = new Task<>() {
+            @Override
+            protected Respuesta call() {
+                ProjectService svc = new ProjectService();
+                return svc.find(id);
+            }
+        };
+        task.setOnSucceeded(e -> {
+            Respuesta r = task.getValue();
+            if (r != null && Boolean.TRUE.equals(r.getEstado())) {
+                Object obj = r.getResultado("Project");
+                if (obj instanceof ProjectDTO p) {
+                    AppContext.getInstance().set("currentProject", p);
+                    // Temporarily disarm listener to avoid recursion while updating fields
+                    boolean prevArmed = statusListenerArmed;
+                    statusListenerArmed = false;
+                    try {
+                        vm.setName(p.getName());
+                        vm.setPlannedStartDate(p.getPlannedStartDate());
+                        vm.setPlannedEndDate(p.getPlannedEndDate());
+                        vm.setActualStartDate(p.getActualStartDate());
+                        vm.setActualEndDate(p.getActualEndDate());
+                        vm.setStatus(p.getStatus());
+                        vm.setCreatedAt(p.getCreatedAt());
+                        vm.setUpdatedAt(p.getUpdatedAt());
+                        vm.setLeaderUserId(p.getLeaderUserId() == null ? 0L : p.getLeaderUserId());
+                        vm.setTechLeaderId(p.getTechLeaderId() == null ? 0L : p.getTechLeaderId());
+                        vm.setSponsorId(p.getSponsorId() == null ? 0L : p.getSponsorId());
+                        // Ensure toggle reflects refreshed status
+                        selectToggleForStatus(p.getStatus());
+                        // Refresh leader/tech/sponsor labels
+                        refreshLeaderLabel();
+                        refreshTechLeaderLabel();
+                        refreshSponsorLabel();
+                    } finally {
+                        statusListenerArmed = prevArmed;
+                    }
+                }
+            } else {
+                LOGGER.fine("[Project Refresh] No update from server. estado=" + (r != null ? r.getEstado() : null));
+            }
+        });
+        task.setOnFailed(e -> LOGGER.fine("[Project Refresh] Failed: " + task.getException()));
+        Thread t = new Thread(task, "project-refresh");
+        t.setDaemon(true);
+        t.start();
     }
 
     @FXML
@@ -263,7 +324,24 @@ public class ProjectExpandController
         // Default selection if empty
         if (vm.getStatus() == null || vm.getStatus().isBlank()) {
             ProjectStatus.selectToggle(tgProjectStatusPending);
+        } else {
+            // Ensure toggle reflects current status on load
+            selectToggleForStatus(vm.getStatus());
         }
+
+        // Listener to persist status when user changes the toggle
+        ProjectStatus
+            .selectedToggleProperty()
+            .addListener((obs, oldT, newT) -> {
+                if (!statusListenerArmed) return; // ignore during init/programmatic changes
+                if (newT == null || newT.getUserData() == null) return;
+                String code = newT.getUserData().toString();
+                if (statusPersistInProgress) return; // an update is in-flight
+                String current = vm.getStatus();
+                if (code == null || (current != null && current.equals(code))) return; // no-op
+                updateProjectStatus(code);
+            });
+        statusListenerArmed = true;
 
         // Configure person display fields as non-editable and show resolved names
         txfLeaderId.setEditable(false);
@@ -399,6 +477,7 @@ public class ProjectExpandController
         }
     }
 
+    @SuppressWarnings("unused")
     private void bindNumericText(
         MFXTextField field,
         boolean isLeader,
@@ -520,37 +599,65 @@ public class ProjectExpandController
      */
     private void updateProjectStatus(String statusCode) {
         LOGGER.info("[Project Status] Toggling to status=" + statusCode + " for project id=" + vm.getId());
-        String old = vm.getStatus();
-        vm.setStatus(statusCode);
-        ProjectService svc = new ProjectService();
-        Respuesta r = svc.update(vm.toDTO());
-        if (!Boolean.TRUE.equals(r.getEstado())) {
-            LOGGER.warning(
-                "[Project Status] Update failed: " +
-                    (r != null ? r.getMensaje() : "null") +
-                    " | " +
-                    (r != null ? r.getMensajeInterno() : "null")
-            );
-            // Revert client VM to previous status since persistence failed
-            vm.setStatus(old);
-        } else {
-            LOGGER.info("[Project Status] Update OK. mensaje=" + r.getMensaje() + ", mensajeInterno=" + r.getMensajeInterno());
-            Object updated = r.getResultado("Project");
-            if (updated instanceof ProjectDTO p) {
-                // Refresh VM from server-confirmed DTO to keep client in sync
-                AppContext.getInstance().set("currentProject", p);
-                vm.setName(p.getName());
-                vm.setPlannedStartDate(p.getPlannedStartDate());
-                vm.setPlannedEndDate(p.getPlannedEndDate());
-                vm.setActualStartDate(p.getActualStartDate());
-                vm.setActualEndDate(p.getActualEndDate());
-                vm.setStatus(p.getStatus());
-                vm.setCreatedAt(p.getCreatedAt());
-                vm.setUpdatedAt(p.getUpdatedAt());
-                vm.setLeaderUserId(p.getLeaderUserId() == null ? 0L : p.getLeaderUserId());
-                vm.setTechLeaderId(p.getTechLeaderId() == null ? 0L : p.getTechLeaderId());
-                vm.setSponsorId(p.getSponsorId() == null ? 0L : p.getSponsorId());
+        statusPersistInProgress = true;
+        try {
+            String old = vm.getStatus();
+            vm.setStatus(statusCode);
+            ProjectService svc = new ProjectService();
+            Respuesta r = svc.update(vm.toDTO());
+            if (!Boolean.TRUE.equals(r.getEstado())) {
+                LOGGER.warning(
+                    "[Project Status] Update failed: " +
+                        (r != null ? r.getMensaje() : "null") +
+                        " | " +
+                        (r != null ? r.getMensajeInterno() : "null")
+                );
+                // Revert client VM to previous status since persistence failed
+                vm.setStatus(old);
+                selectToggleForStatus(old);
+            } else {
+                LOGGER.info("[Project Status] Update OK. mensaje=" + r.getMensaje() + ", mensajeInterno=" + r.getMensajeInterno());
+                Object updated = r.getResultado("Project");
+                if (updated instanceof ProjectDTO p) {
+                    // Refresh VM from server-confirmed DTO to keep client in sync
+                    AppContext.getInstance().set("currentProject", p);
+                    vm.setName(p.getName());
+                    vm.setPlannedStartDate(p.getPlannedStartDate());
+                    vm.setPlannedEndDate(p.getPlannedEndDate());
+                    vm.setActualStartDate(p.getActualStartDate());
+                    vm.setActualEndDate(p.getActualEndDate());
+                    vm.setStatus(p.getStatus());
+                    vm.setCreatedAt(p.getCreatedAt());
+                    vm.setUpdatedAt(p.getUpdatedAt());
+                    vm.setLeaderUserId(p.getLeaderUserId() == null ? 0L : p.getLeaderUserId());
+                    vm.setTechLeaderId(p.getTechLeaderId() == null ? 0L : p.getTechLeaderId());
+                    vm.setSponsorId(p.getSponsorId() == null ? 0L : p.getSponsorId());
+                    selectToggleForStatus(p.getStatus());
+                }
             }
+        } finally {
+            statusPersistInProgress = false;
+        }
+    }
+
+    private void selectToggleForStatus(String status) {
+        if (ProjectStatus == null) return;
+        if (status == null || status.isBlank()) {
+            // fallback to Pending if undefined
+            ProjectStatus.selectToggle(tgProjectStatusPending);
+            return;
+        }
+        String code = status.trim().toUpperCase();
+        // Temporarily disarm listener to avoid recursion
+        boolean prevArmed = statusListenerArmed;
+        statusListenerArmed = false;
+        try {
+            ProjectStatus.getToggles().stream()
+                .filter(t -> t.getUserData() != null && code.equalsIgnoreCase(t.getUserData().toString()))
+                .findFirst()
+                .ifPresent(ProjectStatus::selectToggle);
+        } finally {
+            statusListenerArmed = prevArmed;
         }
     }
 
@@ -766,11 +873,7 @@ public class ProjectExpandController
             Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder)
         );
 
-        // Extra debug for status toggle group selection changes
-        ProjectStatus.selectedToggleProperty().addListener((obs, old, neu) -> {
-            String code = neu != null && neu.getUserData() != null ? neu.getUserData().toString() : null;
-            LOGGER.info("[Project Status] ToggleGroup selection changed to=" + code);
-        });
+        // Status change handling is wired in bindFields()
 
         // Row factory for double click, DnD and pastel coloring
         tbvActivities.setRowFactory(tv -> {
@@ -1087,21 +1190,21 @@ public class ProjectExpandController
 
     @FXML
     private void onActionTgProjectStatusPending(ActionEvent event) {
-        updateProjectStatus("P");
+        // No-op: ToggleGroup listener handles persistence
     }
 
     @FXML
     private void onActionTgProjectStatusRunning(ActionEvent event) {
-        updateProjectStatus("R");
+        // No-op: ToggleGroup listener handles persistence
     }
 
     @FXML
     private void onActionTgProjectStatusSuspended(ActionEvent event) {
-        updateProjectStatus("S");
+        // No-op: ToggleGroup listener handles persistence
     }
 
     @FXML
     private void onActionTgProjectStatusCompleted(ActionEvent event) {
-        updateProjectStatus("C");
+        // No-op: ToggleGroup listener handles persistence
     }
 }
