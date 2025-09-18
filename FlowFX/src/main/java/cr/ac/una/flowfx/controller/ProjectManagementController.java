@@ -183,7 +183,8 @@ public class ProjectManagementController
         for (ProjectDTO p : projects) {
             Board b = new Board();
             b.getLblTitle().setText(p.getName());
-            b.getLblStatus().setText(String.valueOf(p.getStatus()));
+            // Show Spanish status names instead of raw codes
+            b.getLblStatus().setText(mapStatusToSpanish(p.getStatus()));
             b
                 .getBtnExpandProject()
                 .setOnAction(e -> {
@@ -280,5 +281,23 @@ public class ProjectManagementController
 
     private String safe(String s) {
         return s == null ? "" : s.trim();
+    }
+
+    /**
+     * Maps status codes to Spanish display names.
+     * P = Planned / In Planning
+     * R = Running / In Progress
+     * S = Suspended
+     * C = Closed / Completed
+     */
+    private String mapStatusToSpanish(String code) {
+        if (code == null || code.isBlank()) return "-";
+        return switch (code.trim().toUpperCase()) {
+            case "P" -> "Planificada";
+            case "R" -> "En curso";
+            case "S" -> "Suspendida";
+            case "C" -> "Finalizada";
+            default -> code.trim();
+        };
     }
 }

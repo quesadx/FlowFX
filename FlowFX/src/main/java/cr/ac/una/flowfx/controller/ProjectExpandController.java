@@ -244,6 +244,8 @@ public class ProjectExpandController
         bindFields();
         setupActivitiesTable();
         loadActivitiesForProject();
+        // Ensure person names are loaded immediately after binding
+        loadPersonNamesImmediately();
         // Proactively refresh project from server to reflect any out-of-band DB changes
         refreshProjectFromServer();
     }
@@ -858,15 +860,26 @@ public class ProjectExpandController
         return String.valueOf(personId);
     }
 
-    private String mapStatusForExport(String code) {
-        if (code == null || code.isBlank()) return "";
+    /**
+     * Maps status codes to Spanish display names.
+     * P = Planned / In Planning
+     * R = Running / In Progress
+     * S = Suspended
+     * C = Closed / Completed
+     */
+    public static String mapStatusToSpanish(String code) {
+        if (code == null || code.isBlank()) return "-";
         return switch (code.trim().toUpperCase()) {
             case "P" -> "Planificada";
             case "R" -> "En curso";
-            case "S" -> "Postergada";
+            case "S" -> "Suspendida";
             case "C" -> "Finalizada";
             default -> code.trim();
         };
+    }
+
+    private String mapStatusForExport(String code) {
+        return mapStatusToSpanish(code);
     }
 
     private void openPersonInformation(long personId, String roleLabel) {
@@ -971,6 +984,37 @@ public class ProjectExpandController
     }
 
 
+
+    /**
+     * Loads person names immediately during initialization to avoid showing IDs.
+     */
+    private void loadPersonNamesImmediately() {
+        // Pre-fetch leader names synchronously to avoid showing IDs initially
+        long leaderId = vm.getLeaderUserId();
+        long techId = vm.getTechLeaderId();
+        long sponsorId = vm.getSponsorId();
+        
+        if (leaderId > 0) {
+            String leaderName = resolvePersonNameSync(leaderId);
+            if (leaderName != null && !leaderName.equals(String.valueOf(leaderId))) {
+                Platform.runLater(() -> txfLeaderId.setText(leaderName));
+            }
+        }
+        
+        if (techId > 0) {
+            String techName = resolvePersonNameSync(techId);
+            if (techName != null && !techName.equals(String.valueOf(techId))) {
+                Platform.runLater(() -> txfTechLeaderId.setText(techName));
+            }
+        }
+        
+        if (sponsorId > 0) {
+            String sponsorName = resolvePersonNameSync(sponsorId);
+            if (sponsorName != null && !sponsorName.equals(String.valueOf(sponsorId))) {
+                Platform.runLater(() -> txfSponsorId.setText(sponsorName));
+            }
+        }
+    }
 
     private void selectToggleForStatus(String status) {
         if (ProjectStatus == null) return;
@@ -1459,15 +1503,7 @@ public class ProjectExpandController
     }
 
     private String mapStatus(String code) {
-        if (code == null || code.isBlank()) return "-";
-        return switch (code.trim().toUpperCase()) {
-            case "P" -> "Pendiente";
-            case "R" -> "En proceso";
-            case "S" -> "Suspendida";
-            case "C" -> "Completada";
-            case "D" -> "Detenida";
-            default -> code.trim();
-        };
+        return mapStatusToSpanish(code);
     }
 
     private void showActivityDetail(ProjectActivityViewModel item) {

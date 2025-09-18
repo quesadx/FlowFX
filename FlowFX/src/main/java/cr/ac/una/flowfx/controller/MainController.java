@@ -138,11 +138,11 @@ public class MainController extends Controller implements Initializable {
                     : data.getValue().getName()
             )
         );
-        // Status is String; show "-" if null/blank
+        // Status is String; show Spanish names instead of raw codes
         tbcProjectStatus.setCellValueFactory(data -> {
             String st = data.getValue().getStatus();
             return new javafx.beans.property.SimpleStringProperty(
-                (st == null || st.isBlank()) ? "-" : st
+                mapStatusToSpanish(st)
             );
         });
 
@@ -318,7 +318,7 @@ public class MainController extends Controller implements Initializable {
             >) ar.getResultado("Activities");
             if (acts != null) {
                 for (ProjectActivityDTO a : acts) {
-                    String st = safeStatus(a.getStatus());
+                    String st = mapStatusToSpanish(a.getStatus());
                     String label =
                         (a.getDescription() == null
                                 ? "Actividad"
@@ -359,10 +359,10 @@ public class MainController extends Controller implements Initializable {
             }
         }
         var pieData = FXCollections.observableArrayList(
-            new PieChart.Data("Pendiente", cntP),
+            new PieChart.Data("Planificada", cntP),
             new PieChart.Data("En curso", cntR),
-            new PieChart.Data("Suspendido", cntS),
-            new PieChart.Data("Completado", cntC)
+            new PieChart.Data("Suspendida", cntS),
+            new PieChart.Data("Finalizada", cntC)
         );
         if (cntU > 0) pieData.add(new PieChart.Data("Desconocido", cntU));
         pcPersonActivities.setData(pieData);
@@ -524,18 +524,29 @@ public class MainController extends Controller implements Initializable {
     // =========================
 
     /**
-     * Returns a safe status String for display. If null/blank returns "-".
-     */
-    private String safeStatus(String status) {
-        return (status == null || status.isBlank()) ? "-" : status;
-    }
-
-    /**
      * Returns the first character of the status String in upper-case,
      * or '?' if null/blank.
      */
     private char firstStatusChar(String status) {
         if (status == null || status.isBlank()) return '?';
         return Character.toUpperCase(status.charAt(0));
+    }
+
+    /**
+     * Maps status codes to Spanish display names.
+     * P = Planned / In Planning
+     * R = Running / In Progress
+     * S = Suspended
+     * C = Closed / Completed
+     */
+    private String mapStatusToSpanish(String code) {
+        if (code == null || code.isBlank()) return "-";
+        return switch (code.trim().toUpperCase()) {
+            case "P" -> "Planificada";
+            case "R" -> "En curso";
+            case "S" -> "Suspendida";
+            case "C" -> "Finalizada";
+            default -> code.trim();
+        };
     }
 }
