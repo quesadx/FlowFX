@@ -11,6 +11,7 @@ module cr.ac.una.flowfx {
     requires jakarta.persistence;
     requires jakarta.xml.ws;
     requires jakarta.json;
+    requires java.base;
     // Abre paquetes para reflexión (FXML/JAXB/Metro)
     opens cr.ac.una.flowfx to javafx.fxml;
     opens cr.ac.una.flowfx.controller to javafx.fxml;

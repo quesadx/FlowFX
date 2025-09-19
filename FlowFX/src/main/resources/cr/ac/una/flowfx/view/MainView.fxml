@@ -30,9 +30,35 @@
                <children>
                   <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" styleClass="container-sub" VBox.vgrow="NEVER">
+                        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" spacing="4.0" styleClass="container-sub" VBox.vgrow="NEVER">
                            <children>
-                              <Label styleClass="jfx-title-small" stylesheets="@styles.css" text="DASHBAORD" />
+                              <MFXButton maxWidth="200.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" styleClass="jfx-button" text="Obtener ayuda">
+                                 <graphic>
+                                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/icons/lucide--badge-question-mark.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </MFXButton>
+                              <MFXButton maxWidth="200.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" styleClass="jfx-button" text="Obtener informacion">
+                                 <graphic>
+                                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/icons/lucide--badge-info.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </MFXButton>
+                              <MFXButton maxWidth="200.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" styleClass="jfx-button" text="Cerrar sesion">
+                                 <graphic>
+                                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/icons/lucide--shield-close.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </MFXButton>
                            </children>
                         </HBox>
                         <Separator prefWidth="200.0" visible="false">
@@ -102,7 +128,7 @@
                      </children>
                   </VBox>
                </children></VBox>
-            <VBox fx:id="vbLogInDisplay" alignment="CENTER" fillWidth="false" maxHeight="425.0" maxWidth="350.0" prefWidth="375.0" spacing="12.0" styleClass="filler-rounded" visible="false">
+            <VBox fx:id="vbLogInDisplay" alignment="CENTER" fillWidth="false" maxHeight="425.0" maxWidth="350.0" prefWidth="375.0" spacing="12.0" styleClass="filler-rounded">
                <children>
                   <Label styleClass="jfx-title" text="FLOWFX" />
                   <Separator maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="325.0" visible="false" />

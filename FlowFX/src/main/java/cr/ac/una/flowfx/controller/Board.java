@@ -31,7 +31,7 @@ public class Board extends Pane implements Initializable {
     private VBox vbBoard;
 
     @FXML
-    private MFXButton btnExpandProject;
+    private MFXButton btnExpandProject, btnDeleteProject;
 
     @FXML
     private Label lblTitle;
@@ -52,6 +52,7 @@ public class Board extends Pane implements Initializable {
      * single child of this container.
      */
     public Board() {
+        //btnDeleteProject.setVisible(false);
         FXMLLoader fxmlLoader = new FXMLLoader(
             getClass().getResource("/cr/ac/una/flowfx/view/BoardComponent.fxml")
         );
@@ -101,6 +102,10 @@ public class Board extends Pane implements Initializable {
 
     public MFXButton getBtnExpandProject() {
         return btnExpandProject;
+    }
+
+    public MFXButton getBtnDeleteProject() {
+        return btnDeleteProject;
     }
 
     public Label getLblTitle() {

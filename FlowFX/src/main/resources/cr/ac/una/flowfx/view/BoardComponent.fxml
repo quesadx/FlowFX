@@ -10,7 +10,7 @@
 
 <VBox fx:id="vbBoard" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="168.0" prefWidth="313.0" spacing="4.0" styleClass="container-sub" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER">
+      <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
@@ -21,17 +21,18 @@
                   </HBox>
                   <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                   </HBox>
-               <MFXButton fx:id="btnExpandProject" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="jfx-button" text="Ir a vista completa">
+                  <MFXButton fx:id="btnDeleteProject" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="jfx-delete-button" text="Eliminar">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/icons/lucide--fullscreen.png" />
-                           </image></ImageView>
+                              <Image url="@../resources/icons/lucide--package-x.png" />
+                           </image>
+                        </ImageView>
                      </graphic>
                   </MFXButton>
                </children>
             </HBox>
-            <VBox alignment="CENTER_LEFT">
+            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                <children>
                   <Label fx:id="lblTitle" styleClass="jfx-title-tiny" text="TITULO DEL PROYECTO" />
                </children>
@@ -39,6 +40,15 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding>
             </VBox>
+         <MFXButton fx:id="btnExpandProject" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="Ir a vista completa">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/icons/lucide--fullscreen.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </MFXButton>
          </children>
       </VBox>
    </children>

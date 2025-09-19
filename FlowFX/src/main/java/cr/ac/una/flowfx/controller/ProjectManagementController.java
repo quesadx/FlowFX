@@ -8,17 +8,22 @@ import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
 import cr.ac.una.flowfx.util.Mensaje;
 import cr.ac.una.flowfx.util.Respuesta;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +32,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -41,6 +47,14 @@ public class ProjectManagementController
     private static final Logger LOGGER = Logger.getLogger(
         ProjectManagementController.class.getName()
     );
+
+    // Delete mode and animation constants
+    private boolean deleteMode = false;
+    private final Map<MFXButton, RotateTransition> wiggleAnimations = new HashMap<>();
+    
+    private static final double WIGGLE_ANGLE = 2.0;
+    private static final Duration WIGGLE_DURATION = Duration.millis(150);
+    private static final Interpolator WIGGLE_INTERPOLATOR = Interpolator.EASE_BOTH;
 
     @FXML
     private AnchorPane root;
@@ -83,7 +97,6 @@ public class ProjectManagementController
     @Override
     public void initialize() {
         clearForm();
-        loadUserProjects();
         loadUserProjects();
         //FlowController.getInstance().limpiarLoader("ProjectExpandView");
     }
@@ -185,12 +198,16 @@ public class ProjectManagementController
             b.getLblTitle().setText(p.getName());
             // Show Spanish status names instead of raw codes
             b.getLblStatus().setText(mapStatusToSpanish(p.getStatus()));
-            b
-                .getBtnExpandProject()
-                .setOnAction(e -> {
-                    AppContext.getInstance().set("currentProject", p);
-                    FlowController.getInstance().goView("ProjectExpandView");
-                });
+            
+            // Set up expand button
+            b.getBtnExpandProject().setOnAction(e -> {
+                AppContext.getInstance().set("currentProject", p);
+                FlowController.getInstance().goView("ProjectExpandView");
+            });
+            
+            // Set up delete button
+            setupDeleteButton(b, p);
+            
             tpProjects.getChildren().add(b);
         }
     }
@@ -283,7 +300,7 @@ public class ProjectManagementController
         return s == null ? "" : s.trim();
     }
 
-    /**
+        /**
      * Maps status codes to Spanish display names.
      * P = Planned / In Planning
      * R = Running / In Progress
@@ -299,5 +316,149 @@ public class ProjectManagementController
             case "C" -> "Finalizada";
             default -> code.trim();
         };
+    }
+
+    /**
+     * Sets up the delete button for a Board component.
+     */
+    private void setupDeleteButton(Board board, ProjectDTO project) {
+        // Initially hide delete button
+        board.getBtnDeleteProject().setVisible(deleteMode);
+        board.getBtnDeleteProject().setManaged(deleteMode);
+        
+        // Add wiggle animation if in delete mode
+        if (deleteMode) {
+            startWiggleAnimation(board.getBtnDeleteProject());
+        }
+        
+        // Set up delete action
+        board.getBtnDeleteProject().setOnAction(e -> deleteProject(project));
+    }
+
+    /**
+     * Starts a wiggle animation on the given button (iOS-style delete mode).
+     */
+    private void startWiggleAnimation(MFXButton button) {
+        if (button == null) return;
+        
+        // Stop any existing animation
+        stopWiggleAnimation(button);
+        
+        // Create new wiggle animation
+        RotateTransition wiggle = new RotateTransition(WIGGLE_DURATION, button);
+        wiggle.setFromAngle(-WIGGLE_ANGLE);
+        wiggle.setToAngle(WIGGLE_ANGLE);
+        wiggle.setAutoReverse(true);
+        wiggle.setCycleCount(RotateTransition.INDEFINITE);
+        wiggle.setInterpolator(WIGGLE_INTERPOLATOR);
+        
+        // Store animation for later cleanup
+        wiggleAnimations.put(button, wiggle);
+        
+        // Start wiggling
+        wiggle.play();
+    }
+
+    /**
+     * Stops wiggle animation on the given button.
+     */
+    private void stopWiggleAnimation(MFXButton button) {
+        if (button == null) return;
+        
+        RotateTransition existingAnimation = wiggleAnimations.remove(button);
+        if (existingAnimation != null) {
+            existingAnimation.stop();
+            // Reset rotation to 0
+            button.setRotate(0);
+        }
+    }
+
+    /**
+     * Deletes a project with Spanish confirmation dialog.
+     */
+    private void deleteProject(ProjectDTO project) {
+        try {
+            if (project == null || project.getId() == null) {
+                LOGGER.log(Level.WARNING, "Cannot delete: invalid project");
+                return;
+            }
+
+            // Show Spanish confirmation dialog
+            boolean confirmed = new Mensaje().showConfirmation(
+                "Eliminar Proyecto",
+                root.getScene().getWindow(),
+                "¿Está seguro que desea eliminar el proyecto '" + 
+                safe(project.getName()) + "'?\n\nEsta acción no se puede deshacer."
+            );
+
+            if (confirmed) {
+                ProjectService service = new ProjectService();
+                Respuesta response = service.delete(project.getId());
+                
+                if (Boolean.TRUE.equals(response.getEstado())) {
+                    new Mensaje().showModal(
+                        javafx.scene.control.Alert.AlertType.INFORMATION,
+                        "Eliminar Proyecto",
+                        root.getScene().getWindow(),
+                        "El proyecto ha sido eliminado correctamente."
+                    );
+                    
+                    // Reload projects to refresh the view
+                    loadUserProjects();
+                    
+                    LOGGER.log(Level.INFO, "Project deleted successfully: " + project.getId());
+                } else {
+                    new Mensaje().showModal(
+                        javafx.scene.control.Alert.AlertType.ERROR,
+                        "Eliminar Proyecto",
+                        root.getScene().getWindow(),
+                        "Error al eliminar el proyecto: " + response.getMensaje()
+                    );
+                    
+                    LOGGER.log(Level.WARNING, 
+                        "Project deletion failed: " + response.getMensaje());
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Error deleting project", ex);
+            new Mensaje().showModal(
+                javafx.scene.control.Alert.AlertType.ERROR,
+                "Eliminar Proyecto",
+                root.getScene().getWindow(),
+                "Error inesperado al eliminar el proyecto."
+            );
+        }
+    }
+
+    /**
+     * Toggles delete mode and updates all existing Board components.
+     */
+    private void toggleDeleteMode() {
+        deleteMode = !deleteMode;
+        
+        // Update all existing Board components
+        tpProjects.getChildren().forEach(node -> {
+            if (node instanceof Board) {
+                Board board = (Board) node;
+                MFXButton deleteBtn = board.getBtnDeleteProject();
+                
+                deleteBtn.setVisible(deleteMode);
+                deleteBtn.setManaged(deleteMode);
+                
+                // Start/stop wiggle animation
+                if (deleteMode) {
+                    startWiggleAnimation(deleteBtn);
+                } else {
+                    stopWiggleAnimation(deleteBtn);
+                }
+            }
+        });
+        
+        LOGGER.log(Level.INFO, "Delete mode " + (deleteMode ? "enabled" : "disabled"));
+    }
+
+    @FXML
+    private void onActionDeleteMode(ActionEvent event) {
+        toggleDeleteMode();
     }
 }

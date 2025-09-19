@@ -124,7 +124,7 @@
     -fx-green-border: #16a34a;
     -fx-yellow: #fde68a;            /* warning bg */
     -fx-yellow-border: #a19140;     /* warning text/border */
-    -fx-red: #fecaca;               /* error bg */
+    -fx-red: #ffb9b9;               /* error bg */
     -fx-red-border: #dc2626;        /* error border/text */
     -fx-blue: #cae5ff;              /* info bg */
     -fx-blue-border: #3b82f6;       /* info border/text */
@@ -377,6 +377,28 @@
 .mfx-button.jfx-button:focused { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 12, 0.55, 0, 0); }
 .mfx-button.jfx-button:disabled { -fx-background-color: #aab7ff; -fx-opacity: 0.7; }
 
+.mfx-button.jfx-delete-button {
+    -fx-background-color: -fx-red;
+    -fx-background-radius: 24;
+    -fx-border-color: -fx-red-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-text-fill: -fx-text-inverse;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16 8 16;
+}
+.mfx-button.jfx-delete-button:hover   {
+    -fx-background-color:
+        linear-gradient(derive(-fx-red, 4%), derive(-fx-red, -2%)),
+        -fx-red;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 24, 23;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.28), 10, 0.45, 0, 0);
+}
+
+.mfx-button.jfx-delete-button:pressed { -fx-background-color: derive(-fx-red, -10%); -fx-effect: innershadow(gaussian, rgba(0,0,0,0.24), 10, 0.35, 0, 1); }
+.mfx-button.jfx-delete-button:focused { -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.28), 12, 0.55, 0, 0); }
+.mfx-button.jfx-delete-button:disabled { -fx-background-color: #ffdad9; -fx-opacity: 0.7; }
 
 /* ========================================
    7) TEXT INPUTS (MaterialFX)

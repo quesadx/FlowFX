@@ -40,9 +40,12 @@
                   <Tooltip text="Dashboard" />
                </tooltip>
             </MFXButton>
-                <MFXButton fx:id="btnAdmin" prefWidth="150.0" styleClass="jfx-persons" text="Personas">
+                <MFXButton fx:id="btnAdmin" prefWidth="150.0" text="Personas">
                     <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/icons/lucide--users.png" />
+                     </image></ImageView>
                     </graphic>
                <tooltip>
                   <Tooltip text="Menú de usuarios" />
