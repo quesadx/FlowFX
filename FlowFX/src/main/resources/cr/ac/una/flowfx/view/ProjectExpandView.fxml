@@ -33,7 +33,7 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" minHeight="-Infinity" HBox.hgrow="ALWAYS">
                                  <children>
-                     <MFXButton fx:id="btnReturnManagement" onAction="#onActionBtnReturnToManagement" text="">
+                     <MFXButton fx:id="btnReturnManagement" onAction="#onActionBtnReturnToManagement" text="Volver">
                                        <graphic>
                                           <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                                        </graphic>
@@ -46,7 +46,7 @@
                                        </styleClass>
                                     </MFXButton>
                                     <HBox HBox.hgrow="ALWAYS" />
-                                    <MFXButton onAction="#onActionBtnPrintReport" styleClass="jfx-button" text="">
+                                    <MFXButton onAction="#onActionBtnPrintReport" styleClass="jfx-button" text="Imprimir reporte">
                                        <graphic>
                                           <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -82,7 +82,7 @@
                                                             </ImageView>
                                                          </children>
                                                       </VBox>
-                                                      <MFXTextField fx:id="txfProjectName" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      <MFXTextField fx:id="txfProjectName" floatMode="DISABLED" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -101,7 +101,7 @@
                                                             </ImageView>
                                                          </children>
                                                       </VBox>
-                                                      <MFXDatePicker fx:id="dpProjectStartDate" prefWidth="200.0" />
+                                                      <MFXDatePicker fx:id="dpProjectStartDate" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -120,7 +120,7 @@
                                                             </ImageView>
                                                          </children>
                                                       </VBox>
-                                                      <MFXDatePicker fx:id="dpProjectActualStartDate" prefWidth="200.0" />
+                                                      <MFXDatePicker fx:id="dpProjectActualStartDate" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -142,13 +142,20 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" onAction="#onActionTxfSponsorId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Seleccionar">
+                                                               <tooltip>
+                                                                  <Tooltip text="Abrir selector de persona" />
+                                                               </tooltip>
+                                                               <graphic>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--mouse-pointer-2.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </MFXButton>
                                                          </children>
                                                       </HBox>
-                                                      <MFXButton onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Seleccionar">
-                                                         <tooltip>
-                                                            <Tooltip text="Abrir selector de persona" />
-                                                         </tooltip>
-                                                      </MFXButton>
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -170,13 +177,20 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" onAction="#onActionTxfLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Seleccionar">
+                                                               <tooltip>
+                                                                  <Tooltip text="Abrir selector de persona" />
+                                                               </tooltip>
+                                                               <graphic>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--mouse-pointer-2.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </MFXButton>
                                                          </children>
                                                       </HBox>
-                                                      <MFXButton onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Seleccionar">
-                                                         <tooltip>
-                                                            <Tooltip text="Abrir selector de persona" />
-                                                         </tooltip>
-                                                      </MFXButton>
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -198,13 +212,20 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" onAction="#onActionTechLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Seleccionar">
+                                                               <tooltip>
+                                                                  <Tooltip text="Abrir selector de persona" />
+                                                               </tooltip>
+                                                               <graphic>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--mouse-pointer-2.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </MFXButton>
                                                          </children>
                                                       </HBox>
-                                                      <MFXButton onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Seleccionar">
-                                                         <tooltip>
-                                                            <Tooltip text="Abrir selector de persona" />
-                                                         </tooltip>
-                                                      </MFXButton>
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -223,13 +244,13 @@
                                                    <children>
                                                       <HBox alignment="CENTER" spacing="12.0">
                                                          <children>
-                                                            <MFXCircleToggleNode fx:id="tgProjectStatusPending" onAction="#onActionTgProjectStatusPending" prefWidth="37.0" size="16.0" text="Pendiente">
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusPending" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusPending" prefWidth="37.0" size="16.0" text="Pendiente" HBox.hgrow="ALWAYS">
                                                                <toggleGroup>
                                                                   <ToggleGroup fx:id="ProjectStatus" />
                                                                </toggleGroup></MFXCircleToggleNode>
-                                                            <MFXCircleToggleNode fx:id="tgProjectStatusRunning" onAction="#onActionTgProjectStatusRunning" prefWidth="37.0" size="16.0" text="En proceso" toggleGroup="$ProjectStatus" />
-                                                            <MFXCircleToggleNode fx:id="tgProjectStatusSuspended" onAction="#onActionTgProjectStatusSuspended" prefWidth="37.0" size="16.0" text="Suspendido" toggleGroup="$ProjectStatus" />
-                                                            <MFXCircleToggleNode fx:id="tgProjectStatusCompleted" onAction="#onActionTgProjectStatusCompleted" prefWidth="37.0" size="16.0" text="Completado" toggleGroup="$ProjectStatus" />
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusRunning" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusRunning" prefWidth="37.0" size="16.0" text="En proceso" toggleGroup="$ProjectStatus" HBox.hgrow="ALWAYS" />
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusSuspended" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusSuspended" prefWidth="37.0" size="16.0" text="Suspendido" toggleGroup="$ProjectStatus" HBox.hgrow="ALWAYS" />
+                                                            <MFXCircleToggleNode fx:id="tgProjectStatusCompleted" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusCompleted" prefWidth="37.0" size="16.0" text="Completado" toggleGroup="$ProjectStatus" HBox.hgrow="ALWAYS" />
                                                          </children>
                                                       </HBox>
                                                    </children></VBox>
@@ -240,10 +261,17 @@
                                                 <Label styleClass="jfx-label" text="Actividades" />
                                              </children>
                                           </VBox>
-                                          <MFXButton onAction="#onActionCreateActivity" styleClass="jfx-button" text="Nueva actividad">
+                                          <MFXButton onAction="#onActionCreateActivity" prefWidth="200.0" styleClass="jfx-button" text="Nueva actividad">
                                              <tooltip>
                                                 <Tooltip text="Crear nueva actividad" />
                                              </tooltip>
+                                             <graphic>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/lucide--flower-2.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
                                           </MFXButton>
                                           <TableView fx:id="tbvActivities" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                                             <columns>

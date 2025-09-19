@@ -30,7 +30,7 @@
                            <children>
                               <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" styleClass="container-sub" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <MFXButton onAction="#onActionCreateProject" text="">
+                                    <MFXButton onAction="#onActionCreateProject" text="Crear nuevo proyecto">
                                        <graphic>
                                           <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                                        </graphic>

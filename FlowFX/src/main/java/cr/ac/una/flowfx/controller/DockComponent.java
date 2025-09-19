@@ -26,7 +26,7 @@ public class DockComponent extends StackPane {
         DockComponent.class.getName()
     );
 
-    private static final double HOVER_SCALE = 1.3;
+    private static final double HOVER_SCALE = 1.1;
     private static final Duration HOVER_IN_DURATION = Duration.millis(190);
     private static final Duration HOVER_OUT_DURATION = Duration.millis(140);
     private static final Interpolator HOVER_IN_INTERPOLATOR =
@@ -48,6 +48,9 @@ public class DockComponent extends StackPane {
 
     @FXML
     private MFXButton btnAdmin;
+
+    @FXML
+    private MFXButton btnUserConfig;
 
     /**
      * Loads FXML and configures behavior. Any failure to load the FXML is
@@ -75,6 +78,7 @@ public class DockComponent extends StackPane {
         if (btnHome != null) addHoverMagnification(btnHome);
         if (btnProjects != null) addHoverMagnification(btnProjects);
         if (btnAdmin != null) addHoverMagnification(btnAdmin);
+        if (btnUserConfig != null) addHoverMagnification(btnUserConfig);
     }
 
     private void wireActions() {
@@ -93,6 +97,12 @@ public class DockComponent extends StackPane {
                 FlowController.getInstance().goView("PersonSignUpView")
             );
         }
+        if (btnUserConfig != null) {
+            btnUserConfig.setOnAction(e ->
+                FlowController.getInstance().goView("PersonConfigView")
+            );
+        }
+
     }
 
     /**

@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -11,7 +12,7 @@
     <children>
         <HBox fx:id="bar" alignment="CENTER" spacing="12.0" styleClass="container-sub">
             <children>
-                <MFXButton fx:id="btnProjects" styleClass="jfx-projects" text="">
+                <MFXButton fx:id="btnProjects" prefWidth="150.0" styleClass="jfx-projects" text="Proyectos">
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                     </graphic>
@@ -19,7 +20,7 @@
                   <Tooltip text="Menú de proyectost" />
                </tooltip>
                 </MFXButton>
-                <MFXButton fx:id="btnHome" styleClass="jfx-home" text="">
+                <MFXButton fx:id="btnHome" prefWidth="150.0" styleClass="jfx-home" text="Dashboard">
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                     </graphic>
@@ -27,7 +28,19 @@
                   <Tooltip text="Dashboard" />
                </tooltip>
                 </MFXButton>
-                <MFXButton fx:id="btnAdmin" styleClass="jfx-persons" text="">
+            <MFXButton fx:id="btnUserConfig" prefWidth="150.0" text="Usuario">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/icons/lucide--user-cog.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Dashboard" />
+               </tooltip>
+            </MFXButton>
+                <MFXButton fx:id="btnAdmin" prefWidth="150.0" styleClass="jfx-persons" text="Personas">
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                     </graphic>
