@@ -124,7 +124,7 @@
     -fx-green-border: #16a34a;
     -fx-yellow: #fde68a;            /* warning bg */
     -fx-yellow-border: #a19140;     /* warning text/border */
-    -fx-red: #ffb9b9;               /* error bg */
+    -fx-red: #ff9292;               /* error bg */
     -fx-red-border: #dc2626;        /* error border/text */
     -fx-blue: #cae5ff;              /* info bg */
     -fx-blue-border: #3b82f6;       /* info border/text */
@@ -385,7 +385,7 @@
     -fx-border-radius: 24;
     -fx-text-fill: -fx-text-inverse;
     -fx-font-size: 14px;
-    -fx-padding: 8 16 8 16;
+
 }
 .mfx-button.jfx-delete-button:hover   {
     -fx-background-color:

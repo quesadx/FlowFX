@@ -140,18 +140,18 @@ public class PersonConfigController extends Controller implements Initializable 
                 LOGGER.log(Level.WARNING, "No user found in AppContext");
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
-                    "Configuration",
+                    "Configuración",
                     root.getScene().getWindow(),
-                    "No user session found. Please log in again."
+                    "No se encontró una sesión de usuario. Por favor inicie sesión de nuevo."
                 );
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error loading current user", ex);
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Configuration",
+                "Configuración",
                 root.getScene().getWindow(),
-                "Error loading user information."
+                "Error al cargar la información del usuario."
             );
         }
     }
@@ -382,15 +382,15 @@ public class PersonConfigController extends Controller implements Initializable 
     private void onActionBtnCancelChanges(ActionEvent event) {
         try {
             if (originalUser == null) {
-                LOGGER.log(Level.WARNING, "Cannot cancel: no original user data");
+                LOGGER.log(Level.WARNING, "No se puede cancelar: no hay datos de usuario originales");
                 return;
             }
 
             // Show confirmation dialog
             boolean confirmed = new Mensaje().showConfirmation(
-                "Cancel Changes",
+                "Cancelar cambios",
                 root.getScene().getWindow(),
-                "Are you sure you want to cancel all changes? This will reload the original data."
+                "¿Está seguro de que desea cancelar todos los cambios? Esto recargará los datos originales."
             );
 
             if (confirmed) {
@@ -418,9 +418,9 @@ public class PersonConfigController extends Controller implements Initializable 
                 } else {
                     new Mensaje().showModal(
                         Alert.AlertType.ERROR,
-                        "Cancel Changes",
+                        "Cancelar cambios",
                         root.getScene().getWindow(),
-                        "Error reloading user data: " + response.getMensaje()
+                        "Error al recargar los datos del usuario: " + response.getMensaje()
                     );
                 }
             }
@@ -428,34 +428,34 @@ public class PersonConfigController extends Controller implements Initializable 
             LOGGER.log(Level.SEVERE, "Error canceling changes", ex);
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Cancel Changes",
+                "Cancelar cambios",
                 root.getScene().getWindow(),
-                "Error canceling changes."
+                "Error al cancelar los cambios."
             );
         }
     }
 
     @FXML
     private void onActionPrintRegistrationCard(ActionEvent event) {
-        System.out.println("Generating registration card...");
+    System.out.println("Generando tarjeta de identificación...");
         try {
             if (viewModel == null || originalUser == null) {
-                System.out.println("No user data available for printing.");
+                System.out.println("No hay datos de usuario disponibles para imprimir.");
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
-                    "Print Registration Card",
+                    "Imprimir tarjeta de identificación",
                     root.getScene().getWindow(),
-                    "No user data available for printing."
+                    "No hay datos de usuario disponibles para imprimir."
                 );
                 return;
             }
 
             // Show file chooser for save location
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save Registration Card");
+            fileChooser.setTitle("Guardar tarjeta de identificación");
             fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Excel Workbook (*.xlsx)", "*.xlsx"),
-                new FileChooser.ExtensionFilter("All Files", "*.*")
+                new FileChooser.ExtensionFilter("Libro de Excel (*.xlsx)", "*.xlsx"),
+                new FileChooser.ExtensionFilter("Todos los archivos", "*.*")
             );
             
             String defaultName = sanitizeFileName(
@@ -463,7 +463,7 @@ public class PersonConfigController extends Controller implements Initializable 
                     .replaceAll("\\s+", "_")
             );
             if (defaultName.isBlank()) {
-                defaultName = "Registration_Card";
+                defaultName = "Tarjeta_Identificacion";
             }
             fileChooser.setInitialFileName(defaultName + ".xlsx");
             
@@ -480,45 +480,45 @@ public class PersonConfigController extends Controller implements Initializable 
                 
                 new Mensaje().showModal(
                     Alert.AlertType.INFORMATION,
-                    "Print Registration Card",
+                    "Imprimir tarjeta de identificación",
                     root.getScene().getWindow(),
-                    "Registration card generated successfully:\n" + selectedFile.getAbsolutePath()
+                    "La tarjeta de identificación se generó correctamente:\n" + selectedFile.getAbsolutePath()
                 );
                 
-                LOGGER.log(Level.INFO, "Registration card generated: " + selectedFile.getAbsolutePath());
+                LOGGER.log(Level.INFO, "Tarjeta de identificación generada: " + selectedFile.getAbsolutePath());
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error generating registration card", ex);
+            LOGGER.log(Level.SEVERE, "Error al generar la tarjeta de identificación", ex);
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Print Registration Card",
+                "Imprimir tarjeta de identificación",
                 root.getScene().getWindow(),
-                "Error generating registration card: " + ex.getMessage()
+                "Error al generar la tarjeta de identificación: " + ex.getMessage()
             );
         }
     }
 
     @FXML
     private void onActionPrintProjectReport(ActionEvent event) {
-        System.out.println("Generating comprehensive project report...");
+    System.out.println("Generando informe completo de proyectos...");
         try {
             if (viewModel == null || originalUser == null) {
-                System.out.println("No user data available for project report.");
+                System.out.println("No hay datos de usuario disponibles para el informe del proyecto.");
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
-                    "Print Project Report",
+                    "Informe de proyectos",
                     root.getScene().getWindow(),
-                    "No user data available for project report."
+                    "No hay datos de usuario disponibles para generar el informe del proyecto."
                 );
                 return;
             }
 
             // Show file chooser for save location
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save Project Report");
+            fileChooser.setTitle("Guardar informe de proyectos");
             fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Excel Workbook (*.xlsx)", "*.xlsx"),
-                new FileChooser.ExtensionFilter("All Files", "*.*")
+                new FileChooser.ExtensionFilter("Libro de Excel (*.xlsx)", "*.xlsx"),
+                new FileChooser.ExtensionFilter("Todos los archivos", "*.*")
             );
             
             String defaultName = sanitizeFileName(
@@ -526,7 +526,7 @@ public class PersonConfigController extends Controller implements Initializable 
                     .replaceAll("\\s+", "_")
             );
             if (defaultName.isBlank()) {
-                defaultName = "Project_Report";
+                defaultName = "Informe_Proyectos";
             }
             fileChooser.setInitialFileName(defaultName + ".xlsx");
             
@@ -543,27 +543,27 @@ public class PersonConfigController extends Controller implements Initializable 
                 
                 new Mensaje().showModal(
                     Alert.AlertType.INFORMATION,
-                    "Print Project Report",
+                    "Informe de proyectos",
                     root.getScene().getWindow(),
-                    "Project report generated successfully:\n" + selectedFile.getAbsolutePath()
+                    "El informe de proyectos se generó correctamente:\n" + selectedFile.getAbsolutePath()
                 );
                 
-                LOGGER.log(Level.INFO, "Project report generated: " + selectedFile.getAbsolutePath());
+                LOGGER.log(Level.INFO, "Informe de proyectos generado: " + selectedFile.getAbsolutePath());
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error generating project report", ex);
+            LOGGER.log(Level.SEVERE, "Error al generar el informe de proyectos", ex);
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Print Project Report",
+                "Informe de proyectos",
                 root.getScene().getWindow(),
-                "Error generating project report: " + ex.getMessage()
+                "Error al generar el informe de proyectos: " + ex.getMessage()
             );
         }
     }    @FXML
     private void onActionBtnCommitChanges(ActionEvent event) {
         try {
             if (viewModel == null) {
-                LOGGER.log(Level.WARNING, "Cannot commit: no view model");
+                LOGGER.log(Level.WARNING, "No se puede guardar: no hay modelo de vista");
                 return;
             }
 
@@ -574,9 +574,9 @@ public class PersonConfigController extends Controller implements Initializable 
 
             // Show confirmation dialog
             boolean confirmed = new Mensaje().showConfirmation(
-                "Save Changes",
+                "Guardar cambios",
                 root.getScene().getWindow(),
-                "Are you sure you want to save these changes to your profile?"
+                "¿Está seguro de que desea guardar estos cambios en su perfil?"
             );
 
             if (confirmed) {
@@ -597,9 +597,9 @@ public class PersonConfigController extends Controller implements Initializable 
                         
                         new Mensaje().showModal(
                             Alert.AlertType.INFORMATION,
-                            "Save Changes",
+                            "Guardar cambios",
                             root.getScene().getWindow(),
-                            "Your profile has been updated successfully."
+                            "Su perfil se ha actualizado correctamente."
                         );
                         
                         LOGGER.log(Level.INFO, "User profile updated successfully");
@@ -607,9 +607,9 @@ public class PersonConfigController extends Controller implements Initializable 
                 } else {
                     new Mensaje().showModal(
                         Alert.AlertType.ERROR,
-                        "Save Changes",
+                        "Guardar cambios",
                         root.getScene().getWindow(),
-                        "Error saving changes: " + response.getMensaje()
+                        "Error al guardar los cambios: " + response.getMensaje()
                     );
                 }
             }
@@ -617,9 +617,9 @@ public class PersonConfigController extends Controller implements Initializable 
             LOGGER.log(Level.SEVERE, "Error committing changes", ex);
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Save Changes",
+                "Guardar cambios",
                 root.getScene().getWindow(),
-                "Error saving changes."
+                "Error al guardar los cambios."
             );
         }
     }
@@ -637,31 +637,31 @@ public class PersonConfigController extends Controller implements Initializable 
         String password = pswPersonPassword.getText();
 
         if (firstName.isEmpty()) {
-            errors.append("- First name is required\n");
+            errors.append("- El nombre es obligatorio\n");
         }
         
         if (lastName.isEmpty()) {
-            errors.append("- Last name is required\n");
+            errors.append("- El apellido es obligatorio\n");
         }
         
         if (email.isEmpty()) {
-            errors.append("- Email is required\n");
+            errors.append("- El correo electrónico es obligatorio\n");
         }
         
         if (username.isEmpty()) {
-            errors.append("- Username is required\n");
+            errors.append("- El nombre de usuario es obligatorio\n");
         }
         
         if (password == null || password.trim().isEmpty()) {
-            errors.append("- Password is required\n");
+            errors.append("- La contraseña es obligatoria\n");
         }
 
         if (errors.length() > 0) {
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Validation Error",
+                "Error de validación",
                 root.getScene().getWindow(),
-                "Please correct the following errors:\n\n" + errors.toString()
+                "Por favor corrija los siguientes errores:\n\n" + errors.toString()
             );
             return false;
         }
@@ -697,7 +697,7 @@ public class PersonConfigController extends Controller implements Initializable 
         try (XSSFWorkbook workbook = new XSSFWorkbook();
              FileOutputStream fileOutput = new FileOutputStream(file)) {
             
-            Sheet sheet = workbook.createSheet("Registration Card");
+            Sheet sheet = workbook.createSheet("Tarjeta de identificación");
             
             // Create styles
             CellStyle headerStyle = createHeaderStyle(workbook);
@@ -822,14 +822,14 @@ public class PersonConfigController extends Controller implements Initializable 
         Row row = sheet.createRow(startRow);
         row.setHeight((short) 600);
         
-        Cell cell = row.createCell(0);
-        cell.setCellValue("UNIVERSITY OF COSTA RICA");
+    Cell cell = row.createCell(0);
+    cell.setCellValue("UNIVERSIDAD DE COSTA RICA");
         cell.setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, 0, 5));
         
         Row subRow = sheet.createRow(startRow + 1);
         Cell subCell = subRow.createCell(0);
-        subCell.setCellValue("FLOWFX SYSTEM - REGISTRATION CARD");
+    subCell.setCellValue("SISTEMA FLOWFX - TARJETA DE IDENTIFICACIÓN");
         subCell.setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(startRow + 1, startRow + 1, 0, 5));
         
@@ -841,7 +841,7 @@ public class PersonConfigController extends Controller implements Initializable 
         row.setHeight((short) 400);
         
         Cell cell = row.createCell(0);
-        cell.setCellValue("EMPLOYEE IDENTIFICATION CARD");
+    cell.setCellValue("TARJETA DE IDENTIFICACIÓN DE EMPLEADO");
         cell.setCellStyle(titleStyle);
         sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, 0, 5));
         
@@ -852,8 +852,8 @@ public class PersonConfigController extends Controller implements Initializable 
         Row row = sheet.createRow(startRow);
         row.setHeight((short) 1000);
         
-        Cell cell = row.createCell(4);
-        cell.setCellValue("[PHOTO]");
+    Cell cell = row.createCell(4);
+    cell.setCellValue("[FOTO]");
         cell.setCellStyle(labelStyle);
         sheet.addMergedRegion(new CellRangeAddress(startRow, startRow + 3, 4, 5));
         
@@ -863,10 +863,10 @@ public class PersonConfigController extends Controller implements Initializable 
     private int addPersonInfo(Sheet sheet, CellStyle labelStyle, CellStyle dataStyle, int startRow) {
         String[][] data = {
             {"ID:", String.valueOf(viewModel.getId())},
-            {"First Name:", viewModel.getFirstName() != null ? viewModel.getFirstName() : ""},
-            {"Last Name:", viewModel.getLastName() != null ? viewModel.getLastName() : ""},
-            {"Email:", viewModel.getEmail() != null ? viewModel.getEmail() : ""},
-            {"Username:", viewModel.getUsername() != null ? viewModel.getUsername() : ""}
+            {"Nombre:", viewModel.getFirstName() != null ? viewModel.getFirstName() : ""},
+            {"Apellido:", viewModel.getLastName() != null ? viewModel.getLastName() : ""},
+            {"Correo:", viewModel.getEmail() != null ? viewModel.getEmail() : ""},
+            {"Usuario:", viewModel.getUsername() != null ? viewModel.getUsername() : ""}
         };
         
         for (String[] rowData : data) {
@@ -890,27 +890,27 @@ public class PersonConfigController extends Controller implements Initializable 
         Row adminRow = sheet.createRow(startRow++);
         adminRow.setHeight((short) 350);
         
-        Cell adminLabelCell = adminRow.createCell(0);
-        adminLabelCell.setCellValue("Admin:");
+    Cell adminLabelCell = adminRow.createCell(0);
+    adminLabelCell.setCellValue("Administrador:");
         adminLabelCell.setCellStyle(labelStyle);
         
         Cell adminDataCell = adminRow.createCell(1);
         boolean isAdmin = viewModel.getIsAdmin() != null && 
             Character.toUpperCase(viewModel.getIsAdmin()) == 'Y';
-        adminDataCell.setCellValue(isAdmin ? "YES" : "NO");
+    adminDataCell.setCellValue(isAdmin ? "SÍ" : "NO");
         adminDataCell.setCellStyle(statusStyle);
         
         Row statusRow = sheet.createRow(startRow++);
         statusRow.setHeight((short) 350);
         
-        Cell statusLabelCell = statusRow.createCell(0);
-        statusLabelCell.setCellValue("Status:");
+    Cell statusLabelCell = statusRow.createCell(0);
+    statusLabelCell.setCellValue("Estado:");
         statusLabelCell.setCellStyle(labelStyle);
         
         Cell statusDataCell = statusRow.createCell(1);
         boolean isActive = viewModel.getStatus() != null && 
             Character.toUpperCase(viewModel.getStatus()) == 'A';
-        statusDataCell.setCellValue(isActive ? "ACTIVE" : "INACTIVE");
+    statusDataCell.setCellValue(isActive ? "ACTIVO" : "INACTIVO");
         statusDataCell.setCellStyle(statusStyle);
         
         return startRow;
@@ -918,8 +918,8 @@ public class PersonConfigController extends Controller implements Initializable 
 
     private void addFooter(Sheet sheet, CellStyle labelStyle, int startRow) {
         Row row = sheet.createRow(startRow + 1);
-        Cell cell = row.createCell(0);
-        cell.setCellValue("Issued: " + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+    Cell cell = row.createCell(0);
+    cell.setCellValue("Emitido: " + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         cell.setCellStyle(labelStyle);
         sheet.addMergedRegion(new CellRangeAddress(startRow + 1, startRow + 1, 0, 5));
     }
@@ -950,7 +950,7 @@ public class PersonConfigController extends Controller implements Initializable 
         try (XSSFWorkbook workbook = new XSSFWorkbook();
              FileOutputStream fileOutput = new FileOutputStream(file)) {
             
-            Sheet sheet = workbook.createSheet("Project Report");
+            Sheet sheet = workbook.createSheet("Informe de proyectos");
             ProjectReportStyleManager styleManager = new ProjectReportStyleManager(workbook);
             
             int currentRow = 0;
@@ -981,7 +981,7 @@ public class PersonConfigController extends Controller implements Initializable 
         titleRow.setHeight((short) 600);
         
         Cell titleCell = titleRow.createCell(0);
-        titleCell.setCellValue("FLOWFX SYSTEM - COMPREHENSIVE PROJECT REPORT");
+    titleCell.setCellValue("FLOWFX SYSTEM - INFORME COMPLETO DE PROYECTOS");
         titleCell.setCellStyle(styleManager.getTitleStyle());
         sheet.addMergedRegion(new CellRangeAddress(startRow - 1, startRow - 1, 0, 7));
         
@@ -990,7 +990,7 @@ public class PersonConfigController extends Controller implements Initializable 
         
         Cell userCell = userRow.createCell(0);
         String userName = (getTrimmedText(txfPersonFirstName) + " " + getTrimmedText(txfPersonLastName)).trim();
-        userCell.setCellValue("Employee: " + userName);
+    userCell.setCellValue("Empleado: " + userName);
         userCell.setCellStyle(styleManager.getSubHeaderStyle());
         sheet.addMergedRegion(new CellRangeAddress(startRow - 1, startRow - 1, 0, 7));
         
@@ -1002,12 +1002,12 @@ public class PersonConfigController extends Controller implements Initializable 
      */
     private int writePersonSummary(Sheet sheet, ProjectReportStyleManager styleManager, int startRow) {
         String[][] personData = {
-            {"Employee ID:", String.valueOf(viewModel.getId())},
-            {"Full Name:", (getTrimmedText(txfPersonFirstName) + " " + getTrimmedText(txfPersonLastName)).trim()},
-            {"Email:", getTrimmedText(txfPersonEmail)},
-            {"Username:", getTrimmedText(txfPersonUsername)},
-            {"Role:", cbIsAdmin.isSelected() ? "Administrator" : "User"},
-            {"Status:", cbIsActive.isSelected() ? "Active" : "Inactive"}
+            {"ID de empleado:", String.valueOf(viewModel.getId())},
+            {"Nombre completo:", (getTrimmedText(txfPersonFirstName) + " " + getTrimmedText(txfPersonLastName)).trim()},
+            {"Correo electrónico:", getTrimmedText(txfPersonEmail)},
+            {"Nombre de usuario:", getTrimmedText(txfPersonUsername)},
+            {"Rol:", cbIsAdmin.isSelected() ? "Administrador" : "Usuario"},
+            {"Estado:", cbIsActive.isSelected() ? "Activo" : "Inactivo"}
         };
         
         for (String[] rowData : personData) {
@@ -1036,7 +1036,7 @@ public class PersonConfigController extends Controller implements Initializable 
         sectionRow.setHeight((short) 500);
         
         Cell sectionCell = sectionRow.createCell(0);
-        sectionCell.setCellValue("PROJECTS PARTICIPATION");
+    sectionCell.setCellValue("PARTICIPACIÓN EN PROYECTOS");
         sectionCell.setCellStyle(styleManager.getSectionHeaderStyle());
         sheet.addMergedRegion(new CellRangeAddress(startRow - 1, startRow - 1, 0, 7));
         
@@ -1046,7 +1046,7 @@ public class PersonConfigController extends Controller implements Initializable 
         if (userProjects.isEmpty()) {
             Row noProjectsRow = sheet.createRow(startRow++);
             Cell noProjectsCell = noProjectsRow.createCell(0);
-            noProjectsCell.setCellValue("No projects found for this user.");
+            noProjectsCell.setCellValue("No se encontraron proyectos para este usuario.");
             noProjectsCell.setCellStyle(styleManager.getDataStyle());
             sheet.addMergedRegion(new CellRangeAddress(startRow - 1, startRow - 1, 0, 7));
             return startRow;
@@ -1055,7 +1055,7 @@ public class PersonConfigController extends Controller implements Initializable 
         // Projects table headers
         Row headerRow = sheet.createRow(startRow++);
         headerRow.setHeight((short) 400);
-        String[] headers = {"Project Name", "Role", "Status", "Planned Start", "Planned End", "Actual Start", "Actual End", "Created"};
+    String[] headers = {"Nombre del proyecto", "Rol", "Estado", "Inicio previsto", "Fin previsto", "Inicio real", "Fin real", "Creado"};
         
         for (int i = 0; i < headers.length; i++) {
             Cell headerCell = headerRow.createCell(i);
@@ -1091,7 +1091,7 @@ public class PersonConfigController extends Controller implements Initializable 
         sectionRow.setHeight((short) 500);
         
         Cell sectionCell = sectionRow.createCell(0);
-        sectionCell.setCellValue("RECENT ACTIVITIES");
+    sectionCell.setCellValue("ACTIVIDADES RECIENTES");
         sectionCell.setCellStyle(styleManager.getSectionHeaderStyle());
         sheet.addMergedRegion(new CellRangeAddress(startRow - 1, startRow - 1, 0, 7));
         
@@ -1101,7 +1101,7 @@ public class PersonConfigController extends Controller implements Initializable 
         if (userActivities.isEmpty()) {
             Row noActivitiesRow = sheet.createRow(startRow++);
             Cell noActivitiesCell = noActivitiesRow.createCell(0);
-            noActivitiesCell.setCellValue("No recent activities found for this user.");
+            noActivitiesCell.setCellValue("No se encontraron actividades recientes para este usuario.");
             noActivitiesCell.setCellStyle(styleManager.getDataStyle());
             sheet.addMergedRegion(new CellRangeAddress(startRow - 1, startRow - 1, 0, 7));
             return startRow;
@@ -1110,7 +1110,7 @@ public class PersonConfigController extends Controller implements Initializable 
         // Activities table headers
         Row headerRow = sheet.createRow(startRow++);
         headerRow.setHeight((short) 400);
-        String[] headers = {"Activity Description", "Project", "Status", "Planned Start", "Planned End", "Actual Start", "Actual End", "Created"};
+    String[] headers = {"Descripción de la actividad", "Proyecto", "Estado", "Inicio previsto", "Fin previsto", "Inicio real", "Fin real", "Creado"};
         
         for (int i = 0; i < headers.length; i++) {
             Cell headerCell = headerRow.createCell(i);
@@ -1144,7 +1144,7 @@ public class PersonConfigController extends Controller implements Initializable 
         Row footerRow = sheet.createRow(startRow);
         Cell footerCell = footerRow.createCell(0);
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        footerCell.setCellValue("Generated on: " + timestamp + " | FlowFX System v3.0");
+    footerCell.setCellValue("Generado el: " + timestamp + " | FlowFX System v3.0");
         footerCell.setCellStyle(styleManager.getFooterStyle());
         sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, 0, 7));
     }
@@ -1171,7 +1171,7 @@ public class PersonConfigController extends Controller implements Initializable 
                     }
                 }
             } else {
-                LOGGER.log(Level.WARNING, "Failed to load user projects: " + response.getMensaje());
+                LOGGER.log(Level.WARNING, "Error al cargar proyectos del usuario: " + response.getMensaje());
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error loading user projects", ex);
@@ -1209,7 +1209,7 @@ public class PersonConfigController extends Controller implements Initializable 
                     }
                 }
             } else {
-                LOGGER.log(Level.WARNING, "Failed to load user activities: " + response.getMensaje());
+                LOGGER.log(Level.WARNING, "Error al cargar actividades del usuario: " + response.getMensaje());
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error loading user activities", ex);
@@ -1223,28 +1223,28 @@ public class PersonConfigController extends Controller implements Initializable 
      */
     private String determineUserRoleInProject(ProjectDTO project) {
         Long userId = originalUser.getId();
-        if (userId == null) return "Unknown";
+        if (userId == null) return "Desconocido";
         
         List<String> roles = new ArrayList<>();
         
         if (userId.equals(project.getLeaderUserId())) {
-            roles.add("Project Leader");
+            roles.add("Líder de Proyecto");
         }
         if (userId.equals(project.getTechLeaderId())) {
-            roles.add("Technical Leader");
+            roles.add("Líder Técnico");
         }
         if (userId.equals(project.getSponsorId())) {
-            roles.add("Sponsor");
+            roles.add("Patrocinador");
         }
         
-        return roles.isEmpty() ? "Team Member" : String.join(", ", roles);
+        return roles.isEmpty() ? "Miembro del equipo" : String.join(", ", roles);
     }
 
     /**
      * Resolves project name from project ID.
      */
     private String resolveProjectName(Long projectId) {
-        if (projectId == null || projectId <= 0) return "Unknown Project";
+        if (projectId == null || projectId <= 0) return "Proyecto desconocido";
         
         try {
             ProjectService projectService = new ProjectService();
@@ -1252,30 +1252,30 @@ public class PersonConfigController extends Controller implements Initializable 
             
             if (Boolean.TRUE.equals(response.getEstado())) {
                 Object result = response.getResultado("Project");
-                if (result instanceof ProjectDTO project) {
-                    return project.getName() != null ? project.getName() : "Project #" + projectId;
+                    if (result instanceof ProjectDTO project) {
+                    return project.getName() != null ? project.getName() : "Proyecto #" + projectId;
                 }
             }
         } catch (Exception ex) {
             LOGGER.log(Level.WARNING, "Error resolving project name for ID: " + projectId, ex);
         }
         
-        return "Project #" + projectId;
+        return "Proyecto #" + projectId;
     }
 
     /**
      * Maps status codes to display names.
      */
     private String mapStatusToDisplay(String statusCode) {
-        if (statusCode == null || statusCode.isBlank()) return "Unknown";
+        if (statusCode == null || statusCode.isBlank()) return "Desconocido";
         
         return switch (statusCode.trim().toUpperCase()) {
-            case "P" -> "Planned";
-            case "R" -> "Running";
-            case "S" -> "Suspended";
-            case "C" -> "Completed";
-            case "A" -> "Active";
-            case "I" -> "Inactive";
+            case "P" -> "Planificado";
+            case "R" -> "En curso";
+            case "S" -> "Suspendido";
+            case "C" -> "Completado";
+            case "A" -> "Activo";
+            case "I" -> "Inactivo";
             default -> statusCode.trim();
         };
     }
