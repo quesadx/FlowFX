@@ -55,7 +55,7 @@
                                           </ImageView>
                                        </graphic>
                                        <tooltip>
-                                          <Tooltip text="Retornar a vista de proyectos" />
+                                          <Tooltip text="Crear un reporte en xlsx" />
                                        </tooltip>
                                     </MFXButton>
                                  </children>
@@ -142,7 +142,7 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" onAction="#onActionTxfSponsorId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                            <MFXButton onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Seleccionar">
+                                                            <MFXButton onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Cambiar">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
                                                                </tooltip>
@@ -177,7 +177,7 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" onAction="#onActionTxfLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                            <MFXButton onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Seleccionar">
+                                                            <MFXButton onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Cambiar">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
                                                                </tooltip>
@@ -212,7 +212,7 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" onAction="#onActionTechLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                            <MFXButton onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Seleccionar">
+                                                            <MFXButton onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Cambiar">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
                                                                </tooltip>
@@ -231,9 +231,9 @@
                                              </children>
                                           </VBox>
                                        </children></VBox>
-                                    <Separator orientation="VERTICAL">
+                                    <Separator orientation="VERTICAL" visible="false">
                                        <padding>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                          <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                                        </padding></Separator>
                                     <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" spacing="12.0" HBox.hgrow="ALWAYS">
                                        <children>
@@ -273,16 +273,23 @@
                                                 </ImageView>
                                              </graphic>
                                           </MFXButton>
-                                          <TableView fx:id="tbvActivities" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS">
-                                            <columns>
-                                              <TableColumn fx:id="tbcActivityName" prefWidth="75.0" text="Actividad" />
-                                              <TableColumn fx:id="tbcActivityStatus" prefWidth="75.0" text="Estado" />
-                                                <TableColumn fx:id="tbcActivityResponsible" prefWidth="75.0" text="Responsable" />
-                                            </columns>
-                                             <columnResizePolicy>
-                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                             </columnResizePolicy>
-                                          </TableView>
+                                          <VBox alignment="CENTER" styleClass="container-sub" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <TableView fx:id="tbvActivities" maxHeight="1.7976931348623157E308">
+                                                  <columns>
+                                                    <TableColumn fx:id="tbcActivityName" prefWidth="75.0" text="Actividad" />
+                                                    <TableColumn fx:id="tbcActivityStatus" prefWidth="75.0" text="Estado" />
+                                                      <TableColumn fx:id="tbcActivityResponsible" prefWidth="75.0" text="Responsable" />
+                                                  </columns>
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy>
+                                                </TableView>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
+                                          </VBox>
                                        </children></VBox>
                                  </children>
                               </HBox>
