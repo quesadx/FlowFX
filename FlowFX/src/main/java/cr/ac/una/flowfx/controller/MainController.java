@@ -179,6 +179,39 @@ public class MainController extends Controller implements Initializable {
     }
 
     @FXML
+    private void onActionObtainInfo(ActionEvent event) {
+        Stage stage = (Stage) root.getScene().getWindow();
+        FlowController.getInstance().goViewInWindowModal(
+            "AboutView",
+            stage,
+            false
+        );
+    }
+
+    @FXML
+    private void onActionLogOut(ActionEvent event) {
+        userLoggedIn = false;
+        user = null;
+        AppContext.getInstance().set("user", null);
+
+        Object nav = AppContext.getInstance().get("navigationBar");
+        if (nav instanceof VBox) ((VBox) nav).setDisable(true);
+
+        AnimationManager.showPopup(vbLogInDisplay, vbCover);
+        refreshDashboard();
+    }
+
+    @FXML
+    private void onActionObtainHelp(ActionEvent event) {
+        Stage stage = (Stage) root.getScene().getWindow();
+        FlowController.getInstance().goViewInWindowModal(
+            "HelpView",
+            stage,
+            false
+        );
+    }
+    
+    @FXML
     private void onActionBtnLogIn(ActionEvent event) {
         String username = getTrimmedText(txfUsername);
         String password = psfUserPassword.getText();
