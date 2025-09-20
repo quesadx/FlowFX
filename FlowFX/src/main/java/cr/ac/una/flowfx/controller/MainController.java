@@ -119,6 +119,11 @@ public class MainController extends Controller implements Initializable {
 
         Object nav = AppContext.getInstance().get("navigationBar");
         if (nav instanceof VBox) ((VBox) nav).setDisable(!userLoggedIn);
+        // Disable dock while logged out
+        Object dockBarInit = AppContext.getInstance().get("dockBar");
+        if (dockBarInit instanceof javafx.scene.layout.HBox) {
+            ((javafx.scene.layout.HBox) dockBarInit).setDisable(!userLoggedIn);
+        }
 
         // Make it so all the text inputs have a limit of N characters
         setTextFieldLimit(txfUsername, 20);
@@ -196,6 +201,11 @@ public class MainController extends Controller implements Initializable {
 
         Object nav = AppContext.getInstance().get("navigationBar");
         if (nav instanceof VBox) ((VBox) nav).setDisable(true);
+        // Disable dock on logout
+        Object dockBarLogout = AppContext.getInstance().get("dockBar");
+        if (dockBarLogout instanceof javafx.scene.layout.HBox) {
+            ((javafx.scene.layout.HBox) dockBarLogout).setDisable(true);
+        }
 
         AnimationManager.showPopup(vbLogInDisplay, vbCover);
         refreshDashboard();
@@ -252,6 +262,11 @@ public class MainController extends Controller implements Initializable {
             // Enable navigation bar after successful login
             Object nav = AppContext.getInstance().get("navigationBar");
             if (nav instanceof VBox) ((VBox) nav).setDisable(false);
+            // Enable dock on successful login
+            Object dockBarLogin = AppContext.getInstance().get("dockBar");
+            if (dockBarLogin instanceof javafx.scene.layout.HBox) {
+                ((javafx.scene.layout.HBox) dockBarLogin).setDisable(false);
+            }
 
             AnimationManager.hidePopup(vbLogInDisplay, vbCover);
             clearLogInFields();

@@ -556,7 +556,7 @@
                                                    </children>
                                                 </VBox>
                                                 <MFXTextField fx:id="txfResponsableCreation" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                <MFXButton onAction="#onActionBtnSelectActivityResponsible" styleClass="jfx-button" text="Seleccionar">
+                                                <MFXButton onAction="#onActionBtnSelectActivityResponsible" styleClass="jfx-button" text="Cambiar">
                                                    <tooltip>
                                                       <Tooltip text="Abrir selector de persona" />
                                                    </tooltip>
@@ -646,18 +646,18 @@
                                        <children>
                                           <HBox alignment="CENTER" spacing="12.0">
                                              <children>
-                                                <MFXCircleToggleNode fx:id="tgProjectStatusSuspended1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusSuspended" prefWidth="37.0" size="16.0" text="Detenido" HBox.hgrow="ALWAYS">
+                                                <MFXCircleToggleNode fx:id="tgProjectStatusSuspended1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusSuspended" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Detenido" textPosition="TOP" HBox.hgrow="ALWAYS">
                                                    <toggleGroup>
                                                       <ToggleGroup fx:id="ProjectStatus1" />
                                                    </toggleGroup>
                                                 </MFXCircleToggleNode>
-                                                <MFXCircleToggleNode fx:id="tgProjectStatusCompleted1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusCompleted" prefWidth="37.0" size="16.0" text="Completado" toggleGroup="$ProjectStatus1" HBox.hgrow="ALWAYS" />
+                                                <MFXCircleToggleNode fx:id="tgProjectStatusCompleted1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusCompleted" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Completado" textPosition="TOP" toggleGroup="$ProjectStatus1" HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" spacing="12.0">
                                              <children>
-                                                <MFXCircleToggleNode fx:id="tgProjectStatusPending1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusPending" prefWidth="37.0" size="16.0" text="Pendiente" toggleGroup="$ProjectStatus1" HBox.hgrow="ALWAYS" />
-                                                <MFXCircleToggleNode fx:id="tgProjectStatusRunning1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusRunning" prefWidth="37.0" size="16.0" text="En proceso" toggleGroup="$ProjectStatus1" HBox.hgrow="ALWAYS" />
+                                                <MFXCircleToggleNode fx:id="tgProjectStatusPending1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusPending" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Pendiente" textPosition="TOP" toggleGroup="$ProjectStatus1" HBox.hgrow="ALWAYS" />
+                                                <MFXCircleToggleNode fx:id="tgProjectStatusRunning1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusRunning" prefHeight="50.0" prefWidth="50.0" size="16.0" text="En proceso" textPosition="TOP" toggleGroup="$ProjectStatus1" HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
                                        </children>

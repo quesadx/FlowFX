@@ -18,7 +18,7 @@
    <bottom>
       <HBox alignment="CENTER" fillHeight="false" styleClass="filler" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" prefHeight="8.0" prefWidth="200.0" styleClass="container-sub-dark" HBox.hgrow="NEVER" />
+            <HBox fx:id="hboxHorizontalDockBarReference" alignment="CENTER" minWidth="150.0" prefHeight="8.0" prefWidth="400.0" styleClass="container-sub-dark" HBox.hgrow="NEVER" />
          </children>
          <padding>
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

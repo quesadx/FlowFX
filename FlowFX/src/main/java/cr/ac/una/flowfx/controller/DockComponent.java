@@ -1,5 +1,6 @@
 package cr.ac.una.flowfx.controller;
 
+import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.util.logging.Level;
@@ -52,6 +53,9 @@ public class DockComponent extends StackPane {
     @FXML
     private MFXButton btnUserConfig;
 
+    @FXML
+    private MFXButton btnCreativeZone;
+
     /**
      * Loads FXML and configures behavior. Any failure to load the FXML is
      * logged and rethrown as RuntimeException to keep failure modes explicit.
@@ -79,6 +83,17 @@ public class DockComponent extends StackPane {
         if (btnProjects != null) addHoverMagnification(btnProjects);
         if (btnAdmin != null) addHoverMagnification(btnAdmin);
         if (btnUserConfig != null) addHoverMagnification(btnUserConfig);
+
+        // Expose the dock bar for global enable/disable and set initial state
+        if (bar != null) {
+            try {
+                AppContext.getInstance().set("dockBar", bar);
+                Object user = AppContext.getInstance().get("user");
+                bar.setDisable(user == null);
+            } catch (Exception ex) {
+                LOGGER.log(Level.FINER, "Failed to publish dockBar to AppContext", ex);
+            }
+        }
     }
 
     private void wireActions() {
@@ -100,6 +115,11 @@ public class DockComponent extends StackPane {
         if (btnUserConfig != null) {
             btnUserConfig.setOnAction(e ->
                 FlowController.getInstance().goView("PersonConfigView")
+            );
+        }
+        if (btnCreativeZone != null) {
+            btnCreativeZone.setOnAction(e ->
+                FlowController.getInstance().goView("CreativeZoneView")
             );
         }
 

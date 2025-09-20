@@ -8,14 +8,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbBoard" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="168.0" prefWidth="313.0" spacing="4.0" styleClass="container-sub" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbBoard" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="245.0" prefWidth="354.0" spacing="4.0" styleClass="container-sub" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <HBox alignment="CENTER" styleClass="container--sub">
+                  <HBox alignment="CENTER" spacing="4.0">
                      <children>
+                        <Label text="Estado: " />
                         <Label fx:id="lblStatus" styleClass="jfx-red-number-tag" text="ATRASADO" />
                      </children>
                   </HBox>
@@ -25,7 +26,7 @@
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/icons/lucide--package-x.png" />
+                              <Image url="@../resources/icons/lucide--list-x.png" />
                            </image>
                         </ImageView>
                      </graphic>

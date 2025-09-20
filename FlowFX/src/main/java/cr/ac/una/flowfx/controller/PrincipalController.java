@@ -26,7 +26,7 @@ public class PrincipalController extends Controller implements Initializable {
     private MFXButton btnMinimize;
 
     @FXML
-    private HBox hbLateralHandlebar;
+    private HBox hbLateralHandlebar, hboxHorizontalDockBarReference;
 
     private static final int RESIZE_MARGIN = 8;
     private boolean resizingLeft;

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="631.0" prefWidth="875.0" styleClass="container" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.CreativeZoneController">
+   <children>
+      <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="CENTER">
+               <children>
+                  <VBox alignment="TOP_CENTER" spacing="4.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" spacing="4.0" styleClass="container-sub">
+                           <children>
+                              <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionCleanCanvas" prefWidth="200.0" styleClass="jfx-delete-button" text="Limpiar sketch">
+                                 <graphic>
+                                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/icons/lucide--brush-cleaning.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </MFXButton>
+                              <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionSaveCanvas" prefWidth="200.0" styleClass="jfx-button" text="Guardar sketch">
+                                 <graphic>
+                                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/icons/lucide--printer.png" />
+                                       </image></ImageView>
+                                 </graphic>
+                              </MFXButton>
+                           </children>
+                        </HBox>
+                        <Separator prefWidth="200.0" visible="false">
+                           <padding>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </padding>
+                        </Separator>
+                        <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="375.0" spacing="12.0" styleClass="filler-rounded" VBox.vgrow="ALWAYS">
+                           <children>
+                              <StackPane alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <AnchorPane fx:id="apMainCanvasAnchoring" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" StackPane.alignment="CENTER">
+                                       <children>
+                                          <Canvas fx:id="cvMainCanvas" height="200.0" onMouseDragged="#onMouseDraggedMainCanvas" onMousePressed="#onMousePressedMainCanvas" onMouseReleased="#onMouseReleasedMainCanvas" width="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                    <VBox alignment="CENTER" fillWidth="false" maxHeight="450.0" maxWidth="40.0" spacing="4.0" styleClass="container-sub-dark" StackPane.alignment="CENTER_LEFT">
+                                       <children>
+                                          <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnPencil" styleClass="jfx-delete-button" text="">
+                                             <graphic>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/lucide--pencil.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Seleccionar lapiz" />
+                                             </tooltip>
+                                          </MFXButton>
+                                          <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnPencil" styleClass="jfx-delete-button" text="">
+                                             <graphic>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/lucide--eraser.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Seleccionar borrador" />
+                                             </tooltip>
+                                          </MFXButton>
+                                          <Separator prefWidth="200.0">
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
+                                          </Separator>
+                                          <VBox alignment="CENTER">
+                                             <children>
+                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedWhiteColor" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/material-white.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedRedColor" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/material-red.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedGreenColor" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/material-green.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedBlueColor" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/material-blue.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedYellowColor" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/material-yellow.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedBlackColor" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/material-black.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                          </VBox>
+                                          <Separator prefWidth="200.0">
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
+                                          </Separator>
+                                          <VBox alignment="CENTER" spacing="4.0">
+                                             <children>
+                                                <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnIncreasePencilWidth" styleClass="jfx-delete-button" text="">
+                                                   <graphic>
+                                                      <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../resources/icons/lucide--plus.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <tooltip>
+                                                      <Tooltip text="Seleccionar lapiz" />
+                                                   </tooltip>
+                                                </MFXButton>
+                                                <Label fx:id="lblLineWidth" styleClass="jfx-label-light" text="Label" />
+                                                <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnDecreasePencilWidth" styleClass="jfx-delete-button" text="">
+                                                   <graphic>
+                                                      <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../resources/icons/lucide--minus.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <tooltip>
+                                                      <Tooltip text="Seleccionar lapiz" />
+                                                   </tooltip>
+                                                </MFXButton>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                       </padding>
+                                    </VBox>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

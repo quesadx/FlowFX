@@ -17,15 +17,27 @@
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                     </graphic>
                <tooltip>
-                  <Tooltip text="Menú de proyectost" />
+                  <Tooltip text="Menu de proyectos" />
                </tooltip>
                 </MFXButton>
+            <MFXButton fx:id="btnCreativeZone" prefWidth="150.0" text="Area creativa">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/icons/lucide--brush.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Menú de proyectost" />
+               </tooltip>
+            </MFXButton>
                 <MFXButton fx:id="btnHome" prefWidth="150.0" styleClass="jfx-home" text="Dashboard">
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                     </graphic>
                <tooltip>
-                  <Tooltip text="Dashboard" />
+                  <Tooltip text="Dashboard principal" />
                </tooltip>
                 </MFXButton>
             <MFXButton fx:id="btnUserConfig" prefWidth="150.0" text="Usuario">
@@ -37,7 +49,7 @@
                   </ImageView>
                </graphic>
                <tooltip>
-                  <Tooltip text="Dashboard" />
+                  <Tooltip text="Informacion de usuario" />
                </tooltip>
             </MFXButton>
                 <MFXButton fx:id="btnAdmin" prefWidth="150.0" text="Personas">

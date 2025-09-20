@@ -14,6 +14,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -36,10 +37,13 @@
                                  <graphic>
                                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../resources/icons/lucide--shield-close.png" />
+                                          <Image url="@../resources/icons/lucide--log-out.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <tooltip>
+                                    <Tooltip text="Salir del sistema" />
+                                 </tooltip>
                               </MFXButton>
                               <MFXButton maxWidth="200.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionObtainHelp" prefWidth="200.0" styleClass="jfx-button" text="Obtener ayuda">
                                  <graphic>
@@ -49,6 +53,9 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <tooltip>
+                                    <Tooltip text="Desplegar informacion de ayuda" />
+                                 </tooltip>
                               </MFXButton>
                               <MFXButton maxWidth="200.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionObtainInfo" prefWidth="200.0" styleClass="jfx-button" text="Obtener informacion">
                                  <graphic>
@@ -58,6 +65,9 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <tooltip>
+                                    <Tooltip text="Desplegar informacion" />
+                                 </tooltip>
                               </MFXButton>
                            </children>
                         </HBox>
@@ -188,6 +198,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <tooltip>
+                        <Tooltip text="Ingresar a FlowFX" />
+                     </tooltip>
                   </MFXButton>
                   <Separator maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="325.0" visible="false" />
                   <HBox alignment="CENTER" spacing="24.0">
