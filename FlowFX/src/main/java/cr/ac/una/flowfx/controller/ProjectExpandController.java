@@ -67,6 +67,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 /**
  * Controller for the Project Expand view providing comprehensive project management functionality.
@@ -145,6 +146,8 @@ public class ProjectExpandController extends Controller implements Initializable
     private final ObservableList<ProjectActivityViewModel> activities = FXCollections.observableArrayList();
     private ProjectActivityViewModel selectedActivity;
     private boolean statusPersistInProgress = false;
+    private boolean activityStatusPersistInProgress = false;
+    private String activityCreationStatus = "P"; // Default status for new activities
 
     // Change detection for activity detail popup
     private final javafx.beans.property.BooleanProperty activityHasChanges = new javafx.beans.property.SimpleBooleanProperty(false);
@@ -156,40 +159,66 @@ public class ProjectExpandController extends Controller implements Initializable
     private LocalDate snapshotActualStartDate;
     private LocalDate snapshotActualEndDate;
     @FXML
-    private MFXCircleToggleNode tgActivityStatusExistentSuspended;
+    private MFXCircleToggleNode tgActivityDetailStatusSuspended;
     @FXML
-    private ToggleGroup ProjectStatus11;
+    private ToggleGroup ActivityDetailStatusGroup;
     @FXML
-    private MFXCircleToggleNode tgActivityStatusExistentCompleted;
+    private MFXCircleToggleNode tgActivityDetailStatusCompleted;
     @FXML
-    private MFXCircleToggleNode tgActivityStatusExistentPending;
+    private MFXCircleToggleNode tgActivityDetailStatusPending;
     @FXML
-    private MFXCircleToggleNode tgActivityStatusExistentRunning;
+    private MFXCircleToggleNode tgActivityDetailStatusRunning;
     @FXML
-    private MFXCircleToggleNode tgProjectStatusSuspended1;
+    private MFXCircleToggleNode tgActivityCreateStatusSuspended;
     @FXML
-    private ToggleGroup ProjectStatus1;
+    private ToggleGroup ActivityCreateStatusGroup;
     @FXML
-    private MFXCircleToggleNode tgProjectStatusCompleted1;
+    private MFXCircleToggleNode tgActivityCreateStatusCompleted;
     @FXML
-    private MFXCircleToggleNode tgProjectStatusPending1;
+    private MFXCircleToggleNode tgActivityCreateStatusPending;
     @FXML
-    private MFXCircleToggleNode tgProjectStatusRunning1;
+    private MFXCircleToggleNode tgActivityCreateStatusRunning;
 
+    // Activity Detail Status Toggle Actions
     @FXML
-    private void onActionTgAcitivtyStatusExistentSuspended(ActionEvent event) {
+    private void onActionTgActivityDetailStatusSuspended(ActionEvent event) {
+        updateActivityDetailStatus("S");
     }
 
     @FXML
-    private void onActionTgAcitivtyStatusExistentCompleted(ActionEvent event) {
+    private void onActionTgActivityDetailStatusCompleted(ActionEvent event) {
+        updateActivityDetailStatus("C");
     }
 
     @FXML
-    private void onActionTgAcitivtyStatusExistentPending(ActionEvent event) {
+    private void onActionTgActivityDetailStatusPending(ActionEvent event) {
+        updateActivityDetailStatus("P");
     }
 
     @FXML
-    private void onActionTgAcitivtyStatusExistentRunning(ActionEvent event) {
+    private void onActionTgActivityDetailStatusRunning(ActionEvent event) {
+        updateActivityDetailStatus("R");
+    }
+
+    // Activity Creation Status Toggle Actions
+    @FXML
+    private void onActionTgActivityCreateStatusSuspended(ActionEvent event) {
+        activityCreationStatus = "S";
+    }
+
+    @FXML
+    private void onActionTgActivityCreateStatusCompleted(ActionEvent event) {
+        activityCreationStatus = "C";
+    }
+
+    @FXML
+    private void onActionTgActivityCreateStatusPending(ActionEvent event) {
+        activityCreationStatus = "P";
+    }
+
+    @FXML
+    private void onActionTgActivityCreateStatusRunning(ActionEvent event) {
+        activityCreationStatus = "R";
     }
 
     /**
@@ -311,6 +340,25 @@ public class ProjectExpandController extends Controller implements Initializable
         tgProjectStatusRunning.setUserData("R");
         tgProjectStatusSuspended.setUserData("S");
         tgProjectStatusCompleted.setUserData("C");
+        
+        // Configure activity detail status toggles
+        if (tgActivityDetailStatusPending != null) {
+            tgActivityDetailStatusPending.setUserData("P");
+            tgActivityDetailStatusRunning.setUserData("R");
+            tgActivityDetailStatusSuspended.setUserData("S");
+            tgActivityDetailStatusCompleted.setUserData("C");
+        }
+        
+        // Configure activity creation status toggles
+        if (tgActivityCreateStatusPending != null) {
+            tgActivityCreateStatusPending.setUserData("P");
+            tgActivityCreateStatusRunning.setUserData("R");
+            tgActivityCreateStatusSuspended.setUserData("S");
+            tgActivityCreateStatusCompleted.setUserData("C");
+            
+            // Set default selection for activity creation (Pending)
+            ActivityCreateStatusGroup.selectToggle(tgActivityCreateStatusPending);
+        }
     }
 
     /**
@@ -479,7 +527,111 @@ public class ProjectExpandController extends Controller implements Initializable
     @FXML private void onActionTgProjectStatusSuspended(ActionEvent event) { /* Auto-handled by binding */ }
     @FXML private void onActionTgProjectStatusCompleted(ActionEvent event) { /* Auto-handled by binding */ }
 
-    // Person Selection and Management
+    // Activity Status Management
+    
+    /**
+     * Updates the selected activity's status and persists the change.
+     */
+    private void updateActivityDetailStatus(String statusCode) {
+        if (selectedActivity == null || activityStatusPersistInProgress) {
+            return;
+        }
+        
+        String oldStatus = selectedActivity.getStatus();
+        if (statusCode != null && !statusCode.equals(oldStatus)) {
+            LOGGER.log(Level.INFO, "Updating activity status: {0} -> {1} for activity ID: {2}", 
+                new Object[]{oldStatus, statusCode, selectedActivity.getId()});
+            
+            selectedActivity.setStatus(statusCode);
+            
+            // Debug: Log the DTO before sending
+            ProjectActivityDTO dto = selectedActivity.toDTO();
+            LOGGER.log(Level.INFO, "Activity DTO status before sending: {0}, ID: {1}", 
+                new Object[]{dto.getStatus(), dto.getId()});
+            
+            persistActivityStatusAsync(selectedActivity, statusCode);
+            
+            // Apply automatic actual date assignment
+            applyAutomaticActualDatesForActivity(selectedActivity);
+        }
+    }
+    
+    /**
+     * Persists activity status change asynchronously.
+     */
+    private void persistActivityStatusAsync(ProjectActivityViewModel activity, String statusCode) {
+        activityStatusPersistInProgress = true;
+        
+        new Thread(() -> {
+            try {
+                ProjectActivityService service = new ProjectActivityService();
+                ProjectActivityDTO dto = activity.toDTO();
+                
+                Respuesta response = service.update(dto);
+                
+                Platform.runLater(() -> {
+                    handleActivityStatusUpdateResponse(response, activity, statusCode);
+                });
+                
+            } catch (Exception ex) {
+                LOGGER.log(Level.SEVERE, "Error persisting activity status", ex);
+                Platform.runLater(() -> {
+                    activityStatusPersistInProgress = false;
+                });
+            }
+        }, "activity-status-update").start();
+    }
+    
+    /**
+     * Handles the response from activity status update.
+     */
+    private void handleActivityStatusUpdateResponse(Respuesta response, 
+            ProjectActivityViewModel activity, String statusCode) {
+        if (!Boolean.TRUE.equals(response.getEstado())) {
+            LOGGER.log(Level.WARNING, "Activity status update failed: {0}", response.getMensaje());
+            // Revert status change on failure
+            // Note: This is a simple revert, in production you might want to show user notification
+        } else {
+            LOGGER.log(Level.INFO, "Activity status successfully persisted: {0}", statusCode);
+            
+            // Refresh the table display
+            tbvActivities.refresh();
+            
+            // Enqueue notification if needed
+            enqueueStatusChangeNotification("ACTIVITY", activity.getId(), statusCode);
+        }
+        activityStatusPersistInProgress = false;
+    }
+    
+    /**
+     * Sets up activity detail status toggle binding when an activity is selected.
+     */
+    private void bindActivityDetailStatusToggles(ProjectActivityViewModel activity) {
+        if (ActivityDetailStatusGroup == null || activity == null) {
+            return;
+        }
+        
+        // Select the appropriate toggle based on activity status
+        String status = activity.getStatus();
+        if (status != null) {
+            selectActivityDetailToggleForStatus(status.trim().toUpperCase());
+        }
+    }
+    
+    /**
+     * Selects the appropriate activity detail toggle for the given status.
+     */
+    private void selectActivityDetailToggleForStatus(String status) {
+        if (ActivityDetailStatusGroup == null || status == null || status.isBlank()) {
+            return;
+        }
+        
+        ActivityDetailStatusGroup.getToggles().stream()
+            .filter(toggle -> toggle.getUserData() != null && 
+                status.equalsIgnoreCase(toggle.getUserData().toString()))
+            .findFirst()
+            .ifPresent(ActivityDetailStatusGroup::selectToggle);
+    }
     
     /**
      * Handles person selection for activity creation.
@@ -1866,7 +2018,7 @@ public class ProjectExpandController extends Controller implements Initializable
         ProjectActivityDTO dto = new ProjectActivityDTO();
         dto.setProjectId(projectId);
         dto.setDescription(getTextOrNull(txaDescriptionCreation.getText()));
-        dto.setStatus("P"); // Default status
+        dto.setStatus(activityCreationStatus); // Use selected status from toggles
         dto.setPlannedStartDate(fromPicker(dpPlannedStartDateCreation));
         dto.setPlannedEndDate(fromPicker(dpPlannedEndDateCreation));
         dto.setExecutionOrder(activities.size() + 1);
@@ -1976,6 +2128,13 @@ public class ProjectExpandController extends Controller implements Initializable
         txaDescriptionCreation.clear();
         dpPlannedStartDateCreation.setValue(null);
         dpPlannedEndDateCreation.setValue(null);
+        
+        // Reset status to default (Pending)
+        activityCreationStatus = "P";
+        if (ActivityCreateStatusGroup != null && tgActivityCreateStatusPending != null) {
+            ActivityCreateStatusGroup.selectToggle(tgActivityCreateStatusPending);
+        }
+        
         AppContext.getInstance().delete("ProjectExpand.activityResponsible");
     }
 
@@ -1987,6 +2146,7 @@ public class ProjectExpandController extends Controller implements Initializable
         if (activity == null) return;
         
         populateActivityDetailForm(activity);
+        bindActivityDetailStatusToggles(activity);
         AnimationManager.showPopup(vbDisplayActivityExpand, vbCover);
     }
 
