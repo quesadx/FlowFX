@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="470.0" prefWidth="411.0" styleClass="filler" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.SearchResultsController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="9.0" layoutY="9.0" spacing="4.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox fx:id="hbLateralHandlebar" alignment="CENTER_RIGHT" spacing="8.0" styleClass="accordion">
+               <children>
+                  <MFXButton fx:id="btnClose" onAction="#onActionBtnClose" styleClass="jfx-close" text="Salir">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="Cerrar FlowFX" />
+                     </tooltip>
+                  </MFXButton>
+               </children>
+            </HBox>
+            <VBox spacing="4.0" styleClass="container-sub">
+               <padding>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </padding>
+               <children>
+                  <HBox>
+                     <children>
+                        <Label text="Resultado de " />
+                        <Label fx:id="lblSearchPrompt" text="Resultado de " />
+                     </children>
+                  </HBox>
+                  <ListView fx:id="lvSearchResults" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+   </padding>
+</AnchorPane>

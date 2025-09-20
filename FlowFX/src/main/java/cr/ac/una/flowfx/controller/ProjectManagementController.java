@@ -2,6 +2,8 @@ package cr.ac.una.flowfx.controller;
 
 import cr.ac.una.flowfx.model.PersonDTO;
 import cr.ac.una.flowfx.model.ProjectDTO;
+import cr.ac.una.flowfx.model.SearchResultDTO;
+import cr.ac.una.flowfx.service.PersonService;
 import cr.ac.una.flowfx.service.ProjectService;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
@@ -13,11 +15,13 @@ import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.net.URL;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -56,38 +60,167 @@ public class ProjectManagementController
     private static final Duration WIGGLE_DURATION = Duration.millis(150);
     private static final Interpolator WIGGLE_INTERPOLATOR = Interpolator.EASE_BOTH;
 
-    @FXML
-    private AnchorPane root;
+    @FXML private AnchorPane root;
+    @FXML private TilePane tpProjects;
+    @FXML private VBox vbCover;
+    @FXML private VBox vbProjectCreationDisplay;
+    @FXML private MFXTextField txfProjectName;
+    @FXML private TextArea txaProjectDescription;
+    @FXML private MFXDatePicker dpProjectStartDate;
+    @FXML private MFXDatePicker dpProjectEndDate;
+    @FXML private MFXTextField txfSponsorId;
+    @FXML private MFXTextField txfLeaderId;
+    @FXML private MFXTextField txfTechLeaderId;
+    @FXML private MFXTextField txfSearchBar;
 
-    @FXML
-    private TilePane tpProjects;
-
-    @FXML
-    private VBox vbCover;
-
-    @FXML
-    private VBox vbProjectCreationDisplay;
-
-    @FXML
-    private MFXTextField txfProjectName;
-
-    @FXML
-    private TextArea txaProjectDescription;
-
-    @FXML
-    private MFXDatePicker dpProjectStartDate;
-
-    @FXML
-    private MFXDatePicker dpProjectEndDate;
-
-    @FXML
-    private MFXTextField txfSponsorId;
-
-    @FXML
-    private MFXTextField txfLeaderId;
-
-    @FXML
-    private MFXTextField txfTechLeaderId;
+    /**
+     * Comprehensive search method using streams to find projects and associated persons.
+     * Searches across project names, person names, emails, and usernames.
+     */
+    @FXML private void onActionBtnSearch(){
+        String searchTerm = getTrimmedText(txfSearchBar);
+        if (searchTerm.isEmpty()) {
+            Mensaje mensaje = new Mensaje();
+            mensaje.showModal(
+                javafx.scene.control.Alert.AlertType.WARNING,
+                "Búsqueda",
+                root.getScene().getWindow(),
+                "Por favor ingrese un término de búsqueda."
+            );
+            return;
+        }
+        
+        List<SearchResultDTO> results = performSearch(searchTerm);
+        showSearchResults(searchTerm, results);
+        txfSearchBar.clear();
+    }
+    
+    /**
+     * Performs comprehensive search using streams across all projects and persons.
+     * 
+     * @param searchTerm the term to search for
+     * @return list of search results
+     */
+    private List<SearchResultDTO> performSearch(String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        String normalizedTerm = searchTerm.toLowerCase().trim();
+        
+        // Get all projects for the current user
+        Object userObj = AppContext.getInstance().get("user");
+        if (!(userObj instanceof PersonDTO)) {
+            return new ArrayList<>();
+        }
+        
+        PersonDTO currentUser = (PersonDTO) userObj;
+        ProjectService projectService = new ProjectService();
+        PersonService personService = new PersonService();
+        
+        // Get user projects
+        Respuesta projectsResponse = projectService.findProjectsForUser(currentUser.getId());
+        if (!Boolean.TRUE.equals(projectsResponse.getEstado())) {
+            return new ArrayList<>();
+        }
+        
+        @SuppressWarnings("unchecked")
+        List<ProjectDTO> projects = (List<ProjectDTO>) projectsResponse.getResultado("Projects");
+        if (projects == null) {
+            return new ArrayList<>();
+        }
+        
+        // Get all persons for searching
+        Respuesta personsResponse = personService.findAll();
+        Map<Long, PersonDTO> personMap = new HashMap<>();
+        if (Boolean.TRUE.equals(personsResponse.getEstado())) {
+            @SuppressWarnings("unchecked")
+            List<PersonDTO> persons = (List<PersonDTO>) personsResponse.getResultado("Persons");
+            if (persons != null) {
+                personMap = persons.stream()
+                    .filter(p -> p.getId() != null)
+                    .collect(Collectors.toMap(PersonDTO::getId, p -> p));
+            }
+        }
+        
+        final Map<Long, PersonDTO> finalPersonMap = personMap;
+        
+        // Search using streams
+        return projects.stream()
+            .flatMap(project -> {
+                List<SearchResultDTO> projectResults = new ArrayList<>();
+                
+                // Search in project name
+                if (safe(project.getName()).toLowerCase().contains(normalizedTerm)) {
+                    projectResults.add(new SearchResultDTO(null, project, "Proyecto"));
+                }
+                
+                // Search in project persons (sponsor, leader, tech leader)
+                addPersonSearchResults(projectResults, project, project.getSponsorId(), 
+                    "Patrocinador", finalPersonMap, normalizedTerm);
+                addPersonSearchResults(projectResults, project, project.getLeaderUserId(), 
+                    "Líder", finalPersonMap, normalizedTerm);
+                addPersonSearchResults(projectResults, project, project.getTechLeaderId(), 
+                    "Líder Técnico", finalPersonMap, normalizedTerm);
+                
+                return projectResults.stream();
+            })
+            .distinct()
+            .limit(50) // Limit results for performance
+            .collect(Collectors.toList());
+    }
+    
+    /**
+     * Helper method to add person search results for a specific role in a project.
+     */
+    private void addPersonSearchResults(List<SearchResultDTO> results, ProjectDTO project, 
+            Long personId, String role, Map<Long, PersonDTO> personMap, String searchTerm) {
+        if (personId == null) {
+            return;
+        }
+        
+        PersonDTO person = personMap.get(personId);
+        if (person == null) {
+            return;
+        }
+        
+        // Check if person matches search term
+        boolean matches = safe(person.getFirstName()).toLowerCase().contains(searchTerm) ||
+                         safe(person.getLastName()).toLowerCase().contains(searchTerm) ||
+                         safe(person.getEmail()).toLowerCase().contains(searchTerm) ||
+                         safe(person.getUsername()).toLowerCase().contains(searchTerm);
+        
+        if (matches) {
+            results.add(new SearchResultDTO(person, project, role));
+        }
+    }
+    
+    /**
+     * Shows the search results in a popup window.
+     */
+    private void showSearchResults(String searchTerm, List<SearchResultDTO> results) {
+        try {
+            // Store search results and term in context for the SearchResultsController
+            AppContext.getInstance().set("searchResults", results);
+            AppContext.getInstance().set("searchTerm", searchTerm);
+            
+            // Show the search results popup
+            Stage currentStage = (Stage) root.getScene().getWindow();
+            FlowController.getInstance().goViewInWindowModal(
+                "SearchResultsView", 
+                currentStage, 
+                false
+            );
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Error showing search results", ex);
+            new Mensaje().showModal(
+                javafx.scene.control.Alert.AlertType.ERROR,
+                "Búsqueda",
+                root.getScene().getWindow(),
+                "Error al mostrar los resultados de búsqueda."
+            );
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

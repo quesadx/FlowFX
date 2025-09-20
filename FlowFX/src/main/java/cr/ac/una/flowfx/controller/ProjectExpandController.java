@@ -155,6 +155,42 @@ public class ProjectExpandController extends Controller implements Initializable
     private LocalDate snapshotPlannedEndDate;
     private LocalDate snapshotActualStartDate;
     private LocalDate snapshotActualEndDate;
+    @FXML
+    private MFXCircleToggleNode tgActivityStatusExistentSuspended;
+    @FXML
+    private ToggleGroup ProjectStatus11;
+    @FXML
+    private MFXCircleToggleNode tgActivityStatusExistentCompleted;
+    @FXML
+    private MFXCircleToggleNode tgActivityStatusExistentPending;
+    @FXML
+    private MFXCircleToggleNode tgActivityStatusExistentRunning;
+    @FXML
+    private MFXCircleToggleNode tgProjectStatusSuspended1;
+    @FXML
+    private ToggleGroup ProjectStatus1;
+    @FXML
+    private MFXCircleToggleNode tgProjectStatusCompleted1;
+    @FXML
+    private MFXCircleToggleNode tgProjectStatusPending1;
+    @FXML
+    private MFXCircleToggleNode tgProjectStatusRunning1;
+
+    @FXML
+    private void onActionTgAcitivtyStatusExistentSuspended(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionTgAcitivtyStatusExistentCompleted(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionTgAcitivtyStatusExistentPending(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionTgAcitivtyStatusExistentRunning(ActionEvent event) {
+    }
 
     /**
      * Enumeration for person roles in the project.

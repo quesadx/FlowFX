@@ -433,25 +433,6 @@
                               </VBox>
                               <VBox>
                                  <children>
-                                    <Label styleClass="jfx-label" text="Fecha planeada de finalizacion" />
-                                    <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
-                                       <children>
-                                          <VBox alignment="CENTER">
-                                             <children>
-                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/lucide--calendar-clock.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </children>
-                                          </VBox>
-                                          <MFXDatePicker fx:id="dpPlannedEndDate" prefWidth="200.0" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                              <VBox>
-                                 <children>
                                     <Label styleClass="jfx-label" text="Fecha real de inicio" />
                                     <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
                                        <children>
@@ -465,6 +446,25 @@
                                              </children>
                                           </VBox>
                                           <MFXDatePicker fx:id="dpActualStartDate" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label styleClass="jfx-label" text="Fecha planeada de finalizacion" />
+                                    <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                       <children>
+                                          <VBox alignment="CENTER">
+                                             <children>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/lucide--calendar-clock.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                          </VBox>
+                                          <MFXDatePicker fx:id="dpPlannedEndDate" prefWidth="200.0" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -491,6 +491,27 @@
                            </children></VBox>
                      </children>
                   </HBox>
+                  <VBox>
+                     <children>
+                        <Label styleClass="jfx-label" text="Estado para la actividad" />
+                        <VBox alignment="CENTER" prefHeight="100.0" styleClass="container-sub">
+                           <children>
+                              <HBox alignment="CENTER" spacing="12.0">
+                                 <children>
+                                    <MFXCircleToggleNode fx:id="tgActivityStatusExistentSuspended" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgAcitivtyStatusExistentSuspended" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Detenido" textPosition="TOP" HBox.hgrow="ALWAYS">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="ProjectStatus11" />
+                                       </toggleGroup>
+                                    </MFXCircleToggleNode>
+                                    <MFXCircleToggleNode fx:id="tgActivityStatusExistentCompleted" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgAcitivtyStatusExistentCompleted" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Completado" textPosition="TOP" toggleGroup="$ProjectStatus11" HBox.hgrow="ALWAYS" />
+                                    <MFXCircleToggleNode fx:id="tgActivityStatusExistentPending" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgAcitivtyStatusExistentPending" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Pendiente" textPosition="TOP" toggleGroup="$ProjectStatus11" HBox.hgrow="ALWAYS" />
+                                    <MFXCircleToggleNode fx:id="tgActivityStatusExistentRunning" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgAcitivtyStatusExistentRunning" prefHeight="50.0" prefWidth="50.0" size="16.0" text="En proceso" textPosition="TOP" toggleGroup="$ProjectStatus11" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
                   <HBox alignment="CENTER" spacing="12.0">
                      <children>
                         <MFXButton fx:id="btnCancelActivityChanges" onAction="#onActionBtnReturnActivityExpand" prefHeight="50.0" prefWidth="150.0" styleClass="jfx-button" text="Cancelar">

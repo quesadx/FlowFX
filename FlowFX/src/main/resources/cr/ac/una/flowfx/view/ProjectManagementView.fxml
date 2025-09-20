@@ -62,10 +62,10 @@
                                     <HBox alignment="CENTER" spacing="4.0" styleClass="accordion">
                                        <children>
                                           <VBox alignment="CENTER" />
-                                          <MFXTextField fx:id="txfSearchBar" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="Proyecto, Persona, Actividad..." />
-                                          <MFXButton fx:id="btnSearch" onAction="#onActionBtnSearch" styleClass="jfx-button" text="Buscar">
+                                                                                    <MFXTextField fx:id="txfSearchBar" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="Proyecto, Persona, Actividad..." />
+                                          <MFXButton onAction="#onActionBtnSearch" styleClass="jfx-button" text="Buscar">
                                              <tooltip>
-                                                <Tooltip text="Buscar aplicando filtro" />
+                                                <Tooltip text="Buscar utilizando Stream sobre todos los proyectos" />
                                              </tooltip>
                                              <graphic>
                                                 <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
