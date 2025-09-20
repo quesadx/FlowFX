@@ -12,6 +12,7 @@ import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.BindingUtils;
 import cr.ac.una.flowfx.util.FlowController;
+import cr.ac.una.flowfx.util.PersonLabelUtil;
 import cr.ac.una.flowfx.util.ProjectExcelExportUtil;
 import cr.ac.una.flowfx.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -466,7 +467,7 @@ public class ProjectExpandController extends Controller implements Initializable
             stage,
             vm,
             activities,
-            this::resolvePersonNameSync,
+            PersonLabelUtil::resolvePersonNameSync,
             ProjectExpandController::mapStatusToSpanish
         );
     }
@@ -637,10 +638,10 @@ public class ProjectExpandController extends Controller implements Initializable
         
         Object selection = AppContext.getInstance().get("personSelectionResult");
         if (selection instanceof PersonDTO person) {
-            String personLabel = buildPersonLabel(person);
+            String personLabel = PersonLabelUtil.buildPersonLabel(person);
             
             if (person.getId() != null) {
-                cachePersonLabel(person.getId(), personLabel);
+                PersonLabelUtil.cachePersonLabel(person.getId(), personLabel);
             }
             
             txfResponsableCreation.setText(personLabel);
@@ -668,11 +669,11 @@ public class ProjectExpandController extends Controller implements Initializable
      * Handles the result of person selection.
      */
     private void handlePersonSelection(MFXTextField targetField, PersonDTO person, String contextKey) {
-        String personLabel = buildPersonLabel(person);
+        String personLabel = PersonLabelUtil.buildPersonLabel(person);
         
         // Cache before updating to prevent async overwrite
         if (person.getId() != null) {
-            cachePersonLabel(person.getId(), personLabel);
+            PersonLabelUtil.cachePersonLabel(person.getId(), personLabel);
         }
         
         updateViewModelWithSelectedPerson(targetField, person);
@@ -695,39 +696,10 @@ public class ProjectExpandController extends Controller implements Initializable
         }
     }
 
-    // Person Label Management
+    // Person Label Management - delegated to PersonLabelUtil
 
     /**
-     * Builds a display label for a person.
-     */
-    private String buildPersonLabel(PersonDTO person) {
-        if (person == null) return "";
-        
-        String firstName = person.getFirstName() == null ? "" : person.getFirstName().trim();
-        String lastName = person.getLastName() == null ? "" : person.getLastName().trim();
-        
-        return (firstName + " " + lastName).trim();
-    }
-
-    /**
-     * Caches a person label in the application context.
-     */
-    private void cachePersonLabel(Long personId, String label) {
-        if (personId != null && label != null && !label.isBlank()) {
-            AppContext.getInstance().set("person." + personId + ".label", label);
-        }
-    }
-
-    /**
-     * Retrieves a cached person label.
-     */
-    private String getCachedPersonLabel(long personId) {
-        Object label = AppContext.getInstance().get("person." + personId + ".label");
-        return label instanceof String stringLabel ? stringLabel : null;
-    }
-
-    /**
-     * Refreshes all person label displays.
+     * Refreshes all person label displays using PersonLabelUtil.
      */
     private void refreshPersonLabels() {
         refreshLeaderLabel();
@@ -736,125 +708,26 @@ public class ProjectExpandController extends Controller implements Initializable
     }
 
     private void refreshLeaderLabel() {
-        updatePersonLabelIntoField(vm.getLeaderUserId(), txfLeaderId);
+        PersonLabelUtil.updatePersonLabelIntoField(vm.getLeaderUserId(), txfLeaderId);
     }
 
     private void refreshTechLeaderLabel() {
-        updatePersonLabelIntoField(vm.getTechLeaderId(), txfTechLeaderId);
+        PersonLabelUtil.updatePersonLabelIntoField(vm.getTechLeaderId(), txfTechLeaderId);
     }
 
     private void refreshSponsorLabel() {
-        updatePersonLabelIntoField(vm.getSponsorId(), txfSponsorId);
+        PersonLabelUtil.updatePersonLabelIntoField(vm.getSponsorId(), txfSponsorId);
     }
 
     /**
-     * Updates a text field with the resolved person name.
-     */
-    private void updatePersonLabelIntoField(long personId, MFXTextField targetField) {
-        if (targetField == null || personId <= 0) {
-            if (targetField != null) targetField.setText("");
-            return;
-        }
-        
-        String cachedLabel = getCachedPersonLabel(personId);
-        if (cachedLabel != null && !cachedLabel.isBlank()) {
-            targetField.setText(cachedLabel);
-            return;
-        }
-        
-        targetField.setText("Loading...");
-        fetchPersonLabelAsync(personId, targetField);
-    }
-
-    /**
-     * Fetches a person label asynchronously.
-     */
-    private void fetchPersonLabelAsync(long personId, MFXTextField targetField) {
-        Thread fetchThread = new Thread(() -> {
-            try {
-                PersonService personService = new PersonService();
-                Respuesta response = personService.find(personId);
-                
-                String displayText = processPersonResponse(response, personId);
-                Platform.runLater(() -> targetField.setText(displayText));
-            } catch (Exception ex) {
-                LOGGER.fine("Async person fetch failed for ID " + personId + ": " + ex.getMessage());
-                Platform.runLater(() -> targetField.setText("ID: " + personId));
-            }
-        }, "person-label-fetch-" + personId);
-        
-        fetchThread.setDaemon(true);
-        fetchThread.start();
-    }
-
-    /**
-     * Processes person service response and returns display text.
-     */
-    private String processPersonResponse(Respuesta response, long personId) {
-        if (Boolean.TRUE.equals(response.getEstado())) {
-            Object personData = response.getResultado("Person");
-            if (personData instanceof PersonDTO person) {
-                String personLabel = buildPersonLabel(person);
-                if (!personLabel.isBlank()) {
-                    cachePersonLabel(personId, personLabel);
-                    return personLabel;
-                }
-            }
-        }
-        return "ID: " + personId;
-    }
-
-    /**
-     * Loads person names immediately during initialization.
+     * Loads person names immediately during initialization using PersonLabelUtil.
      */
     private void loadPersonNamesImmediately() {
-        loadPersonNameIfValid(vm.getLeaderUserId(), txfLeaderId);
-        loadPersonNameIfValid(vm.getTechLeaderId(), txfTechLeaderId);
-        loadPersonNameIfValid(vm.getSponsorId(), txfSponsorId);
-    }
-
-    /**
-     * Loads a person name if the ID is valid.
-     */
-    private void loadPersonNameIfValid(long personId, MFXTextField targetField) {
-        if (personId > 0) {
-            String personName = resolvePersonNameSync(personId);
-            if (personName != null && !personName.equals(String.valueOf(personId))) {
-                Platform.runLater(() -> targetField.setText(personName));
-            }
-        }
-    }
-
-    /**
-     * Resolves a person's display name synchronously.
-     */
-    private String resolvePersonNameSync(long personId) {
-        if (personId <= 0) return null;
-        
-        String cachedLabel = getCachedPersonLabel(personId);
-        if (cachedLabel != null && !cachedLabel.isBlank()) {
-            return cachedLabel;
-        }
-        
-        try {
-            PersonService personService = new PersonService();
-            Respuesta response = personService.find(personId);
-            
-            if (Boolean.TRUE.equals(response.getEstado())) {
-                Object personData = response.getResultado("Person");
-                if (personData instanceof PersonDTO person) {
-                    String personName = buildPersonLabel(person);
-                    if (!personName.isBlank()) {
-                        cachePersonLabel(personId, personName);
-                        return personName;
-                    }
-                }
-            }
-        } catch (Exception ignored) {
-            // Service unavailable, fallback to ID
-        }
-        
-        return String.valueOf(personId);
+        PersonLabelUtil.loadPersonNamesImmediately(
+            new PersonLabelUtil.PersonField(vm.getLeaderUserId(), txfLeaderId),
+            new PersonLabelUtil.PersonField(vm.getTechLeaderId(), txfTechLeaderId),
+            new PersonLabelUtil.PersonField(vm.getSponsorId(), txfSponsorId)
+        );
     }
 
     /**
@@ -1208,7 +1081,7 @@ public class ProjectExpandController extends Controller implements Initializable
                 long responsibleId = activity.getResponsibleId();
                 if (responsibleId <= 0) return "-";
                 
-                String cachedLabel = getCachedPersonLabel(responsibleId);
+                String cachedLabel = PersonLabelUtil.getCachedPersonLabel(responsibleId);
                 if (cachedLabel != null && !cachedLabel.isBlank()) {
                     return cachedLabel;
                 }
@@ -1221,28 +1094,14 @@ public class ProjectExpandController extends Controller implements Initializable
     }
 
     /**
-     * Fetches person label for table display asynchronously.
+     * Fetches person label for table display asynchronously using PersonLabelUtil.
      */
     private void fetchPersonLabelForTable(long responsibleId) {
-        new Thread(() -> {
-            try {
-                PersonService personService = new PersonService();
-                Respuesta response = personService.find(responsibleId);
-                
-                if (Boolean.TRUE.equals(response.getEstado())) {
-                    Object personData = response.getResultado("Person");
-                    if (personData instanceof PersonDTO person) {
-                        String personName = buildPersonLabel(person);
-                        if (!personName.isBlank()) {
-                            cachePersonLabel(responsibleId, personName);
-                            Platform.runLater(() -> tbvActivities.refresh());
-                        }
-                    }
-                }
-            } catch (Exception ignored) {
-                // Service unavailable, will show "-"
+        PersonLabelUtil.resolvePersonNameAsync(responsibleId, resolvedName -> {
+            if (resolvedName != null && !resolvedName.isBlank()) {
+                Platform.runLater(() -> tbvActivities.refresh());
             }
-        }, "resp-label-fetch-" + responsibleId).start();
+        });
     }
 
     /**
@@ -1517,45 +1376,19 @@ public class ProjectExpandController extends Controller implements Initializable
     }
 
     /**
-     * Pre-fetches person labels for activities to improve UI responsiveness.
+     * Pre-fetches person labels for activities to improve UI responsiveness using PersonLabelUtil.
      */
     private void prefetchResponsibleLabels() {
-        List<Long> personIds = activities.stream()
+        long[] personIds = activities.stream()
             .map(ProjectActivityViewModel::getResponsibleId)
             .filter(id -> id > 0)
             .distinct()
-            .toList();
+            .mapToLong(Long::longValue)
+            .toArray();
         
-        if (personIds.isEmpty()) return;
-        
-        new Thread(() -> {
-            PersonService personService = new PersonService();
-            boolean hasUpdates = false;
-            
-            for (Long personId : personIds) {
-                if (getCachedPersonLabel(personId) != null) continue;
-                
-                try {
-                    Respuesta response = personService.find(personId);
-                    if (Boolean.TRUE.equals(response.getEstado())) {
-                        Object personData = response.getResultado("Person");
-                        if (personData instanceof PersonDTO person) {
-                            String personName = buildPersonLabel(person);
-                            if (!personName.isBlank()) {
-                                cachePersonLabel(personId, personName);
-                                hasUpdates = true;
-                            }
-                        }
-                    }
-                } catch (Exception ignored) {
-                    // Service unavailable, continue with others
-                }
-            }
-            
-            if (hasUpdates) {
-                Platform.runLater(() -> tbvActivities.refresh());
-            }
-        }, "prefetch-person-labels").start();
+        if (personIds.length > 0) {
+            PersonLabelUtil.prefetchPersonLabels(personIds, () -> tbvActivities.refresh());
+        }
     }
 
     /**
@@ -1732,12 +1565,12 @@ public class ProjectExpandController extends Controller implements Initializable
     private void populateActivityDetailForm(ProjectActivityViewModel activity) {
         // Resolve and display responsible person
         long responsibleId = activity.getResponsibleId();
-        String responsibleName = responsibleId > 0 ? resolvePersonNameSync(responsibleId) : "-";
+        String responsibleName = responsibleId > 0 ? PersonLabelUtil.resolvePersonNameSync(responsibleId) : "-";
         txfResponsible.setText(responsibleName);
         
         // Resolve and display creator
         long createdById = activity.getCreatedById();
-        String createdByName = createdById > 0 ? resolvePersonNameSync(createdById) : "-";
+        String createdByName = createdById > 0 ? PersonLabelUtil.resolvePersonNameSync(createdById) : "-";
         txfCreatedBy.setText(createdByName);
         
         // Set form fields
