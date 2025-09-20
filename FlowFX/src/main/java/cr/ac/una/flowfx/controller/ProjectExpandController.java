@@ -8,6 +8,7 @@ import cr.ac.una.flowfx.model.ProjectViewModel;
 import cr.ac.una.flowfx.service.PersonService;
 import cr.ac.una.flowfx.service.ProjectActivityService;
 import cr.ac.una.flowfx.service.ProjectService;
+import cr.ac.una.flowfx.util.ActivityTableUtil;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.BindingUtils;
@@ -20,28 +21,16 @@ import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -89,9 +78,6 @@ public class ProjectExpandController extends Controller implements Initializable
 
     private static final java.util.logging.Logger LOGGER =
         java.util.logging.Logger.getLogger(ProjectExpandController.class.getName());
-
-    // Constants
-    private static final DataFormat ACTIVITY_INDEX = new DataFormat("application/x-flowfx-activity-index");
 
     // FXML injected components
     @FXML private AnchorPane root;
@@ -1048,248 +1034,29 @@ public class ProjectExpandController extends Controller implements Initializable
 
     // Excel Export Functionality delegated to ProjectExcelExportUtil
 
-    // Activity Management Implementation
+    // Activity Management Implementation - delegated to ActivityTableUtil
     
     /**
-     * Sets up the activities table with columns, sorting, and drag-and-drop functionality.
+     * Sets up the activities table using ActivityTableUtil.
      */
     private void setupActivitiesTable() {
-        configureTableColumns();
-        configureTableSorting();
-        configureTableRowFactory();
+        ActivityTableUtil.setupActivitiesTable(
+            tbvActivities,
+            activities,
+            tbcActivityName,
+            tbcActivityStatus,
+            tbcActivityResponsible,
+            ProjectExpandController::mapStatusToSpanish,
+            this::showActivityDetail
+        );
     }
 
     /**
-     * Configures table columns and their value factories.
-     */
-    private void configureTableColumns() {
-        if (tbcActivityName.getCellValueFactory() == null) {
-            tbcActivityName.setCellValueFactory(new PropertyValueFactory<>("description"));
-        }
-        
-        tbcActivityStatus.setCellValueFactory(cellData -> {
-            String statusCode = cellData.getValue() != null ? cellData.getValue().getStatus() : null;
-            String statusText = mapStatusToSpanish(statusCode);
-            return Bindings.createStringBinding(() -> statusText);
-        });
-        
-        tbcActivityResponsible.setCellValueFactory(cellData -> {
-            ProjectActivityViewModel activity = cellData.getValue();
-            return Bindings.createStringBinding(() -> {
-                if (activity == null) return "-";
-                
-                long responsibleId = activity.getResponsibleId();
-                if (responsibleId <= 0) return "-";
-                
-                String cachedLabel = PersonLabelUtil.getCachedPersonLabel(responsibleId);
-                if (cachedLabel != null && !cachedLabel.isBlank()) {
-                    return cachedLabel;
-                }
-                
-                // Trigger async fetch for next refresh
-                fetchPersonLabelForTable(responsibleId);
-                return "-";
-            });
-        });
-    }
-
-    /**
-     * Fetches person label for table display asynchronously using PersonLabelUtil.
-     */
-    private void fetchPersonLabelForTable(long responsibleId) {
-        PersonLabelUtil.resolvePersonNameAsync(responsibleId, resolvedName -> {
-            if (resolvedName != null && !resolvedName.isBlank()) {
-                Platform.runLater(() -> tbvActivities.refresh());
-            }
-        });
-    }
-
-    /**
-     * Configures table sorting behavior.
-     */
-    private void configureTableSorting() {
-        tbvActivities.setItems(activities);
-        tbvActivities.getSortOrder().clear();
-        tbvActivities.setSortPolicy(tableView -> false); // Disable column sorting
-        
-        // Disable individual column sorting
-        tbcActivityName.setSortable(false);
-        tbcActivityStatus.setSortable(false);
-        tbcActivityResponsible.setSortable(false);
-        
-        // Sort by execution order
-        activities.sort(Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder));
-    }
-
-    /**
-     * Configures table row factory for double-click and drag-and-drop.
-     */
-    private void configureTableRowFactory() {
-        tbvActivities.setRowFactory(tableView -> {
-            TableRow<ProjectActivityViewModel> row = createStyledTableRow();
-            
-            // Double click to open detail
-            row.setOnMouseClicked(this::handleRowDoubleClick);
-            
-            // Drag and drop support
-            row.setOnDragDetected(event -> handleRowDragDetected(row, event));
-            row.setOnDragOver(event -> handleRowDragOver(row, event));
-            row.setOnDragDropped(event -> handleRowDragDropped(row, event));
-            
-            return row;
-        });
-    }
-
-    /**
-     * Creates a styled table row with alternating colors.
-     */
-    private TableRow<ProjectActivityViewModel> createStyledTableRow() {
-        return new TableRow<>() {
-            @Override
-            protected void updateItem(ProjectActivityViewModel item, boolean empty) {
-                super.updateItem(item, empty);
-                
-                if (empty || item == null) {
-                    setStyle("");
-                    setCursor(Cursor.DEFAULT);
-                } else {
-                    int index = getIndex();
-                    String backgroundColor = switch (index % 3) {
-                        case 0 -> "-fx-surface";
-                        case 1 -> "-fx-surface-variant";
-                        default -> "#f6f8ff";
-                    };
-                    setStyle("-fx-background-color: " + backgroundColor + "; -fx-background-radius: 12;");
-                    setCursor(Cursor.OPEN_HAND);
-                }
-            }
-        };
-    }
-
-    /**
-     * Handles double-click events on table rows.
-     */
-    private void handleRowDoubleClick(MouseEvent event) {
-        if (event.getClickCount() == 2) {
-            TableRow<?> row = (TableRow<?>) event.getSource();
-            if (!row.isEmpty() && row.getItem() instanceof ProjectActivityViewModel activity) {
-                showActivityDetail(activity);
-            }
-        }
-    }
-
-    /**
-     * Handles drag detection on table rows.
-     */
-    private void handleRowDragDetected(TableRow<ProjectActivityViewModel> row, MouseEvent event) {
-        if (!row.isEmpty()) {
-            Integer index = row.getIndex();
-            Dragboard dragboard = row.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.put(ACTIVITY_INDEX, index);
-            dragboard.setContent(content);
-            
-            // Create drag view
-            WritableImage snapshot = row.snapshot(new SnapshotParameters(), null);
-            dragboard.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
-            
-            event.consume();
-        }
-    }
-
-    /**
-     * Handles drag over events on table rows.
-     */
-    private void handleRowDragOver(TableRow<ProjectActivityViewModel> row, DragEvent event) {
-        Dragboard dragboard = event.getDragboard();
-        if (dragboard.hasContent(ACTIVITY_INDEX)) {
-            Integer draggedIndex = (Integer) dragboard.getContent(ACTIVITY_INDEX);
-            if (row.getIndex() != draggedIndex.intValue()) {
-                event.acceptTransferModes(TransferMode.MOVE);
-                event.consume();
-            }
-        }
-    }
-
-    /**
-     * Handles drag drop events on table rows.
-     */
-    private void handleRowDragDropped(TableRow<ProjectActivityViewModel> row, DragEvent event) {
-        Dragboard dragboard = event.getDragboard();
-        boolean success = false;
-        
-        if (dragboard.hasContent(ACTIVITY_INDEX)) {
-            int draggedIndex = (Integer) dragboard.getContent(ACTIVITY_INDEX);
-            ProjectActivityViewModel draggedItem = tbvActivities.getItems().remove(draggedIndex);
-            
-            int dropIndex = row.isEmpty() ? tbvActivities.getItems().size() : row.getIndex();
-            
-            tbvActivities.getItems().add(dropIndex, draggedItem);
-            renumberExecutionOrder();
-            tbvActivities.getSelectionModel().select(dropIndex);
-            tbvActivities.refresh();
-            
-            logActivityOrder();
-            success = true;
-        }
-        
-        event.setDropCompleted(success);
-        event.consume();
-    }
-
-    /**
-     * Logs the current activity order for debugging.
-     */
-    private void logActivityOrder() {
-        LOGGER.fine("=== Activities new order (index -> id:order) ===");
-        for (int i = 0; i < activities.size(); i++) {
-            ProjectActivityViewModel activity = activities.get(i);
-            LOGGER.fine(i + " -> " + activity.getId() + ":" + activity.getExecutionOrder());
-        }
-    }
-
-    /**
-     * Renumbers execution order for activities and persists changes.
+     * Renumbers execution order for activities using ActivityTableUtil.
      */
     private void renumberExecutionOrder() {
-        boolean hasChanges = false;
-        
-        for (int i = 0; i < activities.size(); i++) {
-            ProjectActivityViewModel activity = activities.get(i);
-            int newOrder = i + 1;
-            
-            if (activity.getExecutionOrder() != newOrder) {
-                activity.setExecutionOrder(newOrder);
-                hasChanges = true;
-            }
-        }
-        
-        activities.sort(Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder));
-        tbvActivities.refresh();
-        
-        if (hasChanges) {
-            persistActivityOrderChanges();
-        }
-    }
-
-    /**
-     * Persists activity order changes to the web service.
-     */
-    private void persistActivityOrderChanges() {
-        ProjectActivityService service = new ProjectActivityService();
-        
-        for (ProjectActivityViewModel activity : activities) {
-            try {
-                Respuesta response = service.update(activity.toDTO());
-                if (!Boolean.TRUE.equals(response.getEstado())) {
-                    LOGGER.fine("Activity reorder persist failed for ID " + activity.getId() + ": " +
-                        (response != null ? response.getMensaje() : "null"));
-                }
-            } catch (Exception ex) {
-                LOGGER.fine("Exception persisting activity reorder for ID " + activity.getId() + ": " +
-                    ex.getMessage());
-            }
-        }
+        ActivityTableUtil.renumberExecutionOrder(activities);
+        ActivityTableUtil.refreshTable(tbvActivities);
     }
 
     /**
@@ -1364,8 +1131,7 @@ public class ProjectExpandController extends Controller implements Initializable
             .sorted(Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder))
             .forEach(activities::add);
         
-        activities.sort(Comparator.comparingInt(ProjectActivityViewModel::getExecutionOrder));
-        tbvActivities.refresh();
+        ActivityTableUtil.sortAndRefreshTable(activities, tbvActivities);
         
         LOGGER.fine("Activities filtered and loaded: " + activities.size());
 
@@ -1387,7 +1153,7 @@ public class ProjectExpandController extends Controller implements Initializable
             .toArray();
         
         if (personIds.length > 0) {
-            PersonLabelUtil.prefetchPersonLabels(personIds, () -> tbvActivities.refresh());
+            PersonLabelUtil.prefetchPersonLabels(personIds, () -> ActivityTableUtil.refreshTable(tbvActivities));
         }
     }
 
@@ -1470,7 +1236,7 @@ public class ProjectExpandController extends Controller implements Initializable
             
             activities.add(activityVm);
             renumberExecutionOrder();
-            Platform.runLater(() -> tbvActivities.refresh());
+            ActivityTableUtil.refreshTable(tbvActivities);
         }
     }
 
