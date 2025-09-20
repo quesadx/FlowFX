@@ -109,7 +109,7 @@ public class ProjectExpandController extends Controller implements Initializable
     @FXML private AnchorPane root;
     @FXML private VBox vbCover;
     @FXML private VBox vbDisplayActivityExpand;
-    @FXML private MFXButton btnReturnManagement;
+    @FXML private MFXButton btnReturnManagement, btnConfirmActivityChanges, btnCancelActivityChanges;
     @FXML private MFXTextField txfProjectName;
     @FXML private MFXTextField txfSponsorId;
     @FXML private MFXTextField txfLeaderId;
@@ -146,6 +146,16 @@ public class ProjectExpandController extends Controller implements Initializable
     private ProjectActivityViewModel selectedActivity;
     private boolean statusPersistInProgress = false;
 
+    // Change detection for activity detail popup
+    private final javafx.beans.property.BooleanProperty activityHasChanges = new javafx.beans.property.SimpleBooleanProperty(false);
+    private String activitySnapshotDescription;
+    private LocalDate snapshotCreationDate;
+    private LocalDate snapshotLastUpdateDate;
+    private LocalDate snapshotPlannedStartDate;
+    private LocalDate snapshotPlannedEndDate;
+    private LocalDate snapshotActualStartDate;
+    private LocalDate snapshotActualEndDate;
+
     /**
      * Enumeration for person roles in the project.
      */
@@ -179,6 +189,17 @@ public class ProjectExpandController extends Controller implements Initializable
         loadActivitiesForProject();
         loadPersonNamesImmediately();
         refreshProjectFromServer();
+
+        // Bind activity change buttons to change detection
+        if (btnConfirmActivityChanges != null) {
+            // Confirm is disabled until there are changes
+            btnConfirmActivityChanges.disableProperty().bind(activityHasChanges.not());
+        }
+        if (btnCancelActivityChanges != null) {
+            // Cancel should always be enabled to close the popup
+            btnCancelActivityChanges.disableProperty().unbind();
+            btnCancelActivityChanges.setDisable(false);
+        }
     }
 
     /**
@@ -262,6 +283,20 @@ public class ProjectExpandController extends Controller implements Initializable
     private void setupStatusChangeListener() {
         vm.statusProperty().addListener((observable, oldStatus, newStatus) -> {
             if (shouldPersistStatusChange(oldStatus, newStatus)) {
+                // Auto-assign actual dates based on project status
+                String code = newStatus == null ? null : newStatus.trim().toUpperCase();
+                Date now = new Date();
+                if ("R".equals(code) && vm.getActualStartDate() == null) {
+                    vm.setActualStartDate(now);
+                }
+                if ("C".equals(code)) {
+                    if (vm.getActualStartDate() == null) vm.setActualStartDate(now);
+                    if (vm.getActualEndDate() == null) vm.setActualEndDate(now);
+                }
+
+                // Hook for notifications (to integrate with backend service)
+                enqueueStatusChangeNotification("PROJECT", vm.getId(), code);
+
                 updateProjectStatusSilent(newStatus);
             }
         });
@@ -1710,6 +1745,11 @@ public class ProjectExpandController extends Controller implements Initializable
         tbvActivities.refresh();
         
         LOGGER.fine("Activities filtered and loaded: " + activities.size());
+
+        // Auto-assign actual dates based on activity status and persist if needed
+        for (ProjectActivityViewModel act : activities) {
+            applyAutomaticActualDatesForActivity(act);
+        }
     }
 
     /**
@@ -1846,6 +1886,10 @@ public class ProjectExpandController extends Controller implements Initializable
         updateActivityFromForm();
         logActivityUpdate();
         persistActivityChanges(selectedActivity);
+
+        // After confirming, consider changes applied
+        activityHasChanges.unbind();
+        activityHasChanges.set(false);
     }
 
     /**
@@ -1934,6 +1978,106 @@ public class ProjectExpandController extends Controller implements Initializable
         setPickerFromDate(dpActualStartDate, activity.getActualStartDate());
         setPickerFromDate(dpPlannedEndDate, activity.getPlannedEndDate());
         setPickerFromDate(dpActualEndDate, activity.getActualEndDate());
+
+        // Take a snapshot of current values for change detection
+        activitySnapshotDescription = txaDescription.getText();
+        snapshotCreationDate = dpCreationDate.getValue();
+        snapshotLastUpdateDate = dpLastUpdate.getValue();
+        snapshotPlannedStartDate = dpPlannedStartDate.getValue();
+        snapshotPlannedEndDate = dpPlannedEndDate.getValue();
+        snapshotActualStartDate = dpActualStartDate.getValue();
+        snapshotActualEndDate = dpActualEndDate.getValue();
+
+        // Setup binding to enable confirm/cancel only when there are changes
+        setupActivityChangeBinding();
+    }
+
+    /**
+     * Binds the activityHasChanges flag to UI fields vs. snapshot values.
+     */
+    private void setupActivityChangeBinding() {
+        activityHasChanges.unbind();
+        javafx.beans.binding.BooleanBinding changes = javafx.beans.binding.Bindings.createBooleanBinding(
+            () -> {
+                if (!safeEquals(txaDescription.getText(), activitySnapshotDescription)) return true;
+                if (!safeEqualsLocalDate(dpCreationDate.getValue(), snapshotCreationDate)) return true;
+                if (!safeEqualsLocalDate(dpLastUpdate.getValue(), snapshotLastUpdateDate)) return true;
+                if (!safeEqualsLocalDate(dpPlannedStartDate.getValue(), snapshotPlannedStartDate)) return true;
+                if (!safeEqualsLocalDate(dpPlannedEndDate.getValue(), snapshotPlannedEndDate)) return true;
+                if (!safeEqualsLocalDate(dpActualStartDate.getValue(), snapshotActualStartDate)) return true;
+                if (!safeEqualsLocalDate(dpActualEndDate.getValue(), snapshotActualEndDate)) return true;
+                return false;
+            },
+            txaDescription.textProperty(),
+            dpCreationDate.valueProperty(),
+            dpLastUpdate.valueProperty(),
+            dpPlannedStartDate.valueProperty(),
+            dpPlannedEndDate.valueProperty(),
+            dpActualStartDate.valueProperty(),
+            dpActualEndDate.valueProperty()
+        );
+        activityHasChanges.bind(changes);
+    }
+
+    private boolean safeEquals(String a, String b) {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        return a.equals(b);
+    }
+
+    private boolean safeEqualsLocalDate(LocalDate a, LocalDate b) {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        return a.equals(b);
+    }
+
+    /**
+     * Applies automatic actual date assignment to an activity based on its status.
+     * If changes are applied, persists the activity and enqueues a notification hook.
+     */
+    private void applyAutomaticActualDatesForActivity(ProjectActivityViewModel activity) {
+        if (activity == null) return;
+        String status = activity.getStatus();
+        if (status == null || status.isBlank()) return;
+        String code = status.trim().toUpperCase();
+
+        boolean modified = false;
+        Date now = new Date();
+        if ("R".equals(code)) {
+            if (activity.getActualStartDate() == null) {
+                activity.setActualStartDate(now);
+                modified = true;
+            }
+        } else if ("C".equals(code)) {
+            if (activity.getActualStartDate() == null) {
+                activity.setActualStartDate(now);
+                modified = true;
+            }
+            if (activity.getActualEndDate() == null) {
+                activity.setActualEndDate(now);
+                modified = true;
+            }
+        }
+
+        if (modified) {
+            persistActivityChanges(activity);
+            enqueueStatusChangeNotification("ACTIVITY", activity.getId(), code);
+        }
+    }
+
+    /**
+     * Placeholder for sending status change notifications to the backend notification system.
+     * Integrate with NOTIFICATION and NOTIFICATION_RECIPIENT tables via a NotificationService when available.
+     */
+    private void enqueueStatusChangeNotification(String entityType, long entityId, String newStatus) {
+        try {
+            LOGGER.fine("[Notification] Entity=" + entityType + ", ID=" + entityId + ", status=" + newStatus);
+            // TODO: Integrate with NotificationService once available, e.g.:
+            // NotificationService svc = new NotificationService();
+            // svc.createStatusChange(entityType, entityId, newStatus);
+        } catch (Exception ignored) {
+            // Best-effort: do not block main flow
+        }
     }
     
     // Utility methods
@@ -1948,7 +2092,11 @@ public class ProjectExpandController extends Controller implements Initializable
     private void setPickerFromDate(MFXDatePicker picker, Date date) {
         if (picker != null) {
             LocalDate localDate = convertDateToLocalDate(date);
-            Platform.runLater(() -> picker.setValue(localDate));
+            if (Platform.isFxApplicationThread()) {
+                picker.setValue(localDate);
+            } else {
+                Platform.runLater(() -> picker.setValue(localDate));
+            }
         }
     }
 }

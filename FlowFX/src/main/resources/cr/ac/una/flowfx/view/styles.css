@@ -40,8 +40,8 @@
 .root {
     -fx-font-family: "Outfit", "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
     /* Global focus ring color (used by many core controls) */
-    -fx-focus-color: #128C7E;            /* Teal Green */
-    -fx-faint-focus-color: rgba(18, 140, 126, 0.15);
+    -fx-focus-color: #343a40;            /* Gray 800 */
+    -fx-faint-focus-color: rgba(52, 58, 64, 0.15);
 }
 
 /* Quick utility typography classes (kept for FXML compatibility) */
@@ -97,57 +97,58 @@
    ======================================== */
 
 * {
-    /* WhatsApp-inspired Green/Teal palette */
-    /* Named palette tokens */
-    -fx-bangladesh-green: #19ac9b;  /* Bangladesh Green */
-    -fx-teal-green:       #128C7E;  /* Teal Green */
-    -fx-ufo-green:        #25D366;  /* UFO Green */
-    -fx-tea-green:        #DCF8C6;  /* Tea Green */
-    -fx-picton-blue:      #34B7F1;  /* Picton Blue */
-    -fx-white-chocolate:  #f5f1ed;  /* White Chocolate */
+    /* Monochrome grayscale palette */
+    -fx-gray-50:  #f8f9fa;
+    -fx-gray-100: #e9ecef;
+    -fx-gray-200: #dee2e6;
+    -fx-gray-300: #ced4da;
+    -fx-gray-400: #adb5bd;
+    -fx-gray-700: #495057;
+    -fx-gray-800: #343a40;
+    -fx-gray-900: #212529;
 
-    /* Primary brand colors */
-    -fx-primary:        -fx-teal-green;       /* Main brand */
-    -fx-primary-600:    -fx-bangladesh-green; /* Hover/active */
-    -fx-primary-200:    -fx-tea-green;        /* Subtle fill / selection */
+    /* Primary brand colors (sleek black/white) */
+    -fx-primary:        -fx-gray-800;   /* Base action */
+    -fx-primary-600:    -fx-gray-900;   /* Active/pressed */
+    -fx-primary-200:    -fx-gray-100;   /* Selection/fill */
 
     /* Neutrals & surfaces */
-    -fx-bg-primary:       -fx-white-chocolate; /* App background */
-    -fx-bg-secondary:     derive(-fx-bg-primary, -10%); /* Dividers / soft borders */
-    -fx-bg-filler:        -fx-tea-green;       /* Neutral/soft filler */
-    -fx-surface:          #ffffff;             /* Cards / panels */
-    -fx-surface-variant:  -fx-tea-green;       /* Headers / sub-panels */
-    -fx-surface-hover:    derive(-fx-tea-green, -5%); /* Hover for surface items */
+    -fx-bg-primary:       -fx-gray-50;   /* App background */
+    -fx-bg-secondary:     -fx-gray-200;  /* Dividers / soft borders */
+    -fx-bg-filler:        -fx-gray-100;  /* Neutral filler */
+    -fx-surface:          #ffffff;       /* Cards / panels */
+    -fx-surface-variant:  -fx-gray-100;  /* Headers / sub-panels */
+    -fx-surface-hover:    derive(-fx-gray-100, -5%);
 
     /* Text */
-    -fx-text-primary:   #252835;   /* Main text color */
-    -fx-text-secondary: #667085;   /* Secondary text */
-    -fx-text-inverse:   #ffffff;   /* On colored backgrounds */
+    -fx-text-primary:   -fx-gray-900;
+    -fx-text-secondary: -fx-gray-700;
+    -fx-text-inverse:   #ffffff;
 
     /* Buttons */
     -fx-btn-base:          #ffffff;
-    -fx-btn-base-pressed:  derive(-fx-teal-green, 30%);
+    -fx-btn-base-pressed:  derive(-fx-gray-300, -10%);
 
-    /* Semantic / status colors */
-    -fx-green:         -fx-ufo-green;                     /* success */
-    -fx-green-border:  derive(-fx-ufo-green, -20%);
-    -fx-yellow:        #fde68a;                           /* warning bg */
-    -fx-yellow-border: #a19140;                           /* warning text/border */
-    -fx-red:           #ff9292;                           /* error bg */
-    -fx-red-border:    #dc2626;                           /* error border/text */
-    -fx-blue:          -fx-picton-blue;                   /* info bg */
-    -fx-blue-border:   derive(-fx-picton-blue, -20%);     /* info border/text */
-    -fx-purple:        #d4cdff;                           /* legacy tag color */
-    -fx-purple-border: #7c3aed;
+    /* Semantic / status colors (neutralized) */
+    -fx-green:         -fx-gray-200;
+    -fx-green-border:  -fx-gray-700;
+    -fx-yellow:        -fx-gray-100;
+    -fx-yellow-border: -fx-gray-700;
+    -fx-red:           -fx-gray-200;
+    -fx-red-border:    -fx-gray-800;
+    -fx-blue:          -fx-gray-200;
+    -fx-blue-border:   -fx-gray-700;
+    -fx-purple:        -fx-gray-200;
+    -fx-purple-border: -fx-gray-700;
 
     /* Borders & depth */
-    -fx-border-default: #e6e7eb;    /* Default border */
-    -fx-border-focus:   -fx-teal-green;      /* Focused border */
-    -fx-shadow-light:   rgba(0, 0, 0, 0.08);
+    -fx-border-default: -fx-gray-200;    /* Default border */
+    -fx-border-focus:   -fx-gray-800;    /* Focused border */
+    -fx-shadow-light:   rgba(0, 0, 0, 0.06);
     -fx-shadow-medium:  rgba(0, 0, 0, 0.15);
 
-    /* Micro-interaction halo (teal glow accents) */
-    -fx-focus-halo-blue: rgba(24, 189, 96, 0.28);
+    /* Micro-interaction halo (neutral glow) */
+    -fx-focus-halo-blue: rgba(52, 58, 64, 0.28); /* keep var name for compatibility */
 }
 
 
@@ -172,9 +173,12 @@
 }
 
 .container {                        /* Primary page container */
-    -fx-background-color: -fx-bg-primary;
-    -fx-background-radius: 24;
-    -fx-border-color: -fx-bg-secondary;
+    -fx-background-color:
+        linear-gradient(from 0% 0% to 100% 100%, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.75) 100%),
+        -fx-bg-primary;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 24, 23;
+    -fx-border-color: linear-gradient(from 0% 0% to 0% 100%, rgba(255,255,255,0.7), rgba(255,255,255,0.35));
     -fx-border-width: 1;
     -fx-border-radius: 24;
     -fx-padding: 8;
@@ -190,11 +194,11 @@
 
 .container-sub {                    /* Secondary card/panel (soft-neumorphic) */
     -fx-background-color:
-        linear-gradient(from 0% 0% to 0% 100%, derive(-fx-surface, 2%) 0%, derive(-fx-surface, -2%) 100%),
+        linear-gradient(from 0% 0% to 0% 100%, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 100%),
         -fx-surface;
     -fx-background-insets: 0, 1;
     -fx-background-radius: 24, 23;
-    -fx-border-color: -fx-border-default;
+    -fx-border-color: linear-gradient(from 0% 0% to 0% 100%, rgba(255,255,255,0.7), rgba(255,255,255,0.35));
     -fx-border-width: 1;
     -fx-border-radius: 24;
     -fx-padding: 8;
@@ -204,11 +208,11 @@
 /* Alias missing from previous CSS but used in FXML */
 .container--sub {                   /* Alias to .container-sub */
     -fx-background-color:
-        linear-gradient(from 0% 0% to 0% 100%, derive(-fx-surface, 2%) 0%, derive(-fx-surface, -2%) 100%),
+        linear-gradient(from 0% 0% to 0% 100%, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 100%),
         -fx-surface;
     -fx-background-insets: 0, 1;
     -fx-background-radius: 24, 23;
-    -fx-border-color: -fx-border-default;
+    -fx-border-color: linear-gradient(from 0% 0% to 0% 100%, rgba(255,255,255,0.7), rgba(255,255,255,0.35));
     -fx-border-width: 1;
     -fx-border-radius: 24;
     -fx-padding: 4;
@@ -384,7 +388,7 @@
 }
 .mfx-button.jfx-button:pressed { -fx-background-color: derive(-fx-primary, -10%); -fx-effect: innershadow(gaussian, rgba(0,0,0,0.24), 10, 0.35, 0, 1); }
 .mfx-button.jfx-button:focused { -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 12, 0.55, 0, 0); }
-.mfx-button.jfx-button:disabled { -fx-background-color: derive(-fx-tea-green, -10%); -fx-opacity: 0.7; }
+.mfx-button.jfx-button:disabled { -fx-background-color: -fx-gray-200; -fx-opacity: 0.7; }
 
 .mfx-button.jfx-delete-button {
     -fx-background-color: -fx-red;
@@ -706,9 +710,12 @@
    ======================================== */
 
 .fx-dock {
-    -fx-background-color: -fx-tea-green; /* Tea Green */
-    -fx-background-radius: 16;
-    -fx-border-color: rgba(227, 255, 212, 0.55);
+    -fx-background-color:
+        linear-gradient(from 0% 0% to 0% 100%, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.25) 100%),
+        rgba(233, 236, 239, 0.35);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 16, 15;
+    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, rgba(255,255,255,0.70), rgba(255,255,255,0.35));
     -fx-border-width: 1;
     -fx-border-radius: 16;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0.2, 0, 6);
@@ -732,54 +739,55 @@
    BASE THEME VARIABLES
    ======================================== */
 * {
-    /* WhatsApp-inspired Green/Teal palette (duplicate block aligned) */
-    /* Named palette tokens for explicit references */
-    -fx-bangladesh-green: #075E54;  /* Bangladesh Green */
-    -fx-teal-green:       #128C7E;  /* Teal Green */
-    -fx-ufo-green:        #25D366;  /* UFO Green */
-    -fx-tea-green:        #DCF8C6;  /* Tea Green */
-    -fx-picton-blue:      #34B7F1;  /* Picton Blue */
-    -fx-white-chocolate:  #ECE5DD;  /* White Chocolate */
+    /* Monochrome grayscale palette (duplicate block aligned) */
+    -fx-gray-50:  #f8f9fa;
+    -fx-gray-100: #e9ecef;
+    -fx-gray-200: #dee2e6;
+    -fx-gray-300: #ced4da;
+    -fx-gray-400: #adb5bd;
+    -fx-gray-700: #495057;
+    -fx-gray-800: #343a40;
+    -fx-gray-900: #212529;
 
     /* Primary Color Palette */
-    -fx-primary:        -fx-teal-green;
-    -fx-primary-light:  derive(-fx-teal-green, 35%);
-    -fx-primary-dark:   -fx-bangladesh-green;
-    -fx-secondary:      #252835;
+    -fx-primary:        -fx-gray-800;
+    -fx-primary-light:  -fx-gray-700;
+    -fx-primary-dark:   -fx-gray-900;
+    -fx-secondary:      -fx-gray-900;
     
     /* Background Colors */
-    -fx-bg-primary:       -fx-white-chocolate;
-    -fx-bg-secondary:     derive(-fx-white-chocolate, -10%);
-    -fx-bg-filler:        -fx-tea-green;
+    -fx-bg-primary:       -fx-gray-50;
+    -fx-bg-secondary:     -fx-gray-200;
+    -fx-bg-filler:        -fx-gray-100;
     -fx-surface:          #ffffff;
-    -fx-surface-variant:  -fx-tea-green;
-    -fx-surface-hover:    derive(-fx-tea-green, -5%);
+    -fx-surface-variant:  -fx-gray-100;
+    -fx-surface-hover:    derive(-fx-gray-100, -5%);
     
     /* Button Colors */
     -fx-btn-base: #ffffff;
-    -fx-btn-base-pressed: derive(-fx-teal-green, 30%);
+    -fx-btn-base-pressed: derive(-fx-gray-300, -10%);
     
-    /* Semantic Color System */
-    -fx-red: #ffcdcd;
-    -fx-red-border: #dc2626;
-    -fx-yellow: #f9eacc;
-    -fx-yellow-border: #a19140;
-    -fx-purple: #d4cdff;
-    -fx-purple-border: #7c3aed;
-    -fx-blue: -fx-picton-blue;
-    -fx-blue-border: derive(-fx-picton-blue, -20%);
-    -fx-green: -fx-ufo-green;
-    -fx-green-border: derive(-fx-ufo-green, -20%);
+    /* Semantic Color System (neutralized) */
+    -fx-red: -fx-gray-200;
+    -fx-red-border: -fx-gray-800;
+    -fx-yellow: -fx-gray-100;
+    -fx-yellow-border: -fx-gray-700;
+    -fx-purple: -fx-gray-200;
+    -fx-purple-border: -fx-gray-700;
+    -fx-blue: -fx-gray-200;
+    -fx-blue-border: -fx-gray-700;
+    -fx-green: -fx-gray-200;
+    -fx-green-border: -fx-gray-700;
     
     /* Text Colors */
-    -fx-text-primary: #252835;
-    -fx-text-secondary: #667085;
+    -fx-text-primary: -fx-gray-900;
+    -fx-text-secondary: -fx-gray-700;
     -fx-text-inverse: #ffffff;
     
     /* Border and Effects */
-    -fx-border-default: #e6e7eb;
-    -fx-border-focus: -fx-teal-green;
-    -fx-shadow-light: rgba(0, 0, 0, 0.08);
+    -fx-border-default: -fx-gray-200;
+    -fx-border-focus: -fx-gray-800;
+    -fx-shadow-light: rgba(0, 0, 0, 0.06);
     -fx-shadow-medium: rgba(0, 0, 0, 0.15);
 }
 

@@ -10,7 +10,7 @@
 
 <StackPane fx:id="root" alignment="BOTTOM_CENTER" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <HBox fx:id="bar" alignment="CENTER" spacing="12.0" styleClass="fx-dock">
+        <HBox fx:id="bar" alignment="CENTER" spacing="12.0" styleClass="container--no-padding">
             <children>
                 <MFXButton fx:id="btnProjects" prefWidth="150.0" styleClass="jfx-projects" text="Proyectos">
                     <graphic>
