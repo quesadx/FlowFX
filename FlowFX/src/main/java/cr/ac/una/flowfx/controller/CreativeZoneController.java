@@ -25,6 +25,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
@@ -55,6 +56,8 @@ public class CreativeZoneController extends Controller implements Initializable 
     @FXML private Canvas cvMainCanvas;
     @FXML private Label lblLineWidth;
     @FXML private ColorPicker cpColorPicker;
+    @FXML private Circle csPencilSelected;
+    @FXML private Circle csEraserSelected;
 
     private GraphicsContext gc;
     private Tool currentTool = Tool.PENCIL;
@@ -67,6 +70,8 @@ public class CreativeZoneController extends Controller implements Initializable 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        csPencilSelected.setVisible(true);
+        csEraserSelected.setVisible(false);
         setupCanvas();
         setupBindings();
         updateLineWidthLabel();
@@ -142,18 +147,21 @@ public class CreativeZoneController extends Controller implements Initializable 
     private void onActionBtnPencil(ActionEvent event) {
         // Two buttons are wired to the same handler (pencil/eraser). We detect which one
         // by inspecting its Tooltip text. Defaults to pencil if not found.
-        Tool tool = Tool.PENCIL;
-        Object src = event.getSource();
-        if (src instanceof Control) {
-            Tooltip t = ((Control) src).getTooltip();
-            if (t != null && t.getText() != null) {
-                String tip = t.getText().toLowerCase(Locale.ROOT);
-                if (tip.contains("borrador") || tip.contains("eraser")) {
-                    tool = Tool.ERASER;
-                }
-            }
-        }
-        currentTool = tool;
+        System.out.println("Pencil selected");
+        currentTool = Tool.PENCIL;
+        csPencilSelected.setVisible(true);
+        csEraserSelected.setVisible(false);
+        configureStrokeForCurrentTool();
+    }
+
+    @FXML
+    private void onActionBtnEraser(ActionEvent event) {
+        // Two buttons are wired to the same handler (pencil/eraser). We detect which one
+        // by inspecting its Tooltip text. Defaults to pencil if not found.
+        System.out.println("Eraser selected");
+        currentTool = Tool.ERASER;
+        csPencilSelected.setVisible(false);
+        csEraserSelected.setVisible(true);
         configureStrokeForCurrentTool();
     }
 

@@ -40,12 +40,12 @@
 
 .mfx-list-view {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
-.mfx-list-view .virtual-flow { -fx-background-color: transparent; -fx-background-radius: 24; }
+.mfx-list-view .virtual-flow { -fx-background-color: transparent; -fx-background-radius: 12; }
 .mfx-list-view .list-cell {
     -fx-background-color: transparent; -fx-text-fill: -fx-text-primary; -fx-border-color: transparent;
 }
@@ -55,10 +55,10 @@
 
 .mfx-table-view {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 .mfx-table-view .column-header {
     -fx-background-color: -fx-surface-variant; -fx-text-fill: -fx-text-primary;
@@ -83,8 +83,8 @@
 .mfx-check-box:disabled .box { -fx-background-color: -fx-surface-variant; -fx-border-color: -fx-border-default; }
 
 .mfx-combo-box {
-    -fx-background-color: -fx-surface; -fx-background-radius: 24;
-    -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24;
+    -fx-background-color: -fx-surface; -fx-background-radius: 12;
+    -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius:12;
 }
 .mfx-combo-box:hover   { -fx-border-color: -fx-border-focus; }
 .mfx-combo-box:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0); }
@@ -117,25 +117,25 @@
 /* Text inputs */
 .text-field, .password-field {
     -fx-background-color: -fx-surface; -fx-text-fill: -fx-text-primary; -fx-prompt-text-fill: -fx-text-secondary;
-    -fx-background-radius: 24; -fx-border-color: -fx-surface; -fx-border-radius: 24;
+    -fx-background-radius: 12; -fx-border-color: -fx-surface; -fx-border-radius:12;
 }
 .text-field:focused, .password-field:focused {
     -fx-border-color: -fx-border-focus; -fx-border-width: 2;
-    -fx-background-radius: 24; -fx-border-radius: 24;
+    -fx-background-radius: 12; -fx-border-radius:12;
     -fx-focus-color: transparent; -fx-faint-focus-color: transparent;
     -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0);
 }
 .text-field:disabled, .password-field:disabled { -fx-background-color: -fx-surface-variant; -fx-border-color: -fx-border-default; }
 
-.text-area { -fx-background-color: -fx-surface; -fx-background-radius: 24; -fx-border-color: -fx-surface; -fx-border-radius: 24; -fx-text-fill: -fx-text-primary; }
-.text-area .content { -fx-background-color: transparent; -fx-background-radius: 24; }
-.text-area:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; -fx-background-radius: 24; -fx-border-radius: 24; }
+.text-area { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-surface; -fx-border-radius:12; -fx-text-fill: -fx-text-primary; }
+.text-area .content { -fx-background-color: transparent; -fx-background-radius: 12; }
+.text-area:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; -fx-background-radius: 12; -fx-border-radius:12; }
 .text-area:disabled { -fx-background-color: -fx-surface-variant; -fx-border-color: -fx-border-default; }
 
 /* Lists & trees */
 .list-view, .tree-view {
-    -fx-background-color: -fx-surface; -fx-background-radius: 24;
-    -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24;
+    -fx-background-color: -fx-surface; -fx-background-radius: 12;
+    -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius:12;
 }
 .list-view .virtual-flow, .tree-view .virtual-flow { -fx-background-color: transparent; }
 .list-view .list-cell, .tree-view .tree-cell { -fx-background-color: transparent; -fx-text-fill: -fx-text-primary; -fx-border-color: transparent; }
@@ -145,8 +145,8 @@
 
 /* Tables */
 .table-view, .tree-table-view {
-    -fx-background-color: -fx-surface; -fx-background-radius: 24;
-    -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24;
+    -fx-background-color: -fx-surface; -fx-background-radius: 12;
+    -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius:12;
 }
 .table-view .column-header-background, .tree-table-view .column-header-background { -fx-background-color: -fx-surface-variant; -fx-background-insets: 0; }
 .table-view .column-header, .tree-table-view .column-header { -fx-background-color: -fx-surface-variant; -fx-text-fill: -fx-text-primary; -fx-border-color: -fx-border-default; -fx-border-width: 0 0 1 0; }
@@ -157,15 +157,15 @@
 
 /* Choice inputs */
 .combo-box-base, .choice-box {
-    -fx-background-color: -fx-surface; -fx-background-radius: 24;
-    -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24;
+    -fx-background-color: -fx-surface; -fx-background-radius: 12;
+    -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius:12;
 }
 .combo-box-base:hover, .choice-box:hover { -fx-border-color: -fx-border-focus; }
 .combo-box-base:focused, .choice-box:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; }
 .combo-box-base .arrow-button, .date-picker .arrow-button { -fx-background-color: transparent; }
 .combo-box-popup .list-view { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 12; }
 
-.date-picker { -fx-background-color: -fx-surface; -fx-background-radius: 24; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24; }
+.date-picker { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius:12; }
 .date-picker:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 10, 0.40, 0, 0); }
 .date-picker .text-field { -fx-background-color: transparent; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; }
 .date-picker-popup { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 12; }
@@ -193,7 +193,7 @@
 
 .toggle-button {
     -fx-background-color: -fx-btn-base; -fx-text-fill: -fx-text-primary;
-    -fx-background-radius: 24; -fx-border-color: -fx-border-default; -fx-border-radius: 24;
+    -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-radius:12;
 }
 .toggle-button:hover   { -fx-background-color: derive(-fx-btn-base, -10%); }
 .toggle-button:pressed { -fx-background-color: -fx-btn-base-pressed; }
@@ -225,13 +225,13 @@
 .tooltip { -fx-background-color: -fx-surface; -fx-text-fill: -fx-text-primary; -fx-background-radius: 10; -fx-border-color: -fx-border-default; -fx-border-radius: 10; -fx-font-size: 12px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.3, 0, 2); }
 
 /* Misc */
-.spinner { -fx-background-color: -fx-surface; -fx-background-radius: 24; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24; }
+.spinner { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius:12; }
 .spinner .increment-arrow-button, .spinner .decrement-arrow-button { -fx-background-color: transparent; }
 .spinner .text-field { -fx-background-color: transparent; }
 
 .pagination { -fx-background-color: transparent; }
 .pagination .control-box { -fx-background-color: transparent; }
-.pagination .number-button { -fx-background-color: -fx-surface-variant; -fx-background-radius: 24; -fx-text-fill: -fx-text-primary; }
+.pagination .number-button { -fx-background-color: -fx-surface-variant; -fx-background-radius: 12; -fx-text-fill: -fx-text-primary; }
 .pagination .number-button:hover { -fx-background-color: derive(-fx-surface-variant, -5%); }
 .pagination .number-button:selected { -fx-background-color: -fx-primary-600; -fx-text-fill: -fx-text-inverse; }
 
@@ -245,7 +245,7 @@
 .split-pane { -fx-background-color: transparent; }
 .split-pane > .split-pane-divider { -fx-padding: 6; -fx-background-color: -fx-border-default; }
 
-.color-picker { -fx-background-color: -fx-surface; -fx-background-radius: 24; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius: 24; }
+.color-picker { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-width: 1; -fx-border-radius:12; }
 .color-picker:hover { -fx-border-color: -fx-border-focus; }
 .color-picker:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; }
 .color-palette, .custom-color-dialog { -fx-background-color: -fx-surface; -fx-background-radius: 12; -fx-border-color: -fx-border-default; -fx-border-radius: 12; }
@@ -377,92 +377,92 @@
    ======================================== */
 .container {
     -fx-background-color: -fx-bg-primary;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
     -fx-padding: 8;
 }
 
 .container--no-padding {
     -fx-background-color: -fx-bg-primary;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .container-sub {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
     -fx-padding: 8;
 }
 
 .container-sub-dark {
     -fx-background-color: -fx-primary;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .container-sub--semitransparent {
     -fx-background-color: rgba(0, 0, 0, 0.041);
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
     -fx-padding: 8;
 }
 
 .container-sub--no-padding {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .container-sub--purple {
     -fx-background-color: -fx-purple;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .container-sub--red {
     -fx-background-color: -fx-red;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .container-sub--yellow {
     -fx-background-color: -fx-yellow;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .container-sub--blue {
     -fx-background-color: -fx-blue;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .container-sub-rounded-top {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24 24 12 12;
+    -fx-background-radius: 12 12 8 8;
     -fx-border-color: -fx-bg-secondary;
     -fx-border-width: 1;
-    -fx-border-radius: 24 24 8 8;
+    -fx-border-radius:12 24 8 8;
     -fx-padding: 4;
 }
 
@@ -481,7 +481,7 @@
 
 .filler-rounded {
     -fx-background-color: -fx-bg-filler;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
     -fx-padding: 8;
 }
@@ -499,37 +499,37 @@
    ======================================== */
 .mfx-button {
     -fx-background-color: #ffffff7e;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
     -fx-padding: 8;
 
 }
 .mfx-button:hover {
     -fx-background-color: derive(-fx-btn-base, -10%);
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-padding: 8;
 }
 
 .mfx-button:pressed {
     -fx-background-color: -fx-btn-base-pressed;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-padding: 8;
 }
 
 .mfx-button:focused {
     -fx-background-color: -fx-btn-base;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-padding: 8;
 }
 
 .mfx-button.jfx-button {
     -fx-background-color: -fx-primary;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: derive(-fx-primary, -10%);
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
     -fx-text-fill: -fx-text-inverse;
     -fx-font-size: 14px;
     -fx-padding: 8;
@@ -541,9 +541,9 @@
 .mfx-text-field {
     -mfx-main: -fx-surface;
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-surface;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .mfx-text-field:readonly,
@@ -566,7 +566,7 @@
 .mfx-text-field:focus-within {
     -fx-border-color: -fx-border-focus;
     -fx-border-width: 2;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 /* Ensure container itself does not draw a separate focus halo/effect */
@@ -621,9 +621,9 @@
 .mfx-password-field {
     -mfx-main: -fx-surface;
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-surface;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .mfx-password-field .password-field {
@@ -640,7 +640,7 @@
 .mfx-password-field:focus-within {
     -fx-border-color: -fx-border-focus;
     -fx-border-width: 2;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 /* Ensure container itself does not draw a separate focus halo/effect */
@@ -676,15 +676,15 @@
    ======================================== */
 .mfx-list-view {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .mfx-list-view .virtual-flow {
     -fx-background-color: transparent;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
 }
 
 .mfx-list-view .list-cell {
@@ -695,18 +695,18 @@
 
 .mfx-list-view .list-cell:selected {
     -fx-background-color: -fx-primary;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-text-fill: -fx-text-inverse;
 }
 
 .mfx-list-view .list-cell:hover {
     -fx-background-color: -fx-surface-hover;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
 }
 
 .mfx-list-view .list-cell:focused {
     -fx-background-color: derive(-fx-primary, 20%);
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-text-fill: -fx-text-primary;
 }
 
@@ -742,10 +742,10 @@
    ======================================== */
 .mfx-table-view {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .mfx-table-view .column-header {
@@ -822,23 +822,23 @@
    ======================================== */
 .mfx-combo-box {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .mfx-combo-box:hover {
     -fx-border-color: -fx-border-focus;
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
+    -fx-background-radius: 12;
+    -fx-border-radius:12;
 }
 
 .mfx-combo-box:focused {
     -fx-border-color: -fx-border-focus;
     -fx-border-width: 2;
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
+    -fx-background-radius: 12;
+    -fx-border-radius:12;
 }
 
 .mfx-combo-box .arrow {
@@ -848,8 +848,8 @@
 .mfx-combo-box:disabled {
     -fx-background-color: -fx-surface-variant;
     -fx-border-color: -fx-border-default;
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
+    -fx-background-radius: 12;
+    -fx-border-radius:12;
 }
 
 /* ========================================
@@ -1033,8 +1033,8 @@
 .jfx-blue-number-tag {
     -fx-background-color: -fx-surface;
     -fx-font-size: 14px;
-    -fx-border-radius: 24;
-    -fx-background-radius: 24;
+    -fx-border-radius:12;
+    -fx-background-radius: 12;
     -fx-alignment: center;
     -fx-border-width: 2;
     -fx-padding: 8;
@@ -1073,16 +1073,16 @@
     -fx-background-color: -fx-surface;
     -fx-text-fill: -fx-text-primary;
     -fx-prompt-text-fill: -fx-text-secondary;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-surface;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .text-field:focused, .password-field:focused {
     -fx-border-color: -fx-border-focus;
     -fx-border-width: 2;
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
+    -fx-background-radius: 12;
+    -fx-border-radius:12;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
@@ -1094,22 +1094,22 @@
 
 .text-area {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-surface;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
     -fx-text-fill: -fx-text-primary;
 }
 
 .text-area .content {
     -fx-background-color: transparent;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
 }
 
 .text-area:focused {
     -fx-border-color: -fx-border-focus;
     -fx-border-width: 2;
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
+    -fx-background-radius: 12;
+    -fx-border-radius:12;
 }
 
 .text-area:disabled {
@@ -1122,10 +1122,10 @@
    ======================================== */
 .list-view, .tree-view {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .list-view .virtual-flow, .tree-view .virtual-flow {
@@ -1140,18 +1140,18 @@
 
 .list-view .list-cell:selected, .tree-view .tree-cell:selected {
     -fx-background-color: -fx-primary;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-text-fill: -fx-text-inverse;
 }
 
 .list-view .list-cell:hover, .tree-view .tree-cell:hover {
     -fx-background-color: -fx-surface-hover;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
 }
 
 .list-view .list-cell:focused, .tree-view .tree-cell:focused {
     -fx-background-color: derive(-fx-primary, 20%);
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
 }
 
 /* ========================================
@@ -1159,10 +1159,10 @@
    ======================================== */
 .table-view, .tree-table-view {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .table-view .column-header-background, .tree-table-view .column-header-background {
@@ -1201,10 +1201,10 @@
    ======================================== */
 .combo-box-base, .choice-box {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .combo-box-base:hover, .choice-box:hover {
@@ -1222,18 +1222,18 @@
 
 .combo-box-popup .list-view {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .date-picker {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .date-picker:focused {
@@ -1249,10 +1249,10 @@
 
 .date-picker-popup {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .date-picker-popup .month-year-pane, .date-picker-popup .calendar-grid {
@@ -1348,14 +1348,14 @@
 .toggle-button {
     -fx-background-color: -fx-btn-base;
     -fx-text-fill: -fx-text-primary;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
-.toggle-button:hover { -fx-background-color: derive(-fx-btn-base, -10%); -fx-background-radius: 24; }
-.toggle-button:pressed { -fx-background-color: -fx-btn-base-pressed; -fx-background-radius: 24; }
-.toggle-button:selected { -fx-background-color: -fx-primary; -fx-text-fill: -fx-text-inverse; -fx-background-radius: 24; }
+.toggle-button:hover { -fx-background-color: derive(-fx-btn-base, -10%); -fx-background-radius: 12; }
+.toggle-button:pressed { -fx-background-color: -fx-btn-base-pressed; -fx-background-radius: 12; }
+.toggle-button:selected { -fx-background-color: -fx-primary; -fx-text-fill: -fx-text-inverse; -fx-background-radius: 12; }
 
 /* ========================================
    JAVAFX STANDARD CONTROLS — TABS & PANELS
@@ -1370,9 +1370,9 @@
 
 .tab-pane .tab {
     -fx-background-color: -fx-surface-variant;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .tab-pane .tab:hover { -fx-background-color: derive(-fx-surface-variant, -5%); }
@@ -1386,16 +1386,16 @@
 
 .titled-pane > .title {
     -fx-background-color: -fx-surface-variant;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .titled-pane:expanded > .content {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .accordion { -fx-background-color: transparent; }
@@ -1450,10 +1450,10 @@
    ======================================== */
 .spinner {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 
 .spinner .increment-arrow-button, .spinner .decrement-arrow-button {
@@ -1466,7 +1466,7 @@
 .pagination .control-box { -fx-background-color: transparent; }
 .pagination .number-button {
     -fx-background-color: -fx-surface-variant;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-text-fill: -fx-text-primary;
 }
 .pagination .number-button:hover { -fx-background-color: derive(-fx-surface-variant, -5%); }
@@ -1509,10 +1509,10 @@
    ======================================== */
 .color-picker {
     -fx-background-color: -fx-surface;
-    -fx-background-radius: 24;
+    -fx-background-radius: 12;
     -fx-border-color: -fx-border-default;
     -fx-border-width: 1;
-    -fx-border-radius: 24;
+    -fx-border-radius:12;
 }
 .color-picker:hover { -fx-border-color: -fx-border-focus; }
 .color-picker:focused { -fx-border-color: -fx-border-focus; -fx-border-width: 2; }
