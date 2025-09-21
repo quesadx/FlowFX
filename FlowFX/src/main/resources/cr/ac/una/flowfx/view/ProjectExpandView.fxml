@@ -500,14 +500,14 @@
                            <children>
                               <HBox alignment="CENTER" spacing="12.0">
                                  <children>
-                                    <MFXCircleToggleNode fx:id="tgActivityDetailStatusSuspended" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityDetailStatusSuspended" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Detenido" textPosition="TOP" HBox.hgrow="ALWAYS">
+                                    <MFXCircleToggleNode fx:id="tgActivityDetailStatusSuspended" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityDetailStatusSuspended" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Detenida" textPosition="TOP" HBox.hgrow="ALWAYS">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="ActivityDetailStatusGroup" />
                                        </toggleGroup>
                                     </MFXCircleToggleNode>
-                                    <MFXCircleToggleNode fx:id="tgActivityDetailStatusCompleted" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityDetailStatusCompleted" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Completado" textPosition="TOP" toggleGroup="$ActivityDetailStatusGroup" HBox.hgrow="ALWAYS" />
                                     <MFXCircleToggleNode fx:id="tgActivityDetailStatusPending" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityDetailStatusPending" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Pendiente" textPosition="TOP" toggleGroup="$ActivityDetailStatusGroup" HBox.hgrow="ALWAYS" />
                                     <MFXCircleToggleNode fx:id="tgActivityDetailStatusRunning" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityDetailStatusRunning" prefHeight="50.0" prefWidth="50.0" size="16.0" text="En proceso" textPosition="TOP" toggleGroup="$ActivityDetailStatusGroup" />
+                                    <MFXCircleToggleNode fx:id="tgActivityDetailStatusCompleted" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityDetailStatusCompleted" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Finalizada" textPosition="TOP" toggleGroup="$ActivityDetailStatusGroup" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -668,7 +668,7 @@
                                                       <ToggleGroup fx:id="ActivityCreateStatusGroup" />
                                                    </toggleGroup>
                                                 </MFXCircleToggleNode>
-                                                <MFXCircleToggleNode fx:id="tgActivityCreateStatusCompleted" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityCreateStatusCompleted" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Completado" textPosition="TOP" toggleGroup="$ActivityCreateStatusGroup" HBox.hgrow="ALWAYS" />
+                                                <MFXCircleToggleNode fx:id="tgActivityCreateStatusCompleted" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityCreateStatusCompleted" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Finalizada" textPosition="TOP" toggleGroup="$ActivityCreateStatusGroup" HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" spacing="12.0">

@@ -70,9 +70,14 @@ public class PersonExpandController
 
     private final PersonViewModel vm = new PersonViewModel();
     private boolean syncingIdText = false;
+    @FXML
+    private MFXButton btnCancelChanges;
+    @FXML
+    private MFXButton btnConfirmChanges;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("FXML initialize(URL, ResourceBundle) invoked for PersonExpandController");
         // No-op for FXMLLoader-based initialization; kept for compatibility.
         LOGGER.fine(
             "FXML initialize(URL, ResourceBundle) invoked for PersonExpandController"
@@ -180,5 +185,13 @@ public class PersonExpandController
         FlowController.getInstance().goView("PersonSignUpView");
         Object nav = AppContext.getInstance().get("navigationBar");
         if (nav instanceof VBox) ((VBox) nav).setDisable(false);
+    }
+
+    @FXML
+    private void onActionCancelChanges(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionConfirmUpdates(ActionEvent event) {
     }
 }

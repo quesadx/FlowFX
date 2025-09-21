@@ -57,6 +57,7 @@ public class PersonInformationController
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("PersonInformationController initialized");
         initialize();
     }
 

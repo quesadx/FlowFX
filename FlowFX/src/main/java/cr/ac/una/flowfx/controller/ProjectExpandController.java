@@ -321,7 +321,7 @@ public class ProjectExpandController extends Controller implements Initializable
         if (tgActivityDetailStatusPending != null) {
             tgActivityDetailStatusPending.setUserData("P");
             tgActivityDetailStatusRunning.setUserData("R");
-            tgActivityDetailStatusSuspended.setUserData("S");
+            tgActivityDetailStatusSuspended.setUserData("D");
             tgActivityDetailStatusCompleted.setUserData("C");
         }
         
@@ -329,7 +329,7 @@ public class ProjectExpandController extends Controller implements Initializable
         if (tgActivityCreateStatusPending != null) {
             tgActivityCreateStatusPending.setUserData("P");
             tgActivityCreateStatusRunning.setUserData("R");
-            tgActivityCreateStatusSuspended.setUserData("S");
+            tgActivityCreateStatusSuspended.setUserData("D");
             tgActivityCreateStatusCompleted.setUserData("C");
             
             // Set default selection for activity creation (Pending)
@@ -1086,7 +1086,7 @@ public class ProjectExpandController extends Controller implements Initializable
         return switch (code.trim().toUpperCase()) {
             case "P" -> "Planificada";
             case "R" -> "En curso";
-            case "S" -> "Suspendida";
+            case "D" -> "Detenida";
             case "C" -> "Finalizada";
             default -> code.trim();
         };
