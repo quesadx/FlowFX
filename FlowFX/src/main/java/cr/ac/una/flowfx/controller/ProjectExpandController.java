@@ -43,6 +43,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 /**
  * Controller for the Project Expand view providing comprehensive project management functionality.
@@ -494,6 +495,29 @@ public class ProjectExpandController extends Controller implements Initializable
             PersonLabelUtil::resolvePersonNameSync,
             ProjectExpandController::mapStatusToSpanish
         );
+    }
+
+    @FXML
+    private void onActionExpandObservations(ActionEvent event) {
+        LOGGER.info("Expanding observations view for project: " + vm.getName());
+        
+        try {
+            // Ensure current project is set in context
+            ProjectDTO projectDto = vm.toDTO();
+            AppContext.getInstance().set("currentProject", projectDto);
+            
+            // Navigate to observations view
+            FlowController.getInstance().goView("ProjectObservationsView");
+            
+            LOGGER.info("Successfully navigated to ProjectObservationsView");
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Error navigating to observations view", ex);
+            new cr.ac.una.flowfx.util.Mensaje().show(
+                javafx.scene.control.Alert.AlertType.ERROR,
+                "Error",
+                "Error al abrir las observaciones: " + ex.getMessage()
+            );
+        }
     }
 
     @FXML

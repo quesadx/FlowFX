@@ -244,6 +244,18 @@
                                                 </HBox>
                                              </children>
                                           </VBox>
+                                          <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionExpandObservations" styleClass="jfx-button" text="Observaciones">
+                                             <tooltip>
+                                                <Tooltip text="Crear nueva actividad" />
+                                             </tooltip>
+                                             <graphic>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/lucide--book-open-text.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </MFXButton>
                                        </children></VBox>
                                     <Separator orientation="VERTICAL" visible="false">
                                        <padding>

@@ -21,6 +21,8 @@ import javafx.beans.property.StringProperty;
 public class ProjectTrackingViewModel {
 
     private final LongProperty id = new SimpleLongProperty();
+    private final LongProperty projectId = new SimpleLongProperty();
+    private final LongProperty createdBy = new SimpleLongProperty();
     private final StringProperty observations = new SimpleStringProperty();
     private final ObjectProperty<Date> trackingDate =
         new SimpleObjectProperty<>();
@@ -43,6 +45,8 @@ public class ProjectTrackingViewModel {
     public ProjectTrackingViewModel(ProjectTrackingDTO dto) {
         if (dto != null) {
             setId(dto.getId() == null ? 0L : dto.getId());
+            setProjectId(dto.getProjectId() == null ? 0L : dto.getProjectId());
+            setCreatedBy(dto.getCreatedBy() == null ? 0L : dto.getCreatedBy());
             setObservations(dto.getObservations());
             setTrackingDate(dto.getTrackingDate());
             setProgressPercentage(
@@ -62,6 +66,8 @@ public class ProjectTrackingViewModel {
     public ProjectTrackingDTO toDTO() {
         ProjectTrackingDTO dto = new ProjectTrackingDTO();
         dto.setId(getId() == 0L ? null : getId());
+        dto.setProjectId(getProjectId() == 0L ? null : getProjectId());
+        dto.setCreatedBy(getCreatedBy() == 0L ? null : getCreatedBy());
         dto.setObservations(getObservations());
         dto.setTrackingDate(getTrackingDate());
         dto.setProgressPercentage(getProgressPercentage());
@@ -127,6 +133,30 @@ public class ProjectTrackingViewModel {
 
     public ObjectProperty<Date> createdAtProperty() {
         return createdAt;
+    }
+
+    public long getProjectId() {
+        return projectId.get();
+    }
+
+    public void setProjectId(long value) {
+        projectId.set(value);
+    }
+
+    public LongProperty projectIdProperty() {
+        return projectId;
+    }
+
+    public long getCreatedBy() {
+        return createdBy.get();
+    }
+
+    public void setCreatedBy(long value) {
+        createdBy.set(value);
+    }
+
+    public LongProperty createdByProperty() {
+        return createdBy;
     }
 
     @Override

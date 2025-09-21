@@ -376,4 +376,142 @@ public class ProjectTrackingService {
 
         return null;
     }
+
+    /**
+     * Creates a new project tracking entry.
+     *
+     * @param dto the tracking DTO to create (required)
+     * @return a Respuesta with the created tracking or an error
+     */
+    public Respuesta create(ProjectTrackingDTO dto) {
+        try {
+            if (dto == null) {
+                return new Respuesta(
+                    false,
+                    "The parameter 'tracking' is required.",
+                    "tracking.create.null"
+                );
+            }
+            
+            LOG.fine("Creating project tracking for project: " + dto.getProjectId());
+            
+            cr.ac.una.flowfx.ws.ProjectTrackingDTO wsDto = toWs(dto);
+            cr.ac.una.flowfx.ws.Respuesta wsResp = port.createProjectTracking(wsDto);
+            
+            Respuesta r = mapRespuesta(wsResp);
+            if (Boolean.TRUE.equals(r.getEstado())) {
+                fillSingleFromMensajeInterno(r);
+            }
+            return r;
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error creating project tracking", ex);
+            return new Respuesta(
+                false,
+                "Error creating project tracking.",
+                "tracking.create " + ex.getMessage()
+            );
+        }
+    }
+
+    /**
+     * Updates an existing project tracking entry.
+     *
+     * @param dto the tracking DTO to update (required, must contain id)
+     * @return a Respuesta with the updated tracking or an error
+     */
+    public Respuesta update(ProjectTrackingDTO dto) {
+        try {
+            if (dto == null || dto.getId() == null) {
+                return new Respuesta(
+                    false,
+                    "The tracking and its 'id' are required.",
+                    "tracking.update.null"
+                );
+            }
+            
+            LOG.fine("Updating project tracking ID: " + dto.getId());
+            
+            cr.ac.una.flowfx.ws.ProjectTrackingDTO wsDto = toWs(dto);
+            cr.ac.una.flowfx.ws.Respuesta wsResp = port.updateProjectTracking(wsDto);
+            
+            Respuesta r = mapRespuesta(wsResp);
+            if (Boolean.TRUE.equals(r.getEstado())) {
+                fillSingleFromMensajeInterno(r);
+            }
+            return r;
+        } catch (Exception ex) {
+            LOG.log(
+                Level.SEVERE,
+                "Error updating tracking [" + (dto != null ? dto.getId() : null) + "]",
+                ex
+            );
+            return new Respuesta(
+                false,
+                "Error updating project tracking.",
+                "tracking.update " + ex.getMessage()
+            );
+        }
+    }
+
+    // Helper methods
+
+    /**
+     * Converts client DTO to web service DTO.
+     */
+    private cr.ac.una.flowfx.ws.ProjectTrackingDTO toWs(ProjectTrackingDTO dto) {
+        if (dto == null) return null;
+        
+        cr.ac.una.flowfx.ws.ProjectTrackingDTO wsDto = new cr.ac.una.flowfx.ws.ProjectTrackingDTO();
+        wsDto.setId(dto.getId());
+        wsDto.setProjectId(dto.getProjectId());
+        wsDto.setCreatedBy(dto.getCreatedBy());
+        wsDto.setObservations(dto.getObservations());
+        
+        // Convert dates using XML calendar
+        if (dto.getTrackingDate() != null) {
+            wsDto.setTrackingDate(toXmlDate(dto.getTrackingDate()));
+        }
+        if (dto.getCreatedAt() != null) {
+            wsDto.setCreatedAt(toXmlDate(dto.getCreatedAt()));
+        }
+        
+        wsDto.setProgressPercentage(dto.getProgressPercentage() != null ? dto.getProgressPercentage().doubleValue() : null);
+        
+        return wsDto;
+    }
+
+    /**
+     * Converts Date to XMLGregorianCalendar for web service compatibility.
+     */
+    private javax.xml.datatype.XMLGregorianCalendar toXmlDate(Date date) {
+        if (date == null) return null;
+        try {
+            java.util.GregorianCalendar gc = new java.util.GregorianCalendar();
+            gc.setTime(date);
+            return javax.xml.datatype.DatatypeFactory
+                .newInstance()
+                .newXMLGregorianCalendar(gc);
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "Error converting Date to XMLGregorianCalendar", e);
+            return null;
+        }
+    }
+
+    /**
+     * Fills single entity result from mensajeInterno JSON.
+     */
+    private void fillSingleFromMensajeInterno(Respuesta r) {
+        String mi = r.getMensajeInterno();
+        if (mi == null || mi.isBlank()) return;
+        
+        try (JsonReader jr = Json.createReader(new StringReader(mi))) {
+            JsonObject obj = jr.readObject();
+            ProjectTrackingDTO dto = fromJsonTracking(obj);
+            if (dto != null) {
+                r.setResultado(ENTITY_KEY, dto);
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.WARNING, "Error parsing single tracking from mensajeInterno", ex);
+        }
+    }
 }
