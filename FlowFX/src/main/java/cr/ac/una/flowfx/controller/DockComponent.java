@@ -103,19 +103,28 @@ public class DockComponent extends StackPane {
      * Configures the admin button visibility based on current user's admin status.
      */
     private void configureAdminButtonVisibility(Object user) {
-        if (btnAdmin == null) return;
+        if (btnAdmin == null) {
+            LOGGER.warning("btnAdmin is null - cannot configure admin button visibility");
+            return;
+        }
+        
+        LOGGER.info("Configuring admin button visibility. User object: " + 
+            (user != null ? user.getClass().getSimpleName() : "null"));
         
         boolean isAdmin = false;
         if (user instanceof cr.ac.una.flowfx.model.PersonDTO person) {
             Character adminFlag = person.getIsAdmin();
             isAdmin = adminFlag != null && Character.toUpperCase(adminFlag) == 'Y';
-            LOGGER.fine("User admin status: " + isAdmin + " (flag: " + adminFlag + ")");
+            LOGGER.info("User admin status: " + isAdmin + " (flag: " + adminFlag + ") for user ID: " + person.getId());
+            LOGGER.info("User details: " + person.getFirstName() + " " + person.getLastName());
+        } else {
+            LOGGER.warning("User object is not PersonDTO: " + (user != null ? user.toString() : "null"));
         }
         
         btnAdmin.setVisible(isAdmin);
         btnAdmin.setManaged(isAdmin); // Also control layout participation
         
-        LOGGER.fine("Admin button configured: visible=" + isAdmin);
+        LOGGER.info("Admin button configured: visible=" + isAdmin + ", managed=" + isAdmin);
     }
 
     /**

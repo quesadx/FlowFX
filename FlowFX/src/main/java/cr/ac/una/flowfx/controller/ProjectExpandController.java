@@ -570,14 +570,8 @@ public class ProjectExpandController extends Controller implements Initializable
         AppContext.getInstance().set("personExpand.returnView", "ProjectExpandView");
         AppContext.getInstance().set("personExpand.returnProject", vm.toDTO());
         
-        try {
-            FlowController.getInstance().goView("PersonExpandView");
-        } finally {
-            // Clean up context (except returnProject which PersonExpandView needs)
-            AppContext.getInstance().delete("personExpand.viewOnly");
-            AppContext.getInstance().delete("personExpand.roleLabel");
-            AppContext.getInstance().delete("personExpand.returnView");
-        }
+        LOGGER.info("Opening PersonExpandView with context: returnView=ProjectExpandView, roleLabel=" + roleLabel);
+        FlowController.getInstance().goView("PersonExpandView");
     }
 
     // Status toggle handlers (kept for FXML compatibility)

@@ -54,6 +54,9 @@ public final class DockOverlayManager {
         StackPane.setAlignment(dock, Pos.BOTTOM_CENTER);
         StackPane.setMargin(dock, new Insets(0, 0, DOCK_BOTTOM_MARGIN, 0));
 
+        // Store dock component in context for later access
+        AppContext.getInstance().set("dockComponent", dock);
+
         overlayRoot.minWidthProperty().bind(rootStack.widthProperty());
         overlayRoot.minHeightProperty().bind(rootStack.heightProperty());
         overlayRoot.prefWidthProperty().bind(rootStack.widthProperty());

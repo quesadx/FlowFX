@@ -206,6 +206,12 @@ public class MainController extends Controller implements Initializable {
         if (dockBarLogout instanceof javafx.scene.layout.HBox) {
             ((javafx.scene.layout.HBox) dockBarLogout).setDisable(true);
         }
+        
+        // Update dock component state (hide admin button)
+        Object dockComponent = AppContext.getInstance().get("dockComponent");
+        if (dockComponent instanceof cr.ac.una.flowfx.controller.DockComponent) {
+            ((cr.ac.una.flowfx.controller.DockComponent) dockComponent).updateDockState();
+        }
 
         AnimationManager.showPopup(vbLogInDisplay, vbCover);
         refreshDashboard();
@@ -266,6 +272,12 @@ public class MainController extends Controller implements Initializable {
             Object dockBarLogin = AppContext.getInstance().get("dockBar");
             if (dockBarLogin instanceof javafx.scene.layout.HBox) {
                 ((javafx.scene.layout.HBox) dockBarLogin).setDisable(false);
+            }
+            
+            // Update dock component state (including admin button visibility)
+            Object dockComponent = AppContext.getInstance().get("dockComponent");
+            if (dockComponent instanceof cr.ac.una.flowfx.controller.DockComponent) {
+                ((cr.ac.una.flowfx.controller.DockComponent) dockComponent).updateDockState();
             }
 
             AnimationManager.hidePopup(vbLogInDisplay, vbCover);

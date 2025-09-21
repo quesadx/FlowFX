@@ -316,21 +316,27 @@ public class PersonExpandController
         String returnView = (String) AppContext.getInstance().get("personExpand.returnView");
         Object returnProject = AppContext.getInstance().get("personExpand.returnProject");
         
+        LOGGER.info("Return navigation: returnView=" + returnView + ", returnProject=" + 
+            (returnProject != null ? "present" : "null"));
+        
         if ("ProjectExpandView".equals(returnView) && returnProject instanceof ProjectDTO) {
             // Return to ProjectExpandView
             AppContext.getInstance().set("currentProject", returnProject);
             FlowController.getInstance().goView("ProjectExpandView");
-            LOGGER.fine("Returning to ProjectExpandView");
+            LOGGER.info("Returning to ProjectExpandView");
         } else {
             // Default return to PersonSignUpView
             FlowController.getInstance().goView("PersonSignUpView");
             Object nav = AppContext.getInstance().get("navigationBar");
             if (nav instanceof VBox) ((VBox) nav).setDisable(false);
-            LOGGER.fine("Returning to PersonSignUpView");
+            LOGGER.info("Returning to PersonSignUpView (default)");
         }
         
-        // Clean up context
+        // Clean up context after navigation
         AppContext.getInstance().delete("personExpand.returnProject");
+        AppContext.getInstance().delete("personExpand.returnView");
+        AppContext.getInstance().delete("personExpand.viewOnly");
+        AppContext.getInstance().delete("personExpand.roleLabel");
     }
 
     @FXML
