@@ -102,7 +102,7 @@ public class SearchResultsController extends Controller implements Initializable
                 }
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Error loading search data", ex);
+            LOGGER.log(Level.WARNING, "Error cargando datos de búsqueda", ex);
         }
     }
 
@@ -134,11 +134,11 @@ public class SearchResultsController extends Controller implements Initializable
                 
                 // Navigate to project expand view
                 FlowController.getInstance().goView("ProjectExpandView");
-                
-                LOGGER.log(Level.INFO, "Navigated to project: " + selectedResult.getProject().getName());
+
+                LOGGER.log(Level.INFO, "Se navegó a: " + selectedResult.getProject().getName());
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error handling result selection", ex);
+            LOGGER.log(Level.SEVERE, "Error manejando la selección de resultados", ex);
         }
     }
 
@@ -165,7 +165,7 @@ public class SearchResultsController extends Controller implements Initializable
                 stage.close();
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Error closing search results window", ex);
+            LOGGER.log(Level.WARNING, "Error cerrando la ventana de resultados de búsqueda", ex);
         }
     }
 

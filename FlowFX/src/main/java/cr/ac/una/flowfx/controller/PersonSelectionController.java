@@ -132,7 +132,7 @@ public class PersonSelectionController
         if (!Boolean.TRUE.equals(r.getEstado())) {
             LOGGER.log(
                 Level.WARNING,
-                "Failed to load persons from service. Respuesta estado={0}, mensaje={1}",
+                "Error al cargar personas desde el service. Respuesta estado={0}, mensaje={1}",
                 new Object[] {
                     r == null ? null : r.getEstado(),
                     r == null ? null : r.getMensaje(),

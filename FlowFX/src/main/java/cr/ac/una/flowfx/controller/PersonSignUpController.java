@@ -175,9 +175,9 @@ public class PersonSignUpController extends Controller implements Initializable 
         if (Boolean.TRUE.equals(r.getEstado())) {
             new Mensaje().showModal(
                 Alert.AlertType.INFORMATION,
-                "Registration",
+                "Registro",
                 root.getScene().getWindow(),
-                "User registered successfully."
+                "Persona registrada exitosamente."
             );
             AnimationManager.hidePopup(vbSignUpDisplay, vbCover);
             clearSignUpFields();
@@ -185,14 +185,14 @@ public class PersonSignUpController extends Controller implements Initializable 
         } else {
             LOGGER.log(
                 Level.WARNING,
-                "Person signup failed. mensaje={0}, mensajeInterno={1}",
+                "P. mensaje={0}, mensajeInterno={1}",
                 new Object[] { r == null ? null : r.getMensaje(), r == null ? null : r.getMensajeInterno() }
             );
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Registration",
+                "Registro",
                 root.getScene().getWindow(),
-                r == null ? "Unknown error." : r.getMensaje()
+                r == null ? "Error misterioso." : r.getMensaje()
             );
         }
     }
@@ -211,9 +211,9 @@ public class PersonSignUpController extends Controller implements Initializable 
             if (id == null || firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()) {
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
-                    "SignUp",
+                    "Registro",
                     root.getScene().getWindow(),
-                    "Please complete all required fields (ID, First name, Last name, Email)."
+                    "Por favor complete todos los campos requeridos (ID, Nombre, Apellido, Correo electrónico)."
                 );
                 return null;
             }
@@ -227,19 +227,19 @@ public class PersonSignUpController extends Controller implements Initializable 
             } else {
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
-                    "SignUp",
+                    "Registro",
                     root.getScene().getWindow(),
-                    "Either provide both Username and Password, or leave both empty."
+                    "Proporcione tanto el Nombre de usuario como la Contraseña, o deje ambos en blanco."
                 );
                 return null;
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Error validating signup data", e);
+            LOGGER.log(Level.WARNING, "Error validando datos", e);
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "SignUp",
+                "Registro",
                 root.getScene().getWindow(),
-                "Error validating data: " + (e == null ? "?" : e.getMessage())
+                "Error validando datos: " + (e == null ? "?" : e.getMessage())
             );
             return null;
         }

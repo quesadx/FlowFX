@@ -212,7 +212,7 @@ public class ProjectManagementController
                 false
             );
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error showing search results", ex);
+            LOGGER.log(Level.SEVERE, "Error mostrando resultados de búsqueda", ex);
             new Mensaje().showModal(
                 javafx.scene.control.Alert.AlertType.ERROR,
                 "Búsqueda",
@@ -304,7 +304,7 @@ public class ProjectManagementController
             );
             LOGGER.log(
                 Level.WARNING,
-                "Project creation failed. mensaje={0}, mensajeInterno={1}",
+                "Creacion de proyecto fallida. mensaje={0}, mensajeInterno={1}",
                 new Object[] {
                     response.getMensaje(),
                     response.getMensajeInterno(),
@@ -533,7 +533,7 @@ public class ProjectManagementController
                         javafx.scene.control.Alert.AlertType.INFORMATION,
                         "Eliminar Proyecto",
                         root.getScene().getWindow(),
-                        "El proyecto ha sido eliminado correctamente."
+                        "El proyecto ha sido eliminado correctamente. GGWP."
                     );
                     
                     // Reload projects to refresh the view
@@ -558,7 +558,7 @@ public class ProjectManagementController
                 javafx.scene.control.Alert.AlertType.ERROR,
                 "Eliminar Proyecto",
                 root.getScene().getWindow(),
-                "Error inesperado al eliminar el proyecto."
+                "Error inesperado al eliminar el proyecto </3."
             );
         }
     }
@@ -586,8 +586,8 @@ public class ProjectManagementController
                 }
             }
         });
-        
-        LOGGER.log(Level.INFO, "Delete mode " + (deleteMode ? "enabled" : "disabled"));
+
+        LOGGER.log(Level.INFO, "Modo de eliminació super poderoso " + (deleteMode ? "activado" : "desactivado"));
     }
 
     @FXML
