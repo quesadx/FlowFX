@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
@@ -29,6 +30,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
+
+import cr.ac.una.flowfx.util.Mensaje;
 
 /**
  * Controller for the Creative Zone view, providing freehand drawing on a
@@ -79,7 +82,6 @@ public class CreativeZoneController extends Controller implements Initializable 
 
     @Override
     public void initialize() {
-        // No-op required by base Controller
     }
 
     @FXML
@@ -95,6 +97,7 @@ public class CreativeZoneController extends Controller implements Initializable 
             if (file != null) {
                 ImageIO.write(toBufferedImage(image), "png", file);
                 LOGGER.log(Level.INFO, "Sketch guardado en {0}", file.getAbsolutePath());
+
             }
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Error al intentar guardar sketch", ex);
@@ -192,19 +195,46 @@ public class CreativeZoneController extends Controller implements Initializable 
     }
 
     private void setupBindings() {
-        // Bind canvas size to anchoring pane to be responsive
-        cvMainCanvas.widthProperty().bind(apMainCanvasAnchoring.widthProperty());
-        cvMainCanvas.heightProperty().bind(apMainCanvasAnchoring.heightProperty());
-
-        // When the canvas size changes (due to binding), redraw last snapshot to preserve content
-        cvMainCanvas.widthProperty().addListener(obs -> preserveOnResize());
-        cvMainCanvas.heightProperty().addListener(obs -> preserveOnResize());
+        // Remove any existing bindings first
+        cvMainCanvas.widthProperty().unbind();
+        cvMainCanvas.heightProperty().unbind();
+        
+        // Set initial size to match the anchoring pane
+        updateCanvasSize();
+        
+        // Listen for anchoring pane size changes and update canvas accordingly
+        apMainCanvasAnchoring.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+            updateCanvasSize();
+            preserveOnResize();
+        });
+        
+        apMainCanvasAnchoring.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+            updateCanvasSize();
+            preserveOnResize();
+        });
+    }
+    
+    /**
+     * Updates canvas size to match the anchoring pane dimensions.
+     * This ensures proper resizing in both directions (growing and shrinking).
+     */
+    private void updateCanvasSize() {
+        double newWidth = apMainCanvasAnchoring.getWidth();
+        double newHeight = apMainCanvasAnchoring.getHeight();
+        
+        // Only update if the size actually changed to avoid unnecessary redraws
+        if (Math.abs(cvMainCanvas.getWidth() - newWidth) > 0.1 || 
+            Math.abs(cvMainCanvas.getHeight() - newHeight) > 0.1) {
+            cvMainCanvas.setWidth(newWidth);
+            cvMainCanvas.setHeight(newHeight);
+        }
     }
 
     private void preserveOnResize() {
         // Reapply background and redraw last snapshot in the top-left corner
         fillBackground(DEFAULT_BACKGROUND);
         if (lastSnapshot != null) {
+            // Preserve the drawing content by redrawing the snapshot
             gc.drawImage(lastSnapshot, 0, 0);
         }
     }

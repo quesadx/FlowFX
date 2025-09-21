@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -70,6 +71,50 @@ public class FlowController {
             createInstance();
         }
         return INSTANCE;
+    }
+
+    /**
+     * Configures the application icon and title for a stage.
+     * 
+     * @param stage the stage to configure
+     */
+    private void configureStageIconAndTitle(Stage stage) {
+        if (stage == null) return;
+        
+        try {
+            // Set application title
+            stage.setTitle("FlowFX");
+            
+            // Set application icon using the flower icon - try multiple path variations
+            String[] iconPaths = {
+                "resources/icons/lucide--flower.png",
+                "/cr/ac/una/flowfx/resources/icons/lucide--flower.png",
+                "cr/ac/una/flowfx/resources/icons/lucide--flower.png"
+            };
+            
+            boolean iconLoaded = false;
+            for (String iconPath : iconPaths) {
+                try {
+                    var iconUrl = App.class.getResource(iconPath);
+                    if (iconUrl != null) {
+                        Image icon = new Image(iconUrl.toExternalForm());
+                        stage.getIcons().clear();
+                        stage.getIcons().add(icon);
+                        LOGGER.fine("Application icon loaded successfully from: " + iconPath);
+                        iconLoaded = true;
+                        break;
+                    }
+                } catch (Exception iconEx) {
+                    LOGGER.fine("Failed to load icon from path: " + iconPath);
+                }
+            }
+            
+            if (!iconLoaded) {
+                LOGGER.warning("Application icon could not be loaded from any of the attempted paths");
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Failed to configure application icon and title", ex);
+        }
     }
 
     @Override
@@ -142,6 +187,9 @@ public class FlowController {
             rootStack.getChildren().add(contentRoot);
             Scene scene = new Scene(rootStack);
             mainStage.setScene(scene);
+
+            // Configure application icon and title
+            configureStageIconAndTitle(mainStage);
 
             MFXThemeManager.addOn(scene, Themes.DEFAULT, Themes.LEGACY);
 
@@ -329,7 +377,14 @@ public class FlowController {
         controller.initialize();
 
         Stage stage = new Stage();
-        stage.setTitle(controller.getNombreVista());
+        
+        // Configure application icon and title
+        configureStageIconAndTitle(stage);
+        // Override title with controller-specific title if available
+        if (controller.getNombreVista() != null && !controller.getNombreVista().trim().isEmpty()) {
+            stage.setTitle("FlowFX - " + controller.getNombreVista());
+        }
+        
         stage.setOnHidden((WindowEvent event) -> {
             if (
                 controller.getStage() != null &&
@@ -394,7 +449,14 @@ public class FlowController {
         controller.initialize();
 
         Stage stage = new Stage();
-        stage.setTitle(controller.getNombreVista());
+        
+        // Configure application icon and title
+        configureStageIconAndTitle(stage);
+        // Override title with controller-specific title if available
+        if (controller.getNombreVista() != null && !controller.getNombreVista().trim().isEmpty()) {
+            stage.setTitle("FlowFX - " + controller.getNombreVista());
+        }
+        
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(resizable);
         stage.setOnHidden((WindowEvent event) -> {

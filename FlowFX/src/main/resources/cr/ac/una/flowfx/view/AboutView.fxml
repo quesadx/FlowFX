@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" fx:id="root" maxWidth="300.0" prefHeight="228.0" prefWidth="300.0" styleClass="filler" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.AboutController">
+<AnchorPane id="AnchorPane" fx:id="root" maxWidth="764.0" prefHeight="378.0" prefWidth="681.0" styleClass="filler" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.AboutController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="9.0" layoutY="9.0" spacing="4.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -25,13 +25,25 @@
                   </MFXButton>
                </children>
             </HBox>
-            <VBox prefHeight="180.0" prefWidth="292.0" spacing="12.0" styleClass="container-sub" VBox.vgrow="ALWAYS">
+            <VBox alignment="CENTER" prefHeight="180.0" prefWidth="292.0" spacing="12.0" styleClass="container-sub" VBox.vgrow="ALWAYS">
                <children>
-                  <Label text="Proyecto FlowFX desarrollado por Matteo Vargas, Kristel Montoya y Kendal Badilla. Repositorio: https://github.com/quesadx/FlowFX. Ofrece gestión integral de proyectos, trazabilidad de actividades y notificaciones por correo, diseñado para integración fácil con bases de datos y servicios web empresariales." wrapText="true" VBox.vgrow="ALWAYS">
+                  <Label styleClass="jfx-title-small" text="flowfx" wrapText="true" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets left="4.0" />
                      </VBox.margin>
                   </Label>
+                  <Label styleClass="jfx-title-tiny" text="Autores:" wrapText="true" />
+                  <Label text="Matteo Vargas, Kristel Montoya y Kendal Badilla" wrapText="true" />
+                  <Label styleClass="jfx-title-tiny" text="Descripcion:" wrapText="true" />
+                  <Label text="FlowFX es una plataforma de gestión integral de proyectos que incluye:" wrapText="true" />
+                  <VBox>
+                     <children>
+                        <Label text="- Trazabilidad de actividades: seguimiento detallado de tareas y avances." wrapText="true" />
+                        <Label text="- Notificaciones por correo: alertas automáticas para mantener informados a los equipos." wrapText="true" />
+                        <Label text="- Integración sencilla con bases de datos y servicios web empresariales." wrapText="true" />
+                     </children>
+                  </VBox>
+                  <Label text="Diseñado para optimizar la coordinación de proyectos y facilitar su adopción en entornos corporativos." wrapText="true" />
                </children>
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

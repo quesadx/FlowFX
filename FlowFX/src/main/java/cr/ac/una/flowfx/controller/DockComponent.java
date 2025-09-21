@@ -83,6 +83,7 @@ public class DockComponent extends StackPane {
         if (btnProjects != null) addHoverMagnification(btnProjects);
         if (btnAdmin != null) addHoverMagnification(btnAdmin);
         if (btnUserConfig != null) addHoverMagnification(btnUserConfig);
+        if (btnCreativeZone != null) addHoverMagnification(btnCreativeZone);
 
         // Expose the dock bar for global enable/disable and set initial state
         if (bar != null) {
