@@ -82,7 +82,7 @@
                                  <children>
                                     <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="container-sub" VBox.vgrow="ALWAYS">
                                        <children>
-                                          <Label text="Personas relacionadas" />
+                                          <Label text="Actividades globales" />
                                           <ListView fx:id="lvActivities" prefHeight="300.0" VBox.vgrow="ALWAYS" />
                                        </children>
                                     </VBox>
@@ -111,8 +111,8 @@
                                           <Insets />
                                        </VBox.margin>
                                        <children>
-                                          <Label text="No se que es" />
-                                          <PieChart fx:id="pcPersonActivities" titleSide="BOTTOM" VBox.vgrow="ALWAYS" />
+                                          <Label text="Estado global de proyectos" />
+                                          <PieChart fx:id="pcPersonActivities" legendVisible="false" titleSide="BOTTOM" VBox.vgrow="ALWAYS" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="container-sub" VBox.vgrow="ALWAYS">

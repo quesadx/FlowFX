@@ -367,27 +367,148 @@ public class MainController extends Controller implements Initializable {
         }
         tvProjects.setItems(FXCollections.observableArrayList(projects));
 
-        // Activities list: latest N activities for user
+        // Activities list: latest N activities for user with project names
         ProjectActivityService actService = new ProjectActivityService();
         Respuesta ar = actService.findRecentForUser(userDto.getId(), 20);
         List<String> items = new ArrayList<>();
         if (Boolean.TRUE.equals(ar.getEstado())) {
+            // Try both possible keys for activities data
             @SuppressWarnings("unchecked")
-            List<ProjectActivityDTO> acts = (List<
-                ProjectActivityDTO
-            >) ar.getResultado("Activities");
-            if (acts != null) {
-                for (ProjectActivityDTO a : acts) {
-                    String st = mapStatusToSpanish(a.getStatus());
-                    String label =
-                        (a.getDescription() == null
-                                ? "Actividad"
-                                : a.getDescription()) +
-                        " [" +
-                        st +
-                        "]";
-                    items.add(label);
+            List<ProjectActivityDTO> acts = (List<ProjectActivityDTO>) ar.getResultado("ProjectActivities");
+            if (acts == null) {
+                @SuppressWarnings("unchecked")
+                List<ProjectActivityDTO> activitiesFallback = (List<ProjectActivityDTO>) ar.getResultado("Activities");
+                acts = activitiesFallback;
+            }
+            
+            LOGGER.info("Dashboard: Found " + (acts != null ? acts.size() : 0) + " activities for user " + userDto.getId());
+            
+            if (acts != null && !acts.isEmpty()) {
+                // Create a map of projectId -> projectName for efficiency
+                java.util.Map<Long, String> projectNames = new java.util.HashMap<>();
+                for (ProjectDTO p : projects) {
+                    if (p.getId() != null && p.getName() != null) {
+                        projectNames.put(p.getId(), p.getName());
+                    }
                 }
+                
+                // Collect missing project IDs and fetch their names
+                java.util.Set<Long> missingProjectIds = new java.util.HashSet<>();
+                for (ProjectActivityDTO a : acts) {
+                    if (a.getProjectId() != null && !projectNames.containsKey(a.getProjectId())) {
+                        missingProjectIds.add(a.getProjectId());
+                    }
+                }
+                
+                LOGGER.info("Dashboard: Need to fetch " + missingProjectIds.size() + " additional project names");
+                
+                // Fetch missing project names
+                for (Long projectId : missingProjectIds) {
+                    Respuesta projectResp = projectService.find(projectId);
+                    if (Boolean.TRUE.equals(projectResp.getEstado())) {
+                        Object projObj = projectResp.getResultado("Project");
+                        if (projObj instanceof ProjectDTO proj && proj.getName() != null) {
+                            projectNames.put(projectId, proj.getName());
+                            LOGGER.fine("Dashboard: Resolved project name for ID " + projectId + ": " + proj.getName());
+                        }
+                    }
+                }
+                
+                for (ProjectActivityDTO a : acts) {
+                    String activityName = a.getDescription() == null
+                            ? "Actividad"
+                            : a.getDescription();
+                    String projectName = "Proyecto desconocido";
+                    
+                    // Resolve project name if projectId is available
+                    if (a.getProjectId() != null) {
+                        String resolvedName = projectNames.get(a.getProjectId());
+                        if (resolvedName != null) {
+                            projectName = resolvedName;
+                        } else {
+                            LOGGER.warning("Dashboard: No se encontró el nombre del proyecto para activity projectId=" + a.getProjectId());
+                        }
+                    } else {
+                        LOGGER.warning("Dashboard: La actividad tiene null projectId: " + a.getId());
+                    }
+                    
+                    String status = mapStatusToSpanish(a.getStatus());
+                    String label = activityName + ": " + projectName + " [" + status + "]";
+                    items.add(label);
+                    LOGGER.fine("Dashboard: Se agregó: " + label);
+                }
+            } else {
+                LOGGER.warning("Dashboard: No se encontraron actividades para el usuario " + userDto.getId());
+            }
+        } else {
+            LOGGER.warning("Dashboard: findRecentForUser fallido: " + (ar != null ? ar.getMensaje() : "respuesta null"));
+            // Fallback: If the service is failing due to backend issues, try to get activities from project activities
+            LOGGER.info("Dashboard: Intentando método alternativo para obtener actividades...");
+            try {
+                Respuesta allActivitiesResp = actService.findAll();
+                if (Boolean.TRUE.equals(allActivitiesResp.getEstado())) {
+                    @SuppressWarnings("unchecked")
+                    List<ProjectActivityDTO> allActs = (List<ProjectActivityDTO>) allActivitiesResp.getResultado("ProjectActivities");
+                    if (allActs == null) {
+                        @SuppressWarnings("unchecked")
+                        List<ProjectActivityDTO> fallbackActs = (List<ProjectActivityDTO>) allActivitiesResp.getResultado("Activities");
+                        allActs = fallbackActs;
+                    }
+                    
+                    if (allActs != null) {
+                        // Filter activities where user is responsible or creator
+                        List<ProjectActivityDTO> userActivities = allActs.stream()
+                            .filter(a -> {
+                                Long responsibleId = a.getResponsibleId();
+                                Long createdById = a.getCreatedById();
+                                return (responsibleId != null && responsibleId.equals(userDto.getId())) ||
+                                       (createdById != null && createdById.equals(userDto.getId()));
+                            })
+                            .limit(20)
+                            .toList();
+                        
+                        LOGGER.info("Dashboard: Método alternativo encontró " + userActivities.size() + " actividades");
+                        
+                        if (!userActivities.isEmpty()) {
+                            // Create project name map
+                            java.util.Map<Long, String> projectNames = new java.util.HashMap<>();
+                            for (ProjectDTO p : projects) {
+                                if (p.getId() != null && p.getName() != null) {
+                                    projectNames.put(p.getId(), p.getName());
+                                }
+                            }
+                            
+                            // Process user activities
+                            for (ProjectActivityDTO a : userActivities) {
+                                String activityName = a.getDescription() == null ? "Actividad" : a.getDescription();
+                                String projectName = "Proyecto desconocido";
+                                
+                                if (a.getProjectId() != null) {
+                                    String resolvedName = projectNames.get(a.getProjectId());
+                                    if (resolvedName != null) {
+                                        projectName = resolvedName;
+                                    } else {
+                                        // Try to fetch project name
+                                        Respuesta projectResp = projectService.find(a.getProjectId());
+                                        if (Boolean.TRUE.equals(projectResp.getEstado())) {
+                                            Object projObj = projectResp.getResultado("Project");
+                                            if (projObj instanceof ProjectDTO proj && proj.getName() != null) {
+                                                projectName = proj.getName();
+                                                projectNames.put(a.getProjectId(), proj.getName());
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                String status = mapStatusToSpanish(a.getStatus());
+                                String label = activityName + ": " + projectName + " [" + status + "]";
+                                items.add(label);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception fallbackEx) {
+                LOGGER.warning("Dashboard: Método alternativo también falló: " + fallbackEx.getMessage());
             }
         }
         lvActivities.setItems(FXCollections.observableArrayList(items));
@@ -427,13 +548,7 @@ public class MainController extends Controller implements Initializable {
         if (cntU > 0) pieData.add(new PieChart.Data("Desconocido", cntU));
         pcPersonActivities.setData(pieData);
 
-        // Stacked bar: simple per-project activity counts
-        List<Long> pids = new ArrayList<>();
-        for (ProjectDTO p : projects)
-            if (p.getId() != null) pids.add(p.getId());
-
-        Respuesta cr = actService.countByProjectIds(pids);
-
+        // Stacked bar: individual activity counts per project
         // Safely cast to a typed chart to add typed series
         @SuppressWarnings("unchecked")
         StackedBarChart<String, Number> chart = (StackedBarChart<
@@ -443,22 +558,25 @@ public class MainController extends Controller implements Initializable {
         chart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Actividades");
-        if (Boolean.TRUE.equals(cr.getEstado())) {
-            @SuppressWarnings("unchecked")
-            java.util.Map<Long, Long> counts = (java.util.Map<
-                Long,
-                Long
-            >) cr.getResultado("Counts");
-            for (ProjectDTO p : projects) {
-                long c = 0L;
-                if (
-                    counts != null &&
-                    p.getId() != null &&
-                    counts.containsKey(p.getId())
-                ) c = counts.get(p.getId());
-                series.getData().add(new XYChart.Data<>(p.getName(), c));
+        
+        // Count activities per project individually for accurate display
+        for (ProjectDTO p : projects) {
+            if (p.getId() != null && p.getName() != null) {
+                List<Long> singleProjectList = List.of(p.getId());
+                Respuesta countResponse = actService.countByProjectIds(singleProjectList);
+                long activityCount = 0L;
+                
+                if (Boolean.TRUE.equals(countResponse.getEstado())) {
+                    Object countResult = countResponse.getResultado("count");
+                    if (countResult instanceof Number num) {
+                        activityCount = num.longValue();
+                    }
+                }
+                
+                series.getData().add(new XYChart.Data<>(p.getName(), activityCount));
             }
         }
+        
         chart.getData().add(series);
     }
 
