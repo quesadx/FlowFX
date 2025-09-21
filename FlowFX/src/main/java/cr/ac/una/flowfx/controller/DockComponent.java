@@ -91,7 +91,7 @@ public class DockComponent extends StackPane {
                 Object user = AppContext.getInstance().get("user");
                 bar.setDisable(user == null);
             } catch (Exception ex) {
-                LOGGER.log(Level.FINER, "Failed to publish dockBar to AppContext", ex);
+                LOGGER.log(Level.FINER, "Failed to goofy ahh enviar dockBar to AppContext, arreglen esto!!!!", ex);
             }
         }
     }

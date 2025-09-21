@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -49,17 +50,11 @@ public class CreativeZoneController extends Controller implements Initializable 
         ERASER
     }
 
-    @FXML
-    private AnchorPane root;
-
-    @FXML
-    private AnchorPane apMainCanvasAnchoring;
-
-    @FXML
-    private Canvas cvMainCanvas;
-
-    @FXML
-    private Label lblLineWidth;
+    @FXML private AnchorPane root;
+    @FXML private AnchorPane apMainCanvasAnchoring;
+    @FXML private Canvas cvMainCanvas;
+    @FXML private Label lblLineWidth;
+    @FXML private ColorPicker cpColorPicker;
 
     private GraphicsContext gc;
     private Tool currentTool = Tool.PENCIL;
@@ -88,16 +83,16 @@ public class CreativeZoneController extends Controller implements Initializable 
         try {
             WritableImage image = cvMainCanvas.snapshot(new SnapshotParameters(), null);
             FileChooser chooser = new FileChooser();
-            chooser.setTitle("Save Sketch");
+            chooser.setTitle("Guardar sketch");
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG Image", "*.png"));
             chooser.setInitialFileName("sketch.png");
             File file = chooser.showSaveDialog(root.getScene() != null ? root.getScene().getWindow() : null);
             if (file != null) {
                 ImageIO.write(toBufferedImage(image), "png", file);
-                LOGGER.log(Level.INFO, "Sketch saved to {0}", file.getAbsolutePath());
+                LOGGER.log(Level.INFO, "Sketch guardado en {0}", file.getAbsolutePath());
             }
         } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, "Failed to save sketch", ex);
+            LOGGER.log(Level.WARNING, "Error al intentar guardar sketch", ex);
         }
     }
 
@@ -162,35 +157,6 @@ public class CreativeZoneController extends Controller implements Initializable 
         configureStrokeForCurrentTool();
     }
 
-    @FXML
-    private void onMouseClickedWhiteColor(MouseEvent event) {
-        setColor(Color.WHITE);
-    }
-
-    @FXML
-    private void onMouseClickedRedColor(MouseEvent event) {
-        setColor(Color.web("#ef4444"));
-    }
-
-    @FXML
-    private void onMouseClickedGreenColor(MouseEvent event) {
-        setColor(Color.web("#22c55e"));
-    }
-
-    @FXML
-    private void onMouseClickedBlueColor(MouseEvent event) {
-        setColor(Color.web("#3b82f6"));
-    }
-
-        @FXML
-    private void onMouseClickedYellowColor(MouseEvent event) {
-        setColor(Color.web("#fbbf24"));
-    }
-
-    @FXML
-    private void onMouseClickedBlackColor(MouseEvent event) {
-        setColor(Color.web("#000000"));
-    }
 
     @FXML
     private void onActionBtnIncreasePencilWidth(ActionEvent event) {
@@ -240,7 +206,7 @@ public class CreativeZoneController extends Controller implements Initializable 
         if (currentTool == Tool.ERASER) {
             gc.setStroke(DEFAULT_BACKGROUND);
         } else {
-            gc.setStroke(currentColor);
+            gc.setStroke(cpColorPicker.getValue());
         }
     }
 
@@ -250,6 +216,7 @@ public class CreativeZoneController extends Controller implements Initializable 
         gc.setLineWidth(lineWidth);
     }
 
+    // Ya no se usa, pero la dejo por si acaso
     private void setColor(Color color) {
         currentColor = color != null ? color : DEFAULT_COLOR;
         if (currentTool == Tool.PENCIL) {

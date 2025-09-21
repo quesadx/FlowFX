@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tooltip?>
@@ -12,6 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 
 <AnchorPane id="AnchorPane" fx:id="root" prefHeight="631.0" prefWidth="875.0" styleClass="container" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.CreativeZoneController">
    <children>
@@ -56,7 +58,7 @@
                                           <Canvas fx:id="cvMainCanvas" height="200.0" onMouseDragged="#onMouseDraggedMainCanvas" onMousePressed="#onMousePressedMainCanvas" onMouseReleased="#onMouseReleasedMainCanvas" width="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
-                                    <VBox alignment="CENTER" fillWidth="false" maxHeight="450.0" maxWidth="40.0" spacing="4.0" styleClass="container-sub-dark" StackPane.alignment="CENTER_LEFT">
+                                    <VBox alignment="CENTER" fillWidth="false" maxHeight="360.0" maxWidth="40.0" spacing="4.0" styleClass="container--no-padding" StackPane.alignment="CENTER_LEFT">
                                        <children>
                                           <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnPencil" styleClass="jfx-delete-button" text="">
                                              <graphic>
@@ -87,40 +89,11 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </padding>
                                           </Separator>
-                                          <VBox alignment="CENTER">
-                                             <children>
-                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedWhiteColor" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/material-white.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedRedColor" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/material-red.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedGreenColor" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/material-green.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedBlueColor" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/material-blue.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedYellowColor" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/material-yellow.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#onMouseClickedBlackColor" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../resources/icons/material-black.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </children>
-                                          </VBox>
+                                          <ColorPicker fx:id="cpColorPicker" prefHeight="90.0" prefWidth="54.0">
+                                             <value>
+                                                <Color />
+                                             </value>
+                                          </ColorPicker>
                                           <Separator prefWidth="200.0">
                                              <padding>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -140,7 +113,7 @@
                                                       <Tooltip text="Seleccionar lapiz" />
                                                    </tooltip>
                                                 </MFXButton>
-                                                <Label fx:id="lblLineWidth" styleClass="jfx-label-light" text="Label" />
+                                                <Label fx:id="lblLineWidth" styleClass="jfx-label" text="5px" />
                                                 <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnDecreasePencilWidth" styleClass="jfx-delete-button" text="">
                                                    <graphic>
                                                       <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
@@ -159,6 +132,9 @@
                                        <padding>
                                           <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                                        </padding>
+                                       <StackPane.margin>
+                                          <Insets left="8.0" />
+                                       </StackPane.margin>
                                     </VBox>
                                  </children>
                               </StackPane>

@@ -63,7 +63,7 @@
                                        <children>
                                           <VBox alignment="CENTER" />
                                                                                     <MFXTextField fx:id="txfSearchBar" floatMode="DISABLED" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="Proyecto, Persona, Actividad..." />
-                                          <MFXButton onAction="#onActionBtnSearch" styleClass="jfx-button" text="Buscar">
+                                          <MFXButton onAction="#onActionBtnSearch" styleClass="jfx-button" text="Buscar con Stream">
                                              <tooltip>
                                                 <Tooltip text="Buscar utilizando Stream sobre todos los proyectos" />
                                              </tooltip>

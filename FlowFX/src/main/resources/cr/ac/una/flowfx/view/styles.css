@@ -337,6 +337,8 @@
     -fx-border-focus: -fx-gray-800;
     -fx-shadow-light: rgba(0, 0, 0, 0.06);
     -fx-shadow-medium: rgba(0, 0, 0, 0.15);
+    /* Lookup color used in -fx-effect dropshadows (must be a Color) */
+    -fx-focus-halo-blue: rgba(59, 130, 246, 0.50);
 }
 
 /* ========================================
