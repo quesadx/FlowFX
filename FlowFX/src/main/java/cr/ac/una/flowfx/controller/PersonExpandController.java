@@ -103,20 +103,27 @@ public class PersonExpandController
             PersonDTO dto = (PersonDTO) p;
             PersonViewModel initial = new PersonViewModel(dto);
             vm.setId(initial.getId());
-            vm.setFirstName(initial.getFirstName());
-            vm.setLastName(initial.getLastName());
-            vm.setEmail(initial.getEmail());
-            vm.setUsername(initial.getUsername());
-            vm.setPassword(initial.getPassword());
-            vm.setStatus(initial.getStatus());
-            vm.setIsAdmin(initial.getIsAdmin());
+            vm.setFirstName(initial.getFirstName() != null ? initial.getFirstName() : "");
+            vm.setLastName(initial.getLastName() != null ? initial.getLastName() : "");
+            vm.setEmail(initial.getEmail() != null ? initial.getEmail() : "");
+            vm.setUsername(initial.getUsername() != null ? initial.getUsername() : "");
+            vm.setPassword(initial.getPassword() != null ? initial.getPassword() : "");
+            vm.setStatus(initial.getStatus() != null ? initial.getStatus() : 'I');
+            vm.setIsAdmin(initial.getIsAdmin() != null ? initial.getIsAdmin() : 'N');
         } else {
+            vm.setFirstName("");
+            vm.setLastName("");
+            vm.setEmail("");
+            vm.setUsername("");
+            vm.setPassword("");
             vm.setStatus('I');
             vm.setIsAdmin('N');
         }
         
         // Check if this is view-only mode
         boolean viewOnly = Boolean.TRUE.equals(AppContext.getInstance().get("personExpand.viewOnly"));
+        LOGGER.info("PersonExpandController initialize: viewOnly=" + viewOnly + ", context value=" + 
+            AppContext.getInstance().get("personExpand.viewOnly"));
         configureViewMode(viewOnly);
         
         bindFields();
@@ -141,8 +148,14 @@ public class PersonExpandController
             cbIsActive.setDisable(true);
             
             // Hide save/cancel buttons in view-only mode
-            if (btnConfirmChanges != null) btnConfirmChanges.setVisible(false);
-            if (btnCancelChanges != null) btnCancelChanges.setVisible(false);
+            if (btnConfirmChanges != null) {
+                btnConfirmChanges.setVisible(false);
+                btnConfirmChanges.setManaged(false);
+            }
+            if (btnCancelChanges != null) {
+                btnCancelChanges.setVisible(false);
+                btnCancelChanges.setManaged(false);
+            }
             
             LOGGER.fine("PersonExpandController configured for view-only mode");
         } else {
@@ -155,6 +168,22 @@ public class PersonExpandController
             psfPersonPassword.setEditable(true);
             cbIsAdmin.setDisable(false);
             cbIsActive.setDisable(false);
+            
+            // Show save/cancel buttons in edit mode
+            if (btnConfirmChanges != null) {
+                btnConfirmChanges.setVisible(true);
+                btnConfirmChanges.setManaged(true);
+                LOGGER.info("btnConfirmChanges set to visible and managed");
+            } else {
+                LOGGER.warning("btnConfirmChanges is null in edit mode");
+            }
+            if (btnCancelChanges != null) {
+                btnCancelChanges.setVisible(true);
+                btnCancelChanges.setManaged(true);
+                LOGGER.info("btnCancelChanges set to visible and managed");
+            } else {
+                LOGGER.warning("btnCancelChanges is null in edit mode");
+            }
             
             LOGGER.fine("PersonExpandController configured for edit mode");
         }
@@ -258,11 +287,11 @@ public class PersonExpandController
      * Takes a snapshot of current person data for change detection.
      */
     private void takePersonSnapshot() {
-        personSnapshotFirstName = vm.getFirstName();
-        personSnapshotLastName = vm.getLastName();
-        personSnapshotEmail = vm.getEmail();
-        personSnapshotUsername = vm.getUsername();
-        personSnapshotPassword = vm.getPassword();
+        personSnapshotFirstName = vm.getFirstName() != null ? vm.getFirstName() : "";
+        personSnapshotLastName = vm.getLastName() != null ? vm.getLastName() : "";
+        personSnapshotEmail = vm.getEmail() != null ? vm.getEmail() : "";
+        personSnapshotUsername = vm.getUsername() != null ? vm.getUsername() : "";
+        personSnapshotPassword = vm.getPassword() != null ? vm.getPassword() : "";
         personSnapshotIsAdmin = vm.getIsAdmin() != null && Character.toUpperCase(vm.getIsAdmin()) == 'Y';
         personSnapshotIsActive = vm.getStatus() != null && Character.toUpperCase(vm.getStatus()) == 'A';
         
@@ -276,11 +305,17 @@ public class PersonExpandController
         personHasChanges.unbind();
         javafx.beans.binding.BooleanBinding changes = javafx.beans.binding.Bindings.createBooleanBinding(
             () -> {
-                if (!safeEquals(vm.getFirstName(), personSnapshotFirstName)) return true;
-                if (!safeEquals(vm.getLastName(), personSnapshotLastName)) return true;
-                if (!safeEquals(vm.getEmail(), personSnapshotEmail)) return true;
-                if (!safeEquals(vm.getUsername(), personSnapshotUsername)) return true;
-                if (!safeEquals(vm.getPassword(), personSnapshotPassword)) return true;
+                String currentFirstName = vm.getFirstName() != null ? vm.getFirstName() : "";
+                String currentLastName = vm.getLastName() != null ? vm.getLastName() : "";
+                String currentEmail = vm.getEmail() != null ? vm.getEmail() : "";
+                String currentUsername = vm.getUsername() != null ? vm.getUsername() : "";
+                String currentPassword = vm.getPassword() != null ? vm.getPassword() : "";
+                
+                if (!safeEquals(currentFirstName, personSnapshotFirstName)) return true;
+                if (!safeEquals(currentLastName, personSnapshotLastName)) return true;
+                if (!safeEquals(currentEmail, personSnapshotEmail)) return true;
+                if (!safeEquals(currentUsername, personSnapshotUsername)) return true;
+                if (!safeEquals(currentPassword, personSnapshotPassword)) return true;
                 
                 boolean currentIsAdmin = vm.getIsAdmin() != null && Character.toUpperCase(vm.getIsAdmin()) == 'Y';
                 if (currentIsAdmin != personSnapshotIsAdmin) return true;
@@ -355,11 +390,11 @@ public class PersonExpandController
      * Reverts all person fields to their snapshot values.
      */
     private void revertPersonChanges() {
-        vm.setFirstName(personSnapshotFirstName);
-        vm.setLastName(personSnapshotLastName);
-        vm.setEmail(personSnapshotEmail);
-        vm.setUsername(personSnapshotUsername);
-        vm.setPassword(personSnapshotPassword);
+        vm.setFirstName(personSnapshotFirstName != null ? personSnapshotFirstName : "");
+        vm.setLastName(personSnapshotLastName != null ? personSnapshotLastName : "");
+        vm.setEmail(personSnapshotEmail != null ? personSnapshotEmail : "");
+        vm.setUsername(personSnapshotUsername != null ? personSnapshotUsername : "");
+        vm.setPassword(personSnapshotPassword != null ? personSnapshotPassword : "");
         vm.setIsAdmin(personSnapshotIsAdmin ? 'Y' : 'N');
         vm.setStatus(personSnapshotIsActive ? 'A' : 'I');
         

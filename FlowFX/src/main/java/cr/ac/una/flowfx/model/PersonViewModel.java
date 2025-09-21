@@ -4,11 +4,11 @@ import javafx.beans.property.*;
 
 public class PersonViewModel {
     private final LongProperty id = new SimpleLongProperty();
-    private final StringProperty firstName = new SimpleStringProperty();
-    private final StringProperty lastName = new SimpleStringProperty();
-    private final StringProperty email = new SimpleStringProperty();
-    private final StringProperty username = new SimpleStringProperty();
-    private final StringProperty password = new SimpleStringProperty();
+    private final StringProperty firstName = new SimpleStringProperty("");
+    private final StringProperty lastName = new SimpleStringProperty("");
+    private final StringProperty email = new SimpleStringProperty("");
+    private final StringProperty username = new SimpleStringProperty("");
+    private final StringProperty password = new SimpleStringProperty("");
     private final ObjectProperty<Character> status = new SimpleObjectProperty<>();
     private final ObjectProperty<Character> isAdmin = new SimpleObjectProperty<>();
 
@@ -44,23 +44,23 @@ public class PersonViewModel {
     public LongProperty idProperty() { return id; }
 
     public String getFirstName() { return firstName.get(); }
-    public void setFirstName(String value) { firstName.set(value); }
+    public void setFirstName(String value) { firstName.set(value == null ? "" : value); }
     public StringProperty firstNameProperty() { return firstName; }
 
     public String getLastName() { return lastName.get(); }
-    public void setLastName(String value) { lastName.set(value); }
+    public void setLastName(String value) { lastName.set(value == null ? "" : value); }
     public StringProperty lastNameProperty() { return lastName; }
 
     public String getEmail() { return email.get(); }
-    public void setEmail(String value) { email.set(value); }
+    public void setEmail(String value) { email.set(value == null ? "" : value); }
     public StringProperty emailProperty() { return email; }
 
     public String getUsername() { return username.get(); }
-    public void setUsername(String value) { username.set(value); }
+    public void setUsername(String value) { username.set(value == null ? "" : value); }
     public StringProperty usernameProperty() { return username; }
 
     public String getPassword() { return password.get(); }
-    public void setPassword(String value) { password.set(value); }
+    public void setPassword(String value) { password.set(value == null ? "" : value); }
     public StringProperty passwordProperty() { return password; }
 
     public Character getStatus() { return status.get(); }

@@ -110,6 +110,7 @@ public class PersonSignUpController extends Controller implements Initializable 
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     PersonViewModel vm = row.getItem();
                     AppContext.getInstance().set("selectedPerson", vm.toDTO());
+                    AppContext.getInstance().set("personExpand.viewOnly", false);
                     FlowController.getInstance().goView("PersonExpandView");
                 }
             });
