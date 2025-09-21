@@ -97,16 +97,21 @@ public final class PersonLabelUtil {
      * @return the person's display name, cached value, or fallback ID format
      */
     public static String resolvePersonNameSync(long personId) {
-        if (personId <= 0) return null;
+        if (personId <= 0) {
+            LOGGER.fine("Invalid person ID provided: " + personId);
+            return null;
+        }
         
         // Check cache first
         String cachedLabel = getCachedPersonLabel(personId);
         if (cachedLabel != null && !cachedLabel.isBlank()) {
+            LOGGER.fine("Using cached label for person ID " + personId + ": " + cachedLabel);
             return cachedLabel;
         }
         
         // Fetch from service
         try {
+            LOGGER.fine("Fetching person from service for ID: " + personId);
             PersonService personService = new PersonService();
             Respuesta response = personService.find(personId);
             
@@ -115,16 +120,26 @@ public final class PersonLabelUtil {
                 if (personData instanceof PersonDTO person) {
                     String personName = buildPersonLabel(person);
                     if (!personName.isBlank()) {
+                        LOGGER.fine("Successfully resolved person name for ID " + personId + ": " + personName);
                         cachePersonLabel(personId, personName);
                         return personName;
+                    } else {
+                        LOGGER.warning("Person DTO has empty name fields for ID: " + personId);
                     }
+                } else {
+                    LOGGER.warning("Service did not return PersonDTO for ID " + personId + ", got: " + 
+                        (personData != null ? personData.getClass().getSimpleName() : "null"));
                 }
+            } else {
+                LOGGER.warning("Person service returned error for ID " + personId + ": " + 
+                    (response != null ? response.getMensaje() : "null response"));
             }
         } catch (Exception ex) {
-            LOGGER.fine("Sync person fetch failed for ID " + personId + ": " + ex.getMessage());
+            LOGGER.warning("Sync person fetch failed for ID " + personId + ": " + ex.getMessage());
         }
         
-        // Fallback to ID display
+        // Fallback to ID display - this should not normally happen
+        LOGGER.warning("Falling back to ID display for person ID: " + personId);
         return String.valueOf(personId);
     }
 
@@ -179,6 +194,7 @@ public final class PersonLabelUtil {
 
     /**
      * Updates a text field with the resolved person name, showing loading state during fetch.
+     * Improved to prevent showing raw IDs when person lookup fails.
      * 
      * @param personId the person ID to resolve and display
      * @param targetField the text field to update
@@ -192,17 +208,22 @@ public final class PersonLabelUtil {
         // Check cache first for immediate update
         String cachedLabel = getCachedPersonLabel(personId);
         if (cachedLabel != null && !cachedLabel.isBlank()) {
+            LOGGER.fine("Using cached label for person ID " + personId + ": " + cachedLabel);
             targetField.setText(cachedLabel);
             return;
         }
         
         // Show loading state and fetch asynchronously
         targetField.setText("Loading...");
+        LOGGER.fine("Fetching person name for ID: " + personId);
         resolvePersonNameAsync(personId, resolvedName -> {
             Platform.runLater(() -> {
-                if (resolvedName != null) {
+                if (resolvedName != null && !resolvedName.startsWith("ID: ")) {
+                    LOGGER.fine("Setting resolved name for person ID " + personId + ": " + resolvedName);
                     targetField.setText(resolvedName);
                 } else {
+                    // Person lookup failed - show empty field instead of raw ID
+                    LOGGER.warning("Person lookup failed for ID " + personId + ", clearing field");
                     targetField.setText("");
                 }
             });
@@ -309,11 +330,21 @@ public final class PersonLabelUtil {
             if (personData instanceof PersonDTO person) {
                 String personLabel = buildPersonLabel(person);
                 if (!personLabel.isBlank()) {
+                    LOGGER.fine("Successfully processed person response for ID " + personId + ": " + personLabel);
                     cachePersonLabel(personId, personLabel);
                     return personLabel;
+                } else {
+                    LOGGER.warning("Processed person response has empty label for ID: " + personId);
                 }
+            } else {
+                LOGGER.warning("Person response did not contain PersonDTO for ID " + personId + ", got: " + 
+                    (personData != null ? personData.getClass().getSimpleName() : "null"));
             }
+        } else {
+            LOGGER.warning("Person service response failed for ID " + personId + ": " + 
+                (response != null ? response.getMensaje() : "null response"));
         }
+        LOGGER.warning("Returning fallback ID format for person ID: " + personId);
         return "ID: " + personId;
     }
 

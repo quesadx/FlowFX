@@ -120,7 +120,10 @@ public class ProjectExpandController extends Controller implements Initializable
     private ProjectActivityViewModel selectedActivity;
     private boolean statusPersistInProgress = false;
     private boolean activityStatusPersistInProgress = false;
-    private String activityCreationStatus = "P"; // Default status for new activities
+    
+    // Activity creation form status property for proper binding
+    private final javafx.beans.property.ObjectProperty<String> activityCreationStatusProperty = 
+        new javafx.beans.property.SimpleObjectProperty<>("P");
 
     // Change detection for activity detail popup
     private final javafx.beans.property.BooleanProperty activityHasChanges = new javafx.beans.property.SimpleBooleanProperty(false);
@@ -152,46 +155,46 @@ public class ProjectExpandController extends Controller implements Initializable
     @FXML
     private MFXCircleToggleNode tgActivityCreateStatusRunning;
 
-    // Activity Detail Status Toggle Actions
+    // Activity Detail Status Toggle Actions (now handled by proper binding)
     @FXML
     private void onActionTgActivityDetailStatusSuspended(ActionEvent event) {
-        updateActivityDetailStatus("S");
+        LOGGER.fine("Activity detail status suspended toggle activated (handled by binding)");
     }
 
     @FXML
     private void onActionTgActivityDetailStatusCompleted(ActionEvent event) {
-        updateActivityDetailStatus("C");
+        LOGGER.fine("Activity detail status completed toggle activated (handled by binding)");
     }
 
     @FXML
     private void onActionTgActivityDetailStatusPending(ActionEvent event) {
-        updateActivityDetailStatus("P");
+        LOGGER.fine("Activity detail status pending toggle activated (handled by binding)");
     }
 
     @FXML
     private void onActionTgActivityDetailStatusRunning(ActionEvent event) {
-        updateActivityDetailStatus("R");
+        LOGGER.fine("Activity detail status running toggle activated (handled by binding)");
     }
 
-    // Activity Creation Status Toggle Actions
+    // Activity Creation Status Toggle Actions (now handled by proper binding)
     @FXML
     private void onActionTgActivityCreateStatusSuspended(ActionEvent event) {
-        activityCreationStatus = "S";
+        LOGGER.fine("Activity creation status suspended toggle activated (handled by binding)");
     }
 
     @FXML
     private void onActionTgActivityCreateStatusCompleted(ActionEvent event) {
-        activityCreationStatus = "C";
+        LOGGER.fine("Activity creation status completed toggle activated (handled by binding)");
     }
 
     @FXML
     private void onActionTgActivityCreateStatusPending(ActionEvent event) {
-        activityCreationStatus = "P";
+        LOGGER.fine("Activity creation status pending toggle activated (handled by binding)");
     }
 
     @FXML
     private void onActionTgActivityCreateStatusRunning(ActionEvent event) {
-        activityCreationStatus = "R";
+        LOGGER.fine("Activity creation status running toggle activated (handled by binding)");
     }
 
     /**
@@ -331,6 +334,10 @@ public class ProjectExpandController extends Controller implements Initializable
             
             // Set default selection for activity creation (Pending)
             ActivityCreateStatusGroup.selectToggle(tgActivityCreateStatusPending);
+            
+            // Bind the toggle group to the creation status property
+            BindingUtils.bindToggleGroupToProperty(ActivityCreateStatusGroup, activityCreationStatusProperty);
+            LOGGER.fine("Bound activity creation status toggles to property");
         }
     }
 
@@ -392,21 +399,38 @@ public class ProjectExpandController extends Controller implements Initializable
     }
 
     /**
-     * Configures person fields as non-editable.
+     * Configures person fields as non-editable and prevents accidental binding.
      */
     private void configurePersonFields() {
+        // Ensure person fields are non-editable and cannot be bound bidirectionally
         txfLeaderId.setEditable(false);
         txfTechLeaderId.setEditable(false);
         txfSponsorId.setEditable(false);
+        
+        // Add style classes to indicate these are display-only fields
+        txfLeaderId.getStyleClass().add("person-display-field");
+        txfTechLeaderId.getStyleClass().add("person-display-field");
+        txfSponsorId.getStyleClass().add("person-display-field");
+        
+        LOGGER.fine("Configured person fields as non-editable display fields");
     }
 
     /**
-     * Sets up listeners for person ID changes.
+     * Sets up listeners for person ID changes with improved timing to prevent ID display.
      */
     private void setupPersonFieldListeners() {
-        vm.leaderUserIdProperty().addListener((obs, oldVal, newVal) -> refreshLeaderLabel());
-        vm.techLeaderIdProperty().addListener((obs, oldVal, newVal) -> refreshTechLeaderLabel());
-        vm.sponsorIdProperty().addListener((obs, oldVal, newVal) -> refreshSponsorLabel());
+        vm.leaderUserIdProperty().addListener((obs, oldVal, newVal) -> {
+            LOGGER.fine("Leader ID changed: " + oldVal + " -> " + newVal);
+            refreshLeaderLabel();
+        });
+        vm.techLeaderIdProperty().addListener((obs, oldVal, newVal) -> {
+            LOGGER.fine("Tech Leader ID changed: " + oldVal + " -> " + newVal);
+            refreshTechLeaderLabel();
+        });
+        vm.sponsorIdProperty().addListener((obs, oldVal, newVal) -> {
+            LOGGER.fine("Sponsor ID changed: " + oldVal + " -> " + newVal);
+            refreshSponsorLabel();
+        });
     }
 
     // Action Handlers
@@ -512,30 +536,6 @@ public class ProjectExpandController extends Controller implements Initializable
     /**
      * Updates the selected activity's status and persists the change.
      */
-    private void updateActivityDetailStatus(String statusCode) {
-        if (selectedActivity == null || activityStatusPersistInProgress) {
-            return;
-        }
-        
-        String oldStatus = selectedActivity.getStatus();
-        if (statusCode != null && !statusCode.equals(oldStatus)) {
-            LOGGER.log(Level.INFO, "Updating activity status: {0} -> {1} for activity ID: {2}", 
-                new Object[]{oldStatus, statusCode, selectedActivity.getId()});
-            
-            selectedActivity.setStatus(statusCode);
-            
-            // Debug: Log the DTO before sending
-            ProjectActivityDTO dto = selectedActivity.toDTO();
-            LOGGER.log(Level.INFO, "Activity DTO status before sending: {0}, ID: {1}", 
-                new Object[]{dto.getStatus(), dto.getId()});
-            
-            persistActivityStatusAsync(selectedActivity, statusCode);
-            
-            // Apply automatic actual date assignment
-            applyAutomaticActualDatesForActivity(selectedActivity);
-        }
-    }
-    
     /**
      * Persists activity status change asynchronously.
      */
@@ -547,6 +547,7 @@ public class ProjectExpandController extends Controller implements Initializable
                 ProjectActivityService service = new ProjectActivityService();
                 ProjectActivityDTO dto = activity.toDTO();
                 
+                LOGGER.info("Persisting activity status change: " + statusCode + " for activity ID: " + dto.getId());
                 Respuesta response = service.update(dto);
                 
                 Platform.runLater(() -> {
@@ -585,13 +586,32 @@ public class ProjectExpandController extends Controller implements Initializable
     
     /**
      * Sets up activity detail status toggle binding when an activity is selected.
+     * Now properly binds the toggle group to the activity's status property.
      */
     private void bindActivityDetailStatusToggles(ProjectActivityViewModel activity) {
         if (ActivityDetailStatusGroup == null || activity == null) {
+            LOGGER.warning("Cannot bind activity detail status toggles: group or activity is null");
             return;
         }
         
-        // Select the appropriate toggle based on activity status
+        LOGGER.fine("Binding activity detail status toggles for activity ID: " + activity.getId());
+        
+        // Unbind any previous binding
+        BindingUtils.unbindToggleGroupToProperty(ActivityDetailStatusGroup, null);
+        
+        // Bind the toggle group to the activity's status property
+        BindingUtils.bindToggleGroupToProperty(ActivityDetailStatusGroup, activity.statusProperty());
+        
+        // Set up change listener for automatic persistence
+        activity.statusProperty().addListener((observable, oldStatus, newStatus) -> {
+            if (newStatus != null && !newStatus.equals(oldStatus) && !activityStatusPersistInProgress) {
+                LOGGER.info("Activity status changed: " + oldStatus + " -> " + newStatus + " for activity ID: " + activity.getId());
+                persistActivityStatusAsync(activity, newStatus);
+                applyAutomaticActualDatesForActivity(activity);
+            }
+        });
+        
+        // Select the appropriate toggle based on current activity status
         String status = activity.getStatus();
         if (status != null) {
             selectActivityDetailToggleForStatus(status.trim().toUpperCase());
@@ -656,15 +676,21 @@ public class ProjectExpandController extends Controller implements Initializable
      */
     private void handlePersonSelection(MFXTextField targetField, PersonDTO person, String contextKey) {
         String personLabel = PersonLabelUtil.buildPersonLabel(person);
+        LOGGER.fine("Handling person selection: " + personLabel + " for field: " + targetField.getId());
         
         // Cache before updating to prevent async overwrite
         if (person.getId() != null) {
             PersonLabelUtil.cachePersonLabel(person.getId(), personLabel);
         }
         
+        // Set the display text immediately
+        targetField.setText(personLabel);
+        
         updateViewModelWithSelectedPerson(targetField, person);
         AppContext.getInstance().set(contextKey, person);
         targetField.setEditable(false);
+        
+        LOGGER.fine("Person selection completed for: " + personLabel);
     }
 
     /**
@@ -694,15 +720,21 @@ public class ProjectExpandController extends Controller implements Initializable
     }
 
     private void refreshLeaderLabel() {
-        PersonLabelUtil.updatePersonLabelIntoField(vm.getLeaderUserId(), txfLeaderId);
+        long leaderId = vm.getLeaderUserId();
+        LOGGER.fine("Refreshing leader label for ID: " + leaderId);
+        PersonLabelUtil.updatePersonLabelIntoField(leaderId, txfLeaderId);
     }
 
     private void refreshTechLeaderLabel() {
-        PersonLabelUtil.updatePersonLabelIntoField(vm.getTechLeaderId(), txfTechLeaderId);
+        long techLeaderId = vm.getTechLeaderId();
+        LOGGER.fine("Refreshing tech leader label for ID: " + techLeaderId);
+        PersonLabelUtil.updatePersonLabelIntoField(techLeaderId, txfTechLeaderId);
     }
 
     private void refreshSponsorLabel() {
-        PersonLabelUtil.updatePersonLabelIntoField(vm.getSponsorId(), txfSponsorId);
+        long sponsorId = vm.getSponsorId();
+        LOGGER.fine("Refreshing sponsor label for ID: " + sponsorId);
+        PersonLabelUtil.updatePersonLabelIntoField(sponsorId, txfSponsorId);
     }
 
     /**
@@ -987,13 +1019,43 @@ public class ProjectExpandController extends Controller implements Initializable
 
     /**
      * Updates view model and UI with server data.
+     * Pre-caches person names to prevent ID display during updates.
      */
     private void updateProjectFromServer(ProjectDTO project) {
         AppContext.getInstance().set("currentProject", project);
         
+        // Pre-cache person names before updating view model to prevent ID display
+        precachePersonNamesFromProject(project);
+        
         updateViewModelFromProject(project);
         selectToggleForStatus(project.getStatus());
         refreshPersonLabels();
+    }
+
+    /**
+     * Pre-caches person names from project data to prevent showing IDs during view model updates.
+     */
+    private void precachePersonNamesFromProject(ProjectDTO project) {
+        if (project == null) return;
+        
+        // Collect person IDs that need pre-caching
+        long[] personIds = {
+            project.getLeaderUserId() != null ? project.getLeaderUserId() : 0L,
+            project.getTechLeaderId() != null ? project.getTechLeaderId() : 0L,
+            project.getSponsorId() != null ? project.getSponsorId() : 0L
+        };
+        
+        // Filter out invalid IDs
+        long[] validPersonIds = java.util.Arrays.stream(personIds)
+            .filter(id -> id > 0)
+            .toArray();
+        
+        if (validPersonIds.length > 0) {
+            LOGGER.fine("Pre-caching person names for IDs: " + java.util.Arrays.toString(validPersonIds));
+            PersonLabelUtil.prefetchPersonLabels(validPersonIds, () -> {
+                LOGGER.fine("Person names pre-cached successfully");
+            });
+        }
     }
 
     /**
@@ -1193,7 +1255,7 @@ public class ProjectExpandController extends Controller implements Initializable
         ProjectActivityDTO dto = new ProjectActivityDTO();
         dto.setProjectId(projectId);
         dto.setDescription(getTextOrNull(txaDescriptionCreation.getText()));
-        dto.setStatus(activityCreationStatus); // Use selected status from toggles
+        dto.setStatus(activityCreationStatusProperty.get()); // Use status from toggle binding
         dto.setPlannedStartDate(fromPicker(dpPlannedStartDateCreation));
         dto.setPlannedEndDate(fromPicker(dpPlannedEndDateCreation));
         dto.setExecutionOrder(activities.size() + 1);
@@ -1305,7 +1367,7 @@ public class ProjectExpandController extends Controller implements Initializable
         dpPlannedEndDateCreation.setValue(null);
         
         // Reset status to default (Pending)
-        activityCreationStatus = "P";
+        activityCreationStatusProperty.set("P");
         if (ActivityCreateStatusGroup != null && tgActivityCreateStatusPending != null) {
             ActivityCreateStatusGroup.selectToggle(tgActivityCreateStatusPending);
         }
