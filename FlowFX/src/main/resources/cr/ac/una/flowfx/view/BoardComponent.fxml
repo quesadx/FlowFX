@@ -22,7 +22,7 @@
                   </HBox>
                   <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                   </HBox>
-                  <MFXButton fx:id="btnDeleteProject" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="jfx-delete-button" text="Eliminar">
+                  <MFXButton fx:id="btnDeleteProject" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="jfx-delete-button" text="Eliminar" HBox.hgrow="ALWAYS">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>

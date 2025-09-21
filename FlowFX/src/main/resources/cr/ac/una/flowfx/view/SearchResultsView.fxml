@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,9 +15,9 @@
    <children>
       <VBox alignment="TOP_CENTER" layoutX="9.0" layoutY="9.0" spacing="4.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox fx:id="hbLateralHandlebar" alignment="CENTER_RIGHT" spacing="8.0" styleClass="accordion">
+            <HBox fx:id="hbLateralHandlebar" alignment="CENTER_RIGHT" spacing="8.0" styleClass="container-sub">
                <children>
-                  <MFXButton fx:id="btnClose" onAction="#onActionBtnClose" styleClass="jfx-close" text="Salir">
+                  <MFXButton fx:id="btnClose" maxWidth="1.7976931348623157E308" onAction="#onActionBtnClose" styleClass="jfx-close" text="Salir" HBox.hgrow="ALWAYS">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
@@ -26,18 +27,23 @@
                   </MFXButton>
                </children>
             </HBox>
-            <VBox spacing="4.0" styleClass="container-sub">
+            <Separator prefWidth="200.0" visible="false">
+               <padding>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </padding>
+            </Separator>
+            <VBox spacing="8.0" styleClass="container-sub" VBox.vgrow="ALWAYS">
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding>
                <children>
                   <HBox>
                      <children>
-                        <Label text="Resultado de " />
+                        <Label text="Resultado de: " />
                         <Label fx:id="lblSearchPrompt" text="Resultado de " />
                      </children>
                   </HBox>
-                  <ListView fx:id="lvSearchResults" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="lvSearchResults" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
          </children>

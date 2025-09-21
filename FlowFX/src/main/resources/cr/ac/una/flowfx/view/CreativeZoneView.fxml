@@ -26,7 +26,7 @@
                      <children>
                         <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" spacing="4.0" styleClass="container-sub">
                            <children>
-                              <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionCleanCanvas" prefWidth="200.0" styleClass="jfx-delete-button" text="Limpiar sketch">
+                              <MFXButton maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionCleanCanvas" styleClass="jfx-delete-button" text="Limpiar sketch" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -35,7 +35,7 @@
                                     </ImageView>
                                  </graphic>
                               </MFXButton>
-                              <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionSaveCanvas" prefWidth="200.0" styleClass="jfx-button" text="Guardar sketch">
+                              <MFXButton maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionSaveCanvas" styleClass="jfx-button" text="Guardar sketch" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                        <image>

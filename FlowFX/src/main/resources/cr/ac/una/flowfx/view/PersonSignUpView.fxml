@@ -28,7 +28,7 @@
                      <children>
                         <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" styleClass="container-sub">
                            <children>
-                              <MFXButton minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnSignUpPerson" text="Crear nueva persona">
+                              <MFXButton maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnSignUpPerson" text="Crear nueva persona" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                                  </graphic>

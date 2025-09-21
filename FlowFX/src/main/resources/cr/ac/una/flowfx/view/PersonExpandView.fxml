@@ -4,7 +4,6 @@
 <?import io.github.palexdev.materialfx.controls.MFXCheckbox?>
 <?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
-<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -27,130 +26,116 @@
                      <children>
                         <HBox alignment="CENTER_LEFT">
                            <children>
-                              <HBox alignment="CENTER_LEFT" minHeight="-Infinity" HBox.hgrow="ALWAYS">
+                              <HBox alignment="CENTER_LEFT" minHeight="-Infinity" styleClass="container-sub" HBox.hgrow="ALWAYS">
                                  <children>
-                     <MFXButton fx:id="btnReturnPersonSignUp" onAction="#onActionReturnPersonSignUp" text="Volver">
+                     <MFXButton fx:id="btnReturnPersonSignUp" maxWidth="1.7976931348623157E308" onAction="#onActionReturnPersonSignUp" text="Volver" HBox.hgrow="ALWAYS">
                                        <graphic>
-                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../resources/icons/lucide--arrow-left.png" />
+                                             </image></ImageView>
                                        </graphic>
                                        <tooltip>
                                           <Tooltip text="Retornar a vista de proyectos" />
                                        </tooltip>
-                                       <styleClass>
-                                          <String fx:value="jfx-return" />
-                                          <String fx:value="jfx-button" />
-                                       </styleClass>
                                     </MFXButton>
                                  </children>
                               </HBox>
                            </children>
                            </HBox>
+                        <Separator prefWidth="200.0" visible="false">
+                           <padding>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </padding>
+                        </Separator>
                         <VBox VBox.vgrow="ALWAYS">
                            <children>
-                              <HBox alignment="CENTER" styleClass="filler-rounded" VBox.vgrow="ALWAYS">
+                              <VBox alignment="CENTER" styleClass="filler-rounded" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <VBox alignment="CENTER" fillWidth="false" maxWidth="300.0" spacing="12.0" HBox.hgrow="ALWAYS">
+                                    <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                                        <children>
-                                          <VBox>
+                                          <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="8.0" HBox.hgrow="ALWAYS">
                                              <children>
-                                                <Label styleClass="jfx-label" text="Nombre de la persona" />
-                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                <VBox>
                                                    <children>
-                                                      <VBox alignment="CENTER">
+                                                      <Label styleClass="jfx-label" text="ID de la persona" />
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
                                                          <children>
                                                             <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
                                                                <image>
-                                                                  <Image url="@../resources/icons/lucide--folder-pen.png" />
+                                                                  <Image url="@../resources/icons/lucide--user-cog.png" />
                                                                </image>
                                                             </ImageView>
+                                                            <MFXTextField fx:id="txfPersonId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                          </children>
-                                                      </VBox>
-                                                      <MFXTextField fx:id="txfPersonName" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      </HBox>
                                                    </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                          <VBox>
-                                             <children>
-                                                <Label styleClass="jfx-label" text="Apellidos de la persona" />
-                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                </VBox>
+                                                <VBox>
                                                    <children>
-                                                      <VBox alignment="CENTER">
+                                                      <Label styleClass="jfx-label" text="Nombre de la persona" />
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
                                                          <children>
                                                             <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
                                                                <image>
-                                                                  <Image url="@../resources/icons/lucide--heart.png" />
+                                                                  <Image url="@../resources/icons/lucide--user.png" />
                                                                </image>
                                                             </ImageView>
+                                                            <MFXTextField fx:id="txfPersonName" floatMode="DISABLED" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                          </children>
-                                                      </VBox>
-                                                      <MFXTextField fx:id="txfPersonLastName" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      </HBox>
                                                    </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                          <VBox>
-                                             <children>
-                                                <Label styleClass="jfx-label" text="Correo electrónico de la persona" />
-                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                </VBox>
+                                                <VBox>
                                                    <children>
-                                                      <VBox alignment="CENTER">
+                                                      <Label styleClass="jfx-label" text="Apellidos de la persona" />
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
                                                          <children>
                                                             <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
                                                                <image>
-                                                                  <Image url="@../resources/icons/lucide--shield-user.png" />
+                                                                  <Image url="@../resources/icons/lucide--user.png" />
                                                                </image>
                                                             </ImageView>
+                                                            <MFXTextField fx:id="txfPersonLastName" floatMode="DISABLED" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                          </children>
-                                                      </VBox>
-                                                      <MFXTextField fx:id="txfPersonMail" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      </HBox>
                                                    </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                          <VBox>
-                                             <children>
-                                                <Label styleClass="jfx-label" text="ID de la persona" />
-                                                <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                </VBox>
+                                                <VBox>
                                                    <children>
-                                                      <VBox alignment="CENTER">
+                                                      <Label styleClass="jfx-label" text="Correo electrónico de la persona" />
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
                                                          <children>
                                                             <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
                                                                <image>
-                                                                  <Image url="@../resources/icons/lucide--graduation-cap.png" />
+                                                                  <Image url="@../resources/icons/lucide--folder-archive.png" />
                                                                </image>
                                                             </ImageView>
+                                                            <MFXTextField fx:id="txfPersonMail" floatMode="DISABLED" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                          </children>
-                                                      </VBox>
-                                                      <MFXTextField fx:id="txfPersonId" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                      </HBox>
                                                    </children>
-                                                </HBox>
+                                                </VBox>
                                              </children>
                                           </VBox>
-                                       </children></VBox>
-                                    <Separator orientation="VERTICAL">
-                                       <padding>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </padding></Separator>
-                                    <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="12.0" HBox.hgrow="ALWAYS">
-                                       <children>
-                                          <HBox alignment="CENTER" spacing="4.0">
+                                          <Separator orientation="VERTICAL" visible="false">
+                                             <padding>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                             </padding>
+                                          </Separator>
+                                          <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="8.0" HBox.hgrow="ALWAYS">
                                              <children>
                                                 <VBox>
                                                    <children>
                                                       <Label styleClass="jfx-label" text="Usuario de la persona" />
-                                                      <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
                                                          <children>
-                                                            <VBox alignment="CENTER">
-                                                               <children>
-                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                                     <image>
-                                                                        <Image url="@../resources/icons/lucide--graduation-cap.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </children>
-                                                            </VBox>
-                                                            <MFXTextField fx:id="txfPersonUsername" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                               <image>
+                                                                  <Image url="@../resources/icons/lucide--user.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <MFXTextField fx:id="txfPersonUsername" floatMode="DISABLED" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                          </children>
                                                       </HBox>
                                                    </children>
@@ -158,34 +143,24 @@
                                                 <VBox>
                                                    <children>
                                                       <Label styleClass="jfx-label" text="Contraseña de la persona" />
-                                                      <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
                                                          <children>
-                                                            <VBox alignment="CENTER">
-                                                               <children>
-                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                                     <image>
-                                                                        <Image url="@../resources/icons/lucide--graduation-cap.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </children>
-                                                            </VBox>
-                                                            <MFXPasswordField fx:id="psfPersonPassword" floatMode="DISABLED" prefWidth="200.0" />
+                                                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                               <image>
+                                                                  <Image url="@../resources/icons/lucide--user.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <MFXPasswordField fx:id="psfPersonPassword" floatMode="DISABLED" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                                          </children>
                                                       </HBox>
                                                    </children>
                                                 </VBox>
-                                             </children>
-                                          </HBox>
-                                          <VBox>
-                                             <children>
-                                                <Label styleClass="jfx-label" text="Estado" />
-                                                <VBox alignment="CENTER" prefHeight="100.0" styleClass="container-sub">
+                                                <VBox>
                                                    <children>
-                                                      <HBox alignment="CENTER" spacing="12.0" />
                                                       <VBox>
                                                          <children>
                                                             <Label styleClass="jfx-label" text="Estados del usuario" />
-                                                            <HBox spacing="4.0" VBox.vgrow="NEVER">
+                                                            <HBox spacing="8.0" VBox.vgrow="NEVER">
                                                                <children>
                                                                   <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub" HBox.hgrow="ALWAYS">
                                                                      <children>
@@ -198,7 +173,7 @@
                                                                               </ImageView>
                                                                            </children>
                                                                         </VBox>
-                                                                        <MFXCheckbox fx:id="cbIsAdmin" maxWidth="1.7976931348623157E308" text="ADMIN" HBox.hgrow="NEVER" />
+                                                                        <MFXCheckbox fx:id="cbIsAdmin" maxWidth="1.7976931348623157E308" text="ADMIN" HBox.hgrow="ALWAYS" />
                                                                      </children>
                                                                   </HBox>
                                                                   <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub" HBox.hgrow="ALWAYS">
@@ -219,51 +194,48 @@
                                                             </HBox>
                                                          </children>
                                                       </VBox>
-                                                   </children></VBox>
+                                                   </children>
+                                                </VBox>
                                              </children>
                                           </VBox>
-                                          <Separator prefWidth="200.0">
-                                             <padding>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </padding>
-                                          </Separator>
-                                          <HBox alignment="CENTER" spacing="12.0">
-                                             <children>
-                                                <MFXButton fx:id="btnCancelChanges" onAction="#onActionCancelChanges" prefHeight="50.0" prefWidth="200.0" styleClass="jfx-button" text="Cancelar cambios">
-                                                   <font>
-                                                      <Font name="System Bold" size="13.0" />
-                                                   </font>
-                                                   <graphic>
-                                                      <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                         <image>
-                                                            <Image url="@../resources/icons/lucide--file-x-2.png" />
-                                                         </image>
-                                                      </ImageView>
-                                                   </graphic>
-                                                   <tooltip>
-                                                      <Tooltip text="Cancelar cambios en la actividad" />
-                                                   </tooltip>
-                                                </MFXButton>
-                                                <MFXButton fx:id="btnConfirmChanges" onAction="#onActionConfirmUpdates" prefHeight="50.0" prefWidth="200.0" styleClass="jfx-button" text="Guardar cambios">
-                                                   <font>
-                                                      <Font name="System Bold" size="13.0" />
-                                                   </font>
-                                                   <graphic>
-                                                      <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                         <image>
-                                                            <Image url="@../resources/icons/lucide--file-check-2.png" />
-                                                         </image>
-                                                      </ImageView>
-                                                   </graphic>
-                                                   <tooltip>
-                                                      <Tooltip text="Confirmar cambios en la actividad" />
-                                                   </tooltip>
-                                                </MFXButton>
-                                             </children>
-                                          </HBox>
-                                       </children></VBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" spacing="8.0">
+                                       <children>
+                                          <MFXButton fx:id="btnCancelChanges" maxWidth="1.7976931348623157E308" onAction="#onActionCancelChanges" prefHeight="40.0" styleClass="jfx-button" text="Cancelar cambios" HBox.hgrow="ALWAYS">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                             <graphic>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/lucide--file-x-2.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Cancelar cambios en la actividad" />
+                                             </tooltip>
+                                          </MFXButton>
+                                          <MFXButton fx:id="btnConfirmChanges" maxWidth="1.7976931348623157E308" onAction="#onActionConfirmUpdates" prefHeight="40.0" styleClass="jfx-button" text="Guardar cambios" HBox.hgrow="ALWAYS">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                             <graphic>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/lucide--file-check-2.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Confirmar cambios en la actividad" />
+                                             </tooltip>
+                                          </MFXButton>
+                                       </children>
+                                    </HBox>
                                  </children>
-                              </HBox>
+                              </VBox>
                            </children>
                         </VBox>
                      </children>
