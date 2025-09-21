@@ -122,7 +122,8 @@ public class PersonSignUpController extends Controller implements Initializable 
 
     @Override
     public void initialize() {
-        // no-op
+        // Check if person list needs refresh (e.g., after edit from PersonExpandView)
+        checkAndRefreshPersonList();
     }
 
     private void setTextFieldLimit(MFXTextField txf, int i) {
@@ -148,6 +149,19 @@ public class PersonSignUpController extends Controller implements Initializable 
         List<PersonViewModel> vms = new ArrayList<>();
         for (PersonDTO dto : list) vms.add(new PersonViewModel(dto));
         persons.addAll(vms);
+    }
+    
+    /**
+     * Checks if the person list needs refresh (e.g., after updates from other views).
+     */
+    private void checkAndRefreshPersonList() {
+        Boolean needsRefresh = (Boolean) AppContext.getInstance().get("personListNeedsRefresh");
+        if (Boolean.TRUE.equals(needsRefresh)) {
+            LOGGER.info("Person list refresh requested, refreshing list");
+            refreshPersons();
+            // Clear the flag
+            AppContext.getInstance().delete("personListNeedsRefresh");
+        }
     }
 
     @FXML

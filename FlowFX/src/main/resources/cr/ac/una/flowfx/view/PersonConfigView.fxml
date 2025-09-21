@@ -225,7 +225,7 @@
                                           </ImageView>
                                        </graphic>
                                     </MFXButton>
-                                    <MFXButton fx:id="btnCommitChanges" onAction="#onActionBtnCommitChanges" prefHeight="40.0" prefWidth="175.0" styleClass="jfx-button" text="Registrar">
+                                    <MFXButton fx:id="btnCommitChanges" onAction="#onActionBtnCommitChanges" prefHeight="40.0" prefWidth="175.0" styleClass="jfx-button" text="Guardar cambios">
                                        <font>
                                           <Font name="System Bold" size="13.0" />
                                        </font>

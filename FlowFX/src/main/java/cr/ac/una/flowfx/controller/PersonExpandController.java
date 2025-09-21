@@ -6,6 +6,7 @@ import cr.ac.una.flowfx.model.ProjectDTO;
 import cr.ac.una.flowfx.service.PersonService;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
+import cr.ac.una.flowfx.util.Mensaje;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
@@ -420,28 +421,95 @@ public class PersonExpandController
             if (Boolean.TRUE.equals(response.getEstado())) {
                 LOGGER.info("Person updated successfully");
                 
-                // Update the snapshot to reflect saved state
-                takePersonSnapshot();
-                
-                // Update context if this is the current user
-                Object currentUser = AppContext.getInstance().get("user");
-                if (currentUser instanceof cr.ac.una.flowfx.model.PersonDTO user && 
-                    user.getId() != null && user.getId().equals(dto.getId())) {
-                    AppContext.getInstance().set("user", dto);
+                // Get the updated person data from the response
+                Object savedPerson = response.getResultado("Person");
+                if (savedPerson instanceof PersonDTO updatedDto) {
+                    // Update the view model with the fresh data from the server
+                    updateViewModelFromSavedData(updatedDto);
+                    
+                    // Update the snapshot to reflect saved state
+                    takePersonSnapshot();
+                    
+                    // Update context if this is the current user
+                    Object currentUser = AppContext.getInstance().get("user");
+                    if (currentUser instanceof cr.ac.una.flowfx.model.PersonDTO user && 
+                        user.getId() != null && user.getId().equals(updatedDto.getId())) {
+                        AppContext.getInstance().set("user", updatedDto);
+                        LOGGER.info("Updated current user in AppContext");
+                    }
+                    
+                    // Reset change detection
+                    personHasChanges.unbind();
+                    personHasChanges.set(false);
+                    setupPersonChangeBinding();
+                    
+                    // Show success message
+                    new cr.ac.una.flowfx.util.Mensaje().showModal(
+                        javafx.scene.control.Alert.AlertType.INFORMATION,
+                        "Actualización",
+                        root.getScene().getWindow(),
+                        "Los datos de la persona se han actualizado correctamente."
+                    );
+                    
+                    // Notify PersonSignUpView to refresh its list if needed
+                    notifyPersonListUpdate();
+                    
+                } else {
+                    LOGGER.warning("No updated person data returned from server");
+                    // Still update the snapshot and reset change detection even if no fresh data
+                    takePersonSnapshot();
+                    personHasChanges.unbind();
+                    personHasChanges.set(false);
+                    setupPersonChangeBinding();
                 }
-                
-                // Reset change detection
-                personHasChanges.unbind();
-                personHasChanges.set(false);
-                setupPersonChangeBinding();
                 
             } else {
                 LOGGER.warning("Person update failed: " + 
                     (response != null ? response.getMensaje() : "null response"));
-                // Could show error dialog here
+                new cr.ac.una.flowfx.util.Mensaje().showModal(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "Error de actualización",
+                    root.getScene().getWindow(),
+                    "Error al actualizar los datos: " + 
+                        (response != null ? response.getMensaje() : "Error desconocido")
+                );
             }
         } catch (Exception ex) {
             LOGGER.warning("Exception during person save: " + ex.getMessage());
+            new cr.ac.una.flowfx.util.Mensaje().showModal(
+                javafx.scene.control.Alert.AlertType.ERROR,
+                "Error de actualización",
+                root.getScene().getWindow(),
+                "Error al guardar los cambios: " + ex.getMessage()
+            );
         }
+    }
+    
+    /**
+     * Updates the view model with fresh data from the server after save.
+     */
+    private void updateViewModelFromSavedData(PersonDTO updatedDto) {
+        LOGGER.fine("Updating view model with saved data for person ID: " + updatedDto.getId());
+        
+        // Update the view model with the fresh server data
+        vm.setId(updatedDto.getId() != null ? updatedDto.getId() : 0L);
+        vm.setFirstName(updatedDto.getFirstName() != null ? updatedDto.getFirstName() : "");
+        vm.setLastName(updatedDto.getLastName() != null ? updatedDto.getLastName() : "");
+        vm.setEmail(updatedDto.getEmail() != null ? updatedDto.getEmail() : "");
+        vm.setUsername(updatedDto.getUsername() != null ? updatedDto.getUsername() : "");
+        vm.setPassword(updatedDto.getPassword() != null ? updatedDto.getPassword() : "");
+        vm.setStatus(updatedDto.getStatus() != null ? updatedDto.getStatus() : 'I');
+        vm.setIsAdmin(updatedDto.getIsAdmin() != null ? updatedDto.getIsAdmin() : 'N');
+        
+        LOGGER.fine("View model updated with saved data");
+    }
+    
+    /**
+     * Notifies other views that a person has been updated.
+     */
+    private void notifyPersonListUpdate() {
+        // Set a flag in AppContext that PersonSignUpView can check to refresh its list
+        AppContext.getInstance().set("personListNeedsRefresh", Boolean.TRUE);
+        LOGGER.fine("Set personListNeedsRefresh flag for PersonSignUpView");
     }
 }
