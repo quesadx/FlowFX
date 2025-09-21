@@ -90,10 +90,45 @@ public class DockComponent extends StackPane {
                 AppContext.getInstance().set("dockBar", bar);
                 Object user = AppContext.getInstance().get("user");
                 bar.setDisable(user == null);
+                
+                // Configure admin button visibility based on user role
+                configureAdminButtonVisibility(user);
             } catch (Exception ex) {
                 LOGGER.log(Level.FINER, "Failed to goofy ahh enviar dockBar to AppContext, arreglen esto!!!!", ex);
             }
         }
+    }
+
+    /**
+     * Configures the admin button visibility based on current user's admin status.
+     */
+    private void configureAdminButtonVisibility(Object user) {
+        if (btnAdmin == null) return;
+        
+        boolean isAdmin = false;
+        if (user instanceof cr.ac.una.flowfx.model.PersonDTO person) {
+            Character adminFlag = person.getIsAdmin();
+            isAdmin = adminFlag != null && Character.toUpperCase(adminFlag) == 'Y';
+            LOGGER.fine("User admin status: " + isAdmin + " (flag: " + adminFlag + ")");
+        }
+        
+        btnAdmin.setVisible(isAdmin);
+        btnAdmin.setManaged(isAdmin); // Also control layout participation
+        
+        LOGGER.fine("Admin button configured: visible=" + isAdmin);
+    }
+
+    /**
+     * Updates the dock component state based on current user context.
+     * Call this method when user context changes (login/logout/role change).
+     */
+    public void updateDockState() {
+        Object user = AppContext.getInstance().get("user");
+        if (bar != null) {
+            bar.setDisable(user == null);
+        }
+        configureAdminButtonVisibility(user);
+        LOGGER.fine("Dock state updated");
     }
 
     private void wireActions() {

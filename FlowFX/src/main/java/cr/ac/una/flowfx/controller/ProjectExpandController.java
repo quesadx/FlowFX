@@ -43,7 +43,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 /**
  * Controller for the Project Expand view providing comprehensive project management functionality.
@@ -119,7 +118,6 @@ public class ProjectExpandController extends Controller implements Initializable
     private final ObservableList<ProjectActivityViewModel> activities = FXCollections.observableArrayList();
     private ProjectActivityViewModel selectedActivity;
     private boolean statusPersistInProgress = false;
-    private boolean activityStatusPersistInProgress = false;
     
     // Activity creation form status property for proper binding
     private final javafx.beans.property.ObjectProperty<String> activityCreationStatusProperty = 
@@ -128,6 +126,7 @@ public class ProjectExpandController extends Controller implements Initializable
     // Change detection for activity detail popup
     private final javafx.beans.property.BooleanProperty activityHasChanges = new javafx.beans.property.SimpleBooleanProperty(false);
     private String activitySnapshotDescription;
+    private String activitySnapshotStatus;
     private LocalDate snapshotCreationDate;
     private LocalDate snapshotLastUpdateDate;
     private LocalDate snapshotPlannedStartDate;
@@ -195,6 +194,21 @@ public class ProjectExpandController extends Controller implements Initializable
     @FXML
     private void onActionTgActivityCreateStatusRunning(ActionEvent event) {
         LOGGER.fine("Activity creation status running toggle activated (handled by binding)");
+    }
+
+    @FXML
+    private void onActionTechLeaderDetails(ActionEvent event) {
+        openPersonExpandView(vm.getTechLeaderId(), "Technical Leader");
+    }
+
+    @FXML
+    private void onActionLeaderDetails(ActionEvent event) {
+        openPersonExpandView(vm.getLeaderUserId(), "Project Leader");
+    }
+
+    @FXML
+    private void onActionSponsorDetails(ActionEvent event) {
+        openPersonExpandView(vm.getSponsorId(), "Sponsor");
     }
 
     /**
@@ -512,17 +526,58 @@ public class ProjectExpandController extends Controller implements Initializable
 
     @FXML
     private void onActionTxfSponsorId(ActionEvent event) {
-        openPersonInformation(vm.getSponsorId(), "Sponsor");
+        openPersonExpandView(vm.getSponsorId(), "Sponsor");
     }
 
     @FXML
     private void onActionTxfLeaderId(ActionEvent event) {
-        openPersonInformation(vm.getLeaderUserId(), "Project Leader");
+        openPersonExpandView(vm.getLeaderUserId(), "Project Leader");
     }
 
     @FXML
     private void onActionTechLeaderId(ActionEvent event) {
-        openPersonInformation(vm.getTechLeaderId(), "Technical Leader");
+        openPersonExpandView(vm.getTechLeaderId(), "Technical Leader");
+    }
+
+    /**
+     * Opens PersonExpandView in view-only mode for the specified person.
+     */
+    private void openPersonExpandView(long personId, String roleLabel) {
+        if (personId <= 0) {
+            LOGGER.warning("Invalid person ID provided: " + personId);
+            return;
+        }
+        
+        PersonService service = new PersonService();
+        cr.ac.una.flowfx.util.Respuesta response = service.find(personId);
+        
+        if (!Boolean.TRUE.equals(response.getEstado())) {
+            LOGGER.warning("Could not retrieve person with ID " + personId + ": " + 
+                (response != null ? response.getMensaje() : "null response"));
+            return;
+        }
+        
+        Object personData = response.getResultado("Person");
+        if (!(personData instanceof PersonDTO person)) {
+            LOGGER.warning("Service did not return valid PersonDTO for ID " + personId);
+            return;
+        }
+        
+        // Set up context for PersonExpandView
+        AppContext.getInstance().set("selectedPerson", person);
+        AppContext.getInstance().set("personExpand.viewOnly", true);
+        AppContext.getInstance().set("personExpand.roleLabel", roleLabel);
+        AppContext.getInstance().set("personExpand.returnView", "ProjectExpandView");
+        AppContext.getInstance().set("personExpand.returnProject", vm.toDTO());
+        
+        try {
+            FlowController.getInstance().goView("PersonExpandView");
+        } finally {
+            // Clean up context (except returnProject which PersonExpandView needs)
+            AppContext.getInstance().delete("personExpand.viewOnly");
+            AppContext.getInstance().delete("personExpand.roleLabel");
+            AppContext.getInstance().delete("personExpand.returnView");
+        }
     }
 
     // Status toggle handlers (kept for FXML compatibility)
@@ -534,59 +589,8 @@ public class ProjectExpandController extends Controller implements Initializable
     // Activity Status Management
     
     /**
-     * Updates the selected activity's status and persists the change.
-     */
-    /**
-     * Persists activity status change asynchronously.
-     */
-    private void persistActivityStatusAsync(ProjectActivityViewModel activity, String statusCode) {
-        activityStatusPersistInProgress = true;
-        
-        new Thread(() -> {
-            try {
-                ProjectActivityService service = new ProjectActivityService();
-                ProjectActivityDTO dto = activity.toDTO();
-                
-                LOGGER.info("Persisting activity status change: " + statusCode + " for activity ID: " + dto.getId());
-                Respuesta response = service.update(dto);
-                
-                Platform.runLater(() -> {
-                    handleActivityStatusUpdateResponse(response, activity, statusCode);
-                });
-                
-            } catch (Exception ex) {
-                LOGGER.log(Level.SEVERE, "Error persisting activity status", ex);
-                Platform.runLater(() -> {
-                    activityStatusPersistInProgress = false;
-                });
-            }
-        }, "activity-status-update").start();
-    }
-    
-    /**
-     * Handles the response from activity status update.
-     */
-    private void handleActivityStatusUpdateResponse(Respuesta response, 
-            ProjectActivityViewModel activity, String statusCode) {
-        if (!Boolean.TRUE.equals(response.getEstado())) {
-            LOGGER.log(Level.WARNING, "Activity status update failed: {0}", response.getMensaje());
-            // Revert status change on failure
-            // Note: This is a simple revert, in production you might want to show user notification
-        } else {
-            LOGGER.log(Level.INFO, "Activity status successfully persisted: {0}", statusCode);
-            
-            // Refresh the table display
-            tbvActivities.refresh();
-            
-            // Enqueue notification if needed
-            enqueueStatusChangeNotification("ACTIVITY", activity.getId(), statusCode);
-        }
-        activityStatusPersistInProgress = false;
-    }
-    
-    /**
      * Sets up activity detail status toggle binding when an activity is selected.
-     * Now properly binds the toggle group to the activity's status property.
+     * Now properly binds the toggle group to the activity's status property without auto-persistence.
      */
     private void bindActivityDetailStatusToggles(ProjectActivityViewModel activity) {
         if (ActivityDetailStatusGroup == null || activity == null) {
@@ -602,14 +606,8 @@ public class ProjectExpandController extends Controller implements Initializable
         // Bind the toggle group to the activity's status property
         BindingUtils.bindToggleGroupToProperty(ActivityDetailStatusGroup, activity.statusProperty());
         
-        // Set up change listener for automatic persistence
-        activity.statusProperty().addListener((observable, oldStatus, newStatus) -> {
-            if (newStatus != null && !newStatus.equals(oldStatus) && !activityStatusPersistInProgress) {
-                LOGGER.info("Activity status changed: " + oldStatus + " -> " + newStatus + " for activity ID: " + activity.getId());
-                persistActivityStatusAsync(activity, newStatus);
-                applyAutomaticActualDatesForActivity(activity);
-            }
-        });
+        // Note: Status changes are now tracked by the change detection system
+        // and will be persisted when the user clicks "Confirm Changes"
         
         // Select the appropriate toggle based on current activity status
         String status = activity.getStatus();
@@ -746,49 +744,6 @@ public class ProjectExpandController extends Controller implements Initializable
             new PersonLabelUtil.PersonField(vm.getTechLeaderId(), txfTechLeaderId),
             new PersonLabelUtil.PersonField(vm.getSponsorId(), txfSponsorId)
         );
-    }
-
-    /**
-     * Opens detailed person information dialog.
-     */
-    private void openPersonInformation(long personId, String roleLabel) {
-        if (personId <= 0) {
-            LOGGER.warning("Invalid person ID provided: " + personId);
-            return;
-        }
-        
-        PersonService service = new PersonService();
-        Respuesta response = service.find(personId);
-        
-        if (!Boolean.TRUE.equals(response.getEstado())) {
-            LOGGER.warning("Could not retrieve person with ID " + personId + ": " + 
-                (response != null ? response.getMensaje() : "null response"));
-            return;
-        }
-        
-        Object personData = response.getResultado("Person");
-        if (!(personData instanceof PersonDTO person)) {
-            LOGGER.warning("Service did not return valid PersonDTO for ID " + personId);
-            return;
-        }
-        
-        showPersonInformationModal(person, roleLabel);
-    }
-
-    /**
-     * Shows the person information modal dialog.
-     */
-    private void showPersonInformationModal(PersonDTO person, String roleLabel) {
-        AppContext.getInstance().set("personInformation.person", person);
-        AppContext.getInstance().set("personInformation.role", roleLabel);
-        
-        try {
-            FlowController.getInstance().goViewInWindowModal(
-                "PersonInformationView", (Stage) root.getScene().getWindow(), false);
-        } finally {
-            AppContext.getInstance().delete("personInformation.person");
-            AppContext.getInstance().delete("personInformation.role");
-        }
     }
 
     // Date Binding Utilities
@@ -1414,6 +1369,7 @@ public class ProjectExpandController extends Controller implements Initializable
 
         // Take a snapshot of current values for change detection
         activitySnapshotDescription = txaDescription.getText();
+        activitySnapshotStatus = activity.getStatus();
         snapshotCreationDate = dpCreationDate.getValue();
         snapshotLastUpdateDate = dpLastUpdate.getValue();
         snapshotPlannedStartDate = dpPlannedStartDate.getValue();
@@ -1433,6 +1389,7 @@ public class ProjectExpandController extends Controller implements Initializable
         javafx.beans.binding.BooleanBinding changes = javafx.beans.binding.Bindings.createBooleanBinding(
             () -> {
                 if (!safeEquals(txaDescription.getText(), activitySnapshotDescription)) return true;
+                if (!safeEquals(selectedActivity != null ? selectedActivity.getStatus() : null, activitySnapshotStatus)) return true;
                 if (!safeEqualsLocalDate(dpCreationDate.getValue(), snapshotCreationDate)) return true;
                 if (!safeEqualsLocalDate(dpLastUpdate.getValue(), snapshotLastUpdateDate)) return true;
                 if (!safeEqualsLocalDate(dpPlannedStartDate.getValue(), snapshotPlannedStartDate)) return true;
@@ -1442,6 +1399,7 @@ public class ProjectExpandController extends Controller implements Initializable
                 return false;
             },
             txaDescription.textProperty(),
+            selectedActivity != null ? selectedActivity.statusProperty() : new javafx.beans.property.SimpleObjectProperty<>(),
             dpCreationDate.valueProperty(),
             dpLastUpdate.valueProperty(),
             dpPlannedStartDate.valueProperty(),

@@ -142,6 +142,18 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" onAction="#onActionTxfSponsorId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionSponsorDetails" prefWidth="102.0" styleClass="jfx-button" text="Datos">
+                                                               <tooltip>
+                                                                  <Tooltip text="Crear nueva actividad" />
+                                                               </tooltip>
+                                                               <graphic>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--badge-info.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </MFXButton>
                                                             <MFXButton onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Cambiar">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
@@ -177,6 +189,18 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" onAction="#onActionTxfLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionLeaderDetails" prefWidth="102.0" styleClass="jfx-button" text="Datos">
+                                                               <tooltip>
+                                                                  <Tooltip text="Crear nueva actividad" />
+                                                               </tooltip>
+                                                               <graphic>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--badge-info.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </MFXButton>
                                                             <MFXButton onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Cambiar">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
@@ -212,6 +236,18 @@
                                                                </children>
                                                             </VBox>
                                                             <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" onAction="#onActionTechLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionTechLeaderDetails" prefWidth="102.0" styleClass="jfx-button" text="Datos">
+                                                               <tooltip>
+                                                                  <Tooltip text="Crear nueva actividad" />
+                                                               </tooltip>
+                                                               <graphic>
+                                                                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@../resources/icons/lucide--badge-info.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </MFXButton>
                                                             <MFXButton onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Cambiar">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
