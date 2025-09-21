@@ -17,9 +17,11 @@ import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.datatype.DatatypeFactory;
 
 /**
  * Client service for ProjectTracking operations against the FlowFX web service.
@@ -393,7 +395,9 @@ public class ProjectTrackingService {
                 );
             }
             
-            LOG.fine("Creating project tracking for project: " + dto.getProjectId());
+            LOG.info("CLIENT:createProjectTracking(start) projectId=" + dto.getProjectId() + 
+                    ", createdBy=" + dto.getCreatedBy() + 
+                    ", observations=" + (dto.getObservations() != null ? dto.getObservations().substring(0, Math.min(50, dto.getObservations().length())) : "null"));
             
             cr.ac.una.flowfx.ws.ProjectTrackingDTO wsDto = toWs(dto);
             cr.ac.una.flowfx.ws.Respuesta wsResp = port.createProjectTracking(wsDto);
@@ -401,10 +405,14 @@ public class ProjectTrackingService {
             Respuesta r = mapRespuesta(wsResp);
             if (Boolean.TRUE.equals(r.getEstado())) {
                 fillSingleFromMensajeInterno(r);
+                LOG.info("CLIENT:createProjectTracking(success)");
+            } else {
+                LOG.warning("CLIENT:createProjectTracking(failed) - " + 
+                           (r != null ? r.getMensaje() : "null response"));
             }
             return r;
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error creating project tracking", ex);
+            LOG.log(Level.SEVERE, "CLIENT:createProjectTracking(error)", ex);
             return new Respuesta(
                 false,
                 "Error creating project tracking.",

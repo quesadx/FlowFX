@@ -353,11 +353,17 @@ public class ProjectObservationsController extends Controller implements Initial
     private void prefetchCreatedByLabels() {
         LOGGER.fine("Pre-fetching created by labels for observations");
         
-        observations.stream()
+        long[] personIds = observations.stream()
             .mapToLong(ProjectTrackingViewModel::getCreatedBy)
             .filter(id -> id > 0)
             .distinct()
-            .forEach(id -> PersonLabelUtil.resolvePersonNameAsync(id, null));
+            .toArray();
+        
+        if (personIds.length > 0) {
+            PersonLabelUtil.prefetchPersonLabels(personIds, () -> {
+                LOGGER.fine("Completed prefetching person labels for " + personIds.length + " IDs");
+            });
+        }
     }
 
     /**
@@ -494,8 +500,10 @@ public class ProjectObservationsController extends Controller implements Initial
         dto.setProgressPercentage((int) Math.round(sliderObservationPercentage.getValue()));
         dto.setCreatedAt(new Date());
         
-        LOGGER.fine("Built observation DTO - Project: " + dto.getProjectId() + 
-                   ", Progress: " + dto.getProgressPercentage() + "%, Date: " + dto.getTrackingDate());
+        LOGGER.info("Built observation DTO - Project: " + dto.getProjectId() + 
+                   ", CreatedBy: " + dto.getCreatedBy() + 
+                   ", Progress: " + dto.getProgressPercentage() + "%, Date: " + dto.getTrackingDate() + 
+                   ", Observations: " + (dto.getObservations() != null ? dto.getObservations().substring(0, Math.min(50, dto.getObservations().length())) : "null"));
         
         return dto;
     }
