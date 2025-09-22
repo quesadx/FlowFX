@@ -29,6 +29,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -37,6 +38,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import cr.ac.una.flowfx.util.Mensaje;
 
 import java.net.URL;
 import java.time.Instant;
@@ -1248,9 +1250,13 @@ public class ProjectExpandController extends Controller implements Initializable
             clearActivityCreationForm();
             AnimationManager.hidePopup(vbDisplayActivityCreation, vbCover);
             loadActivitiesForProject(); // Defensive reload to stay synchronized
+            new Mensaje().show(Alert.AlertType.INFORMATION, "Éxito", "Actividad creada exitosamente.");
+
         } else {
             LOGGER.warning("Activity creation failed: " + response.getMensaje() + 
                 " | " + response.getMensajeInterno());
+            new Mensaje().show(Alert.AlertType.ERROR, "Error", 
+                "No se pudo crear la actividad: " + (response != null ? response.getMensaje() : "null"));
         }
     }
 
