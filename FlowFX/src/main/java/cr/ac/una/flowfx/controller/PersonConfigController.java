@@ -237,6 +237,16 @@ public class PersonConfigController extends Controller implements Initializable 
             Character.toUpperCase(viewModel.getIsAdmin()) == 'Y';
         cbIsAdmin.setSelected(isAdminSelected);
         
+        // Disable admin checkbox if user is not currently an admin
+        // This prevents non-admin users from granting themselves admin privileges
+        boolean userIsAdmin = originalUser != null && originalUser.getIsAdmin() != null && 
+            Character.toUpperCase(originalUser.getIsAdmin()) == 'Y';
+        cbIsAdmin.setDisable(!userIsAdmin);
+        
+        if (!userIsAdmin) {
+            LOGGER.info("Admin checkbox disabled - current user is not an administrator");
+        }
+        
         cbIsAdmin.selectedProperty().addListener((obs, oldVal, newVal) -> {
             if (!syncingFields) {
                 viewModel.setIsAdmin(newVal ? 'Y' : 'N');

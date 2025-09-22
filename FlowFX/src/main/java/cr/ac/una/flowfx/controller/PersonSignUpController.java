@@ -139,16 +139,35 @@ public class PersonSignUpController extends Controller implements Initializable 
     }
 
     private void refreshPersons() {
+        LOGGER.info("Refrescando lista de personas");
         persons.clear();
         PersonService s = new PersonService();
         Respuesta r = s.findAll();
-        if (r == null || !Boolean.TRUE.equals(r.getEstado())) return;
+        
+        if (r == null) {
+            LOGGER.warning("PersonService.findAll() devolvió null");
+            return;
+        }
+        
+        if (!Boolean.TRUE.equals(r.getEstado())) {
+            LOGGER.warning("Error al obtener personas: " + r.getMensaje());
+            return;
+        }
+        
         @SuppressWarnings("unchecked")
         List<PersonDTO> list = (List<PersonDTO>) r.getResultado("Persons");
-        if (list == null) return;
+        if (list == null) {
+            LOGGER.warning("Lista de personas es null en la respuesta");
+            return;
+        }
+        
+        LOGGER.info("Obtenidas " + list.size() + " personas del servicio");
         List<PersonViewModel> vms = new ArrayList<>();
-        for (PersonDTO dto : list) vms.add(new PersonViewModel(dto));
+        for (PersonDTO dto : list) {
+            vms.add(new PersonViewModel(dto));
+        }
         persons.addAll(vms);
+        LOGGER.fine("Lista de personas actualizada con " + persons.size() + " elementos");
     }
     
     /**
@@ -183,38 +202,58 @@ public class PersonSignUpController extends Controller implements Initializable 
 
     @FXML
     private void onActionBtnPersonSignUp(ActionEvent event) {
+        LOGGER.info("Iniciando proceso de registro de persona");
+        
         PersonDTO dto = extractPersonFromSignUp();
-        if (dto == null) return;
+        if (dto == null) {
+            LOGGER.warning("Validación de datos falló, cancelando registro");
+            return;
+        }
+        
+        LOGGER.info("Datos validados correctamente, enviando al servicio - ID: " + dto.getId() + 
+            ", Nombre: " + dto.getFirstName() + " " + dto.getLastName() + 
+            ", Estado: " + dto.getStatus() + ", Admin: " + dto.getIsAdmin());
+        
         PersonService s = new PersonService();
         Respuesta r = s.create(dto);
+        
         if (Boolean.TRUE.equals(r.getEstado())) {
+            LOGGER.info("Persona registrada exitosamente en el servidor");
             new Mensaje().showModal(
                 Alert.AlertType.INFORMATION,
-                "Registro",
+                "Registro Exitoso",
                 root.getScene().getWindow(),
-                "Persona registrada exitosamente."
+                "La persona ha sido registrada exitosamente."
             );
             AnimationManager.hidePopup(vbSignUpDisplay, vbCover);
             clearSignUpFields();
             refreshPersons();
         } else {
-            LOGGER.log(
-                Level.WARNING,
-                "P. mensaje={0}, mensajeInterno={1}",
-                new Object[] { r == null ? null : r.getMensaje(), r == null ? null : r.getMensajeInterno() }
-            );
+            String errorMsg = r != null ? r.getMensaje() : "Error desconocido";
+            String errorDetail = r != null ? r.getMensajeInterno() : "";
+            
+            LOGGER.log(Level.SEVERE, "Error en registro - Mensaje: {0}, Detalle: {1}", 
+                new Object[] { errorMsg, errorDetail });
+            
+            // Show detailed error to help with debugging
+            String detailedMsg = errorMsg;
+            if (errorDetail != null && !errorDetail.trim().isEmpty()) {
+                detailedMsg += "\n\nDetalle técnico: " + errorDetail;
+            }
+            
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Registro",
+                "Error de Registro",
                 root.getScene().getWindow(),
-                r == null ? "Error misterioso." : r.getMensaje()
+                detailedMsg
             );
         }
     }
 
     private PersonDTO extractPersonFromSignUp() {
         try {
-            Long id = parseLongSafe(txfPersonId.getText());
+            // Extract and validate all field values
+            String idText = txfPersonId.getText();
             String firstName = getTrimmedText(txfPersonFirstName);
             String lastName = getTrimmedText(txfPersonLastName);
             String email = getTrimmedText(txfPersonEmail);
@@ -223,38 +262,87 @@ public class PersonSignUpController extends Controller implements Initializable 
             Character status = cbIsActive.isSelected() ? 'A' : 'I';
             Character isAdmin = cbIsAdmin.isSelected() ? 'Y' : 'N';
 
-            if (id == null || firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()) {
+            // Debug logging to track field values
+            LOGGER.info("Validando campos de registro - ID: '" + idText + "', " +
+                "Nombre: '" + firstName + "', Apellido: '" + lastName + "', " +
+                "Email: '" + email + "', Usuario: '" + username + "', " +
+                "Contraseña: " + (password != null && !password.isEmpty() ? "[PRESENTE]" : "[VACÍA]"));
+
+            // Validate required fields first
+            List<String> missingFields = new ArrayList<>();
+            
+            if (idText == null || idText.trim().isEmpty()) {
+                missingFields.add("Cédula");
+            }
+            if (firstName.isEmpty()) {
+                missingFields.add("Nombre");
+            }
+            if (lastName.isEmpty()) {
+                missingFields.add("Apellido");
+            }
+            if (email.isEmpty()) {
+                missingFields.add("Correo electrónico");
+            }
+
+            if (!missingFields.isEmpty()) {
+                String fieldsList = String.join(", ", missingFields);
+                LOGGER.warning("Campos faltantes: " + fieldsList);
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
-                    "Registro",
+                    "Campos Requeridos",
                     root.getScene().getWindow(),
-                    "Por favor complete todos los campos requeridos (ID, Nombre, Apellido, Correo electrónico)."
+                    "Por favor complete los siguientes campos requeridos: " + fieldsList
                 );
                 return null;
             }
 
-            boolean usernameEmpty = username.isEmpty();
-            boolean passwordEmpty = password == null || password.isEmpty();
-            if (usernameEmpty && passwordEmpty) {
-                return new PersonDTO(id, firstName, lastName, email, null, null, status, isAdmin);
-            } else if (!usernameEmpty && !passwordEmpty) {
-                return new PersonDTO(id, firstName, lastName, email, username, password, status, isAdmin);
-            } else {
+            // Parse and validate ID
+            Long id = parseLongSafe(idText);
+            if (id == null) {
+                LOGGER.warning("ID inválido: '" + idText + "'");
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
-                    "Registro",
+                    "Cédula Inválida",
                     root.getScene().getWindow(),
-                    "Proporcione tanto el Nombre de usuario como la Contraseña, o deje ambos en blanco."
+                    "La cédula debe ser un número válido."
+                );
+                return null;
+            }
+
+            // Validate username/password combination
+            boolean usernameEmpty = username.isEmpty();
+            boolean passwordEmpty = password == null || password.isEmpty();
+            
+            LOGGER.info("Validación usuario/contraseña - Usuario vacío: " + usernameEmpty + 
+                ", Contraseña vacía: " + passwordEmpty);
+
+            if (usernameEmpty && passwordEmpty) {
+                // Both empty: allowed, create person without credentials
+                LOGGER.info("Creando persona sin credenciales de usuario");
+                return new PersonDTO(id, firstName, lastName, email, null, null, status, isAdmin);
+            } else if (!usernameEmpty && !passwordEmpty) {
+                // Both filled: allowed, create person with credentials
+                LOGGER.info("Creando persona con credenciales de usuario");
+                return new PersonDTO(id, firstName, lastName, email, username, password, status, isAdmin);
+            } else {
+                // One filled, one empty: not allowed
+                LOGGER.warning("Usuario y contraseña incompletos - Usuario: '" + username + 
+                    "', Contraseña: " + (passwordEmpty ? "vacía" : "presente"));
+                new Mensaje().showModal(
+                    Alert.AlertType.ERROR,
+                    "Credenciales Incompletas",
+                    root.getScene().getWindow(),
+                    "Debe proporcionar tanto el nombre de usuario como la contraseña, o dejar ambos campos vacíos."
                 );
                 return null;
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Error validando datos", e);
+            LOGGER.log(Level.SEVERE, "Error inesperado validando datos de registro", e);
             new Mensaje().showModal(
                 Alert.AlertType.ERROR,
-                "Registro",
+                "Error de Validación",
                 root.getScene().getWindow(),
-                "Error validando datos: " + (e == null ? "?" : e.getMessage())
+                "Error inesperado al validar los datos: " + e.getMessage()
             );
             return null;
         }
