@@ -31,26 +31,13 @@ public class PersonInformationController
         PersonInformationController.class.getName()
     );
 
-    @FXML
-    private AnchorPane root;
-
-    @FXML
-    private HBox hbLateralHandlebar;
-
-    @FXML
-    private MFXButton btnClose;
-
-    @FXML
-    private Label lblPersonName;
-
-    @FXML
-    private Label lblPersonMail;
-
-    @FXML
-    private Label lblPersonId;
-
-    @FXML
-    private Label lblPersonProjectRole;
+    @FXML private AnchorPane root;
+    @FXML private HBox hbLateralHandlebar;
+    @FXML private MFXButton btnClose;
+    @FXML private Label lblPersonName;
+    @FXML private Label lblPersonMail;
+    @FXML private Label lblPersonId;
+    @FXML private Label lblPersonProjectRole;
 
     /**
      * Initializes the controller class.

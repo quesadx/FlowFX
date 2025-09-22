@@ -38,38 +38,17 @@ public class PersonExpandController
         PersonExpandController.class.getName()
     );
 
-    @FXML
-    private AnchorPane root;
-
-    @FXML
-    private VBox vbCover;
-
-    @FXML
-    private MFXButton btnReturnPersonSignUp, btnDeletePerson;
-
-    @FXML
-    private MFXTextField txfPersonName;
-
-    @FXML
-    private MFXTextField txfPersonLastName;
-
-    @FXML
-    private MFXTextField txfPersonMail;
-
-    @FXML
-    private MFXTextField txfPersonId;
-
-    @FXML
-    private MFXTextField txfPersonUsername;
-
-    @FXML
-    private MFXPasswordField psfPersonPassword;
-
-    @FXML
-    private MFXCheckbox cbIsAdmin;
-
-    @FXML
-    private MFXCheckbox cbIsActive;
+    @FXML private AnchorPane root;
+    @FXML private VBox vbCover;
+    @FXML private MFXButton btnReturnPersonSignUp, btnDeletePerson;
+    @FXML private MFXTextField txfPersonName;
+    @FXML private MFXTextField txfPersonLastName;
+    @FXML private MFXTextField txfPersonMail;
+    @FXML private MFXTextField txfPersonId;
+    @FXML private MFXTextField txfPersonUsername;
+    @FXML private MFXPasswordField psfPersonPassword;
+    @FXML private MFXCheckbox cbIsAdmin;
+    @FXML private MFXCheckbox cbIsActive;
 
     private final PersonViewModel vm = new PersonViewModel();
     private boolean syncingIdText = false;

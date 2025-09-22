@@ -37,53 +37,22 @@ import javafx.scene.layout.VBox;
  */
 public class PersonSignUpController extends Controller implements Initializable {
 
-    @FXML
-    private AnchorPane root;
-
-    @FXML
-    private VBox vbCover;
-
-    @FXML
-    private VBox vbSignUpDisplay;
-
-    @FXML
-    private MFXTextField txfPersonId;
-
-    @FXML
-    private MFXTextField txfPersonFirstName;
-
-    @FXML
-    private MFXTextField txfPersonLastName;
-
-    @FXML
-    private MFXTextField txfPersonEmail;
-
-    @FXML
-    private MFXTextField txfPersonUsername;
-
-    @FXML
-    private MFXPasswordField pswPersonPassword;
-
-    @FXML
-    private MFXCheckbox cbIsAdmin;
-
-    @FXML
-    private MFXCheckbox cbIsActive;
-
-    @FXML
-    private TableView<PersonViewModel> tbvPersons;
-
-    @FXML
-    private TableColumn<PersonViewModel, Number> tbvPersonid;
-
-    @FXML
-    private TableColumn<PersonViewModel, String> tbvPersonName;
-
-    @FXML
-    private TableColumn<PersonViewModel, String> tbcPersonLastName;
-
-    @FXML
-    private TableColumn<PersonViewModel, String> tbvPersonMail;
+    @FXML private AnchorPane root;
+    @FXML private VBox vbCover;
+    @FXML private VBox vbSignUpDisplay;
+    @FXML private MFXTextField txfPersonId;
+    @FXML private MFXTextField txfPersonFirstName;
+    @FXML private MFXTextField txfPersonLastName;
+    @FXML private MFXTextField txfPersonEmail;
+    @FXML private MFXTextField txfPersonUsername;
+    @FXML private MFXPasswordField pswPersonPassword;
+    @FXML private MFXCheckbox cbIsAdmin;
+    @FXML private MFXCheckbox cbIsActive;
+    @FXML private TableView<PersonViewModel> tbvPersons;
+    @FXML private TableColumn<PersonViewModel, Number> tbvPersonid;
+    @FXML private TableColumn<PersonViewModel, String> tbvPersonName;
+    @FXML private TableColumn<PersonViewModel, String> tbcPersonLastName;
+    @FXML private TableColumn<PersonViewModel, String> tbvPersonMail;
 
     private static final Logger LOGGER = Logger.getLogger(PersonSignUpController.class.getName());
 
@@ -97,6 +66,16 @@ public class PersonSignUpController extends Controller implements Initializable 
         setTextFieldLimit(txfPersonEmail, 35);
         setTextFieldLimit(txfPersonUsername, 20);
         setTextFieldLimit(pswPersonPassword, 20);
+
+        // Sanitizar cédula: solo dígitos y máximo 9
+        txfPersonId.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null) return;
+            String digits = newVal.replaceAll("\\D", "");
+            if (digits.length() > 9) digits = digits.substring(0, 9);
+            if (!digits.equals(newVal)) {
+                txfPersonId.setText(digits);
+            }
+        });
 
         tbvPersonid.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getId()));
         tbvPersonName.setCellValueFactory(data -> data.getValue().firstNameProperty());
@@ -252,7 +231,7 @@ public class PersonSignUpController extends Controller implements Initializable 
 
     private PersonDTO extractPersonFromSignUp() {
         try {
-            // Extract and validate all field values
+            // Extraer y preparar valores de la UI
             String idText = txfPersonId.getText();
             String firstName = getTrimmedText(txfPersonFirstName);
             String lastName = getTrimmedText(txfPersonLastName);
@@ -262,44 +241,47 @@ public class PersonSignUpController extends Controller implements Initializable 
             Character status = cbIsActive.isSelected() ? 'A' : 'I';
             Character isAdmin = cbIsAdmin.isSelected() ? 'Y' : 'N';
 
-            // Debug logging to track field values
-            LOGGER.info("Validando campos de registro - ID: '" + idText + "', " +
-                "Nombre: '" + firstName + "', Apellido: '" + lastName + "', " +
-                "Email: '" + email + "', Usuario: '" + username + "', " +
-                "Contraseña: " + (password != null && !password.isEmpty() ? "[PRESENTE]" : "[VACÍA]"));
+            // Debug
+            LOGGER.info(
+                "Validando campos de registro - ID: '" + idText + "', Nombre: '" + firstName +
+                "', Apellido: '" + lastName + "', Email: '" + email + "', Usuario: '" + username +
+                "', Contraseña: " + (password != null && !password.isEmpty() ? "[PRESENTE]" : "[VACÍA]")
+            );
 
-            // Validate required fields first
-            List<String> missingFields = new ArrayList<>();
-            
-            if (idText == null || idText.trim().isEmpty()) {
-                missingFields.add("Cédula");
-            }
-            if (firstName.isEmpty()) {
-                missingFields.add("Nombre");
-            }
-            if (lastName.isEmpty()) {
-                missingFields.add("Apellido");
-            }
-            if (email.isEmpty()) {
-                missingFields.add("Correo electrónico");
-            }
-
-            if (!missingFields.isEmpty()) {
-                String fieldsList = String.join(", ", missingFields);
-                LOGGER.warning("Campos faltantes: " + fieldsList);
+            // Validación de campos requeridos
+            List<String> missing = new ArrayList<>();
+            if (idText == null || idText.trim().isEmpty()) missing.add("Cédula");
+            if (firstName.isEmpty()) missing.add("Nombre");
+            if (lastName.isEmpty()) missing.add("Apellido");
+            if (email.isEmpty()) missing.add("Correo electrónico");
+            if (!missing.isEmpty()) {
+                String fields = String.join(", ", missing);
+                LOGGER.warning("Campos faltantes: " + fields);
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
                     "Campos Requeridos",
                     root.getScene().getWindow(),
-                    "Por favor complete los siguientes campos requeridos: " + fieldsList
+                    "Por favor complete los siguientes campos requeridos: " + fields
                 );
                 return null;
             }
 
-            // Parse and validate ID
-            Long id = parseLongSafe(idText);
+            // Validar cédula: exactamente 9 dígitos
+            String idDigits = idText.trim();
+            if (!idDigits.matches("\\d{9}")) {
+                new Mensaje().showModal(
+                    Alert.AlertType.ERROR,
+                    "Registro",
+                    root.getScene().getWindow(),
+                    "La cédula debe tener exactamente 9 dígitos numéricos."
+                );
+                return null;
+            }
+
+            // Parsear cédula a Long (seguro tras validación)
+            Long id = parseLongSafe(idDigits);
             if (id == null) {
-                LOGGER.warning("ID inválido: '" + idText + "'");
+                LOGGER.warning("ID inválido: '" + idDigits + "'");
                 new Mensaje().showModal(
                     Alert.AlertType.ERROR,
                     "Cédula Inválida",
@@ -309,33 +291,37 @@ public class PersonSignUpController extends Controller implements Initializable 
                 return null;
             }
 
-            // Validate username/password combination
+            // Validación de usuario/contraseña
             boolean usernameEmpty = username.isEmpty();
-            boolean passwordEmpty = password == null || password.isEmpty();
-            
-            LOGGER.info("Validación usuario/contraseña - Usuario vacío: " + usernameEmpty + 
-                ", Contraseña vacía: " + passwordEmpty);
+            boolean passwordEmpty = (password == null || password.isEmpty());
+            LOGGER.info(
+                "Validación usuario/contraseña - Usuario vacío: " + usernameEmpty +
+                ", Contraseña vacía: " + passwordEmpty
+            );
 
             if (usernameEmpty && passwordEmpty) {
-                // Both empty: allowed, create person without credentials
+                // Ambos vacíos: permitido
                 LOGGER.info("Creando persona sin credenciales de usuario");
                 return new PersonDTO(id, firstName, lastName, email, null, null, status, isAdmin);
-            } else if (!usernameEmpty && !passwordEmpty) {
-                // Both filled: allowed, create person with credentials
+            }
+            if (!usernameEmpty && !passwordEmpty) {
+                // Ambos llenos: permitido
                 LOGGER.info("Creando persona con credenciales de usuario");
                 return new PersonDTO(id, firstName, lastName, email, username, password, status, isAdmin);
-            } else {
-                // One filled, one empty: not allowed
-                LOGGER.warning("Usuario y contraseña incompletos - Usuario: '" + username + 
-                    "', Contraseña: " + (passwordEmpty ? "vacía" : "presente"));
-                new Mensaje().showModal(
-                    Alert.AlertType.ERROR,
-                    "Credenciales Incompletas",
-                    root.getScene().getWindow(),
-                    "Debe proporcionar tanto el nombre de usuario como la contraseña, o dejar ambos campos vacíos."
-                );
-                return null;
             }
+
+            // Uno vacío y otro lleno: error
+            LOGGER.warning(
+                "Usuario y contraseña incompletos - Usuario: '" + username + "', Contraseña: " +
+                (passwordEmpty ? "vacía" : "presente")
+            );
+            new Mensaje().showModal(
+                Alert.AlertType.ERROR,
+                "Credenciales Incompletas",
+                root.getScene().getWindow(),
+                "Debe proporcionar tanto el nombre de usuario como la contraseña, o dejar ambos campos vacíos."
+            );
+            return null;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error inesperado validando datos de registro", e);
             new Mensaje().showModal(

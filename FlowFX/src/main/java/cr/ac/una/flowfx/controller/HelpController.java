@@ -23,12 +23,9 @@ import javafx.stage.Stage;
 public class HelpController extends Controller implements Initializable {
 
 
-    @FXML
-    private AnchorPane root;
-    @FXML
-    private HBox hbLateralHandlebar;
-    @FXML
-    private MFXButton btnClose;
+    @FXML private AnchorPane root;
+    @FXML private HBox hbLateralHandlebar;
+    @FXML private MFXButton btnClose;
     /**
      * Initializes the controller class.
      */

@@ -35,26 +35,13 @@ public class DockComponent extends StackPane {
     private static final Interpolator HOVER_OUT_INTERPOLATOR =
         Interpolator.EASE_BOTH;
 
-    @FXML
-    private StackPane root;
-
-    @FXML
-    private HBox bar;
-
-    @FXML
-    private MFXButton btnHome;
-
-    @FXML
-    private MFXButton btnProjects;
-
-    @FXML
-    private MFXButton btnAdmin;
-
-    @FXML
-    private MFXButton btnUserConfig;
-
-    @FXML
-    private MFXButton btnCreativeZone;
+    @FXML private StackPane root;
+    @FXML private HBox bar;
+    @FXML private MFXButton btnHome;
+    @FXML private MFXButton btnProjects;
+    @FXML private MFXButton btnAdmin;
+    @FXML private MFXButton btnUserConfig;
+    @FXML private MFXButton btnCreativeZone;
 
     /**
      * Loads FXML and configures behavior. Any failure to load the FXML is

@@ -65,32 +65,19 @@ public class PersonConfigController extends Controller implements Initializable 
         PersonConfigController.class.getName()
     );
 
-    @FXML
-    private AnchorPane root;
-    @FXML
-    private VBox vbCover;
-    @FXML
-    private VBox vbSignUpDisplay;
-    @FXML
-    private MFXTextField txfPersonId;
-    @FXML
-    private MFXTextField txfPersonFirstName;
-    @FXML
-    private MFXTextField txfPersonLastName;
-    @FXML
-    private MFXTextField txfPersonEmail;
-    @FXML
-    private MFXTextField txfPersonUsername;
-    @FXML
-    private MFXPasswordField pswPersonPassword;
-    @FXML
-    private MFXCheckbox cbIsAdmin;
-    @FXML
-    private MFXCheckbox cbIsActive;
-    @FXML
-    private MFXButton btnCancelChanges;
-    @FXML
-    private MFXButton btnCommitChanges;
+    @FXML private AnchorPane root;
+    @FXML private VBox vbCover;
+    @FXML private VBox vbSignUpDisplay;
+    @FXML private MFXTextField txfPersonId;
+    @FXML private MFXTextField txfPersonFirstName;
+    @FXML private MFXTextField txfPersonLastName;
+    @FXML private MFXTextField txfPersonEmail;
+    @FXML private MFXTextField txfPersonUsername;
+    @FXML private MFXPasswordField pswPersonPassword;
+    @FXML private MFXCheckbox cbIsAdmin;
+    @FXML private MFXCheckbox cbIsActive;
+    @FXML private MFXButton btnCancelChanges;
+    @FXML private MFXButton btnCommitChanges;
 
     private PersonViewModel viewModel;
     private PersonDTO originalUser;

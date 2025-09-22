@@ -65,7 +65,6 @@ public class ProjectManagementController
     @FXML private VBox vbCover;
     @FXML private VBox vbProjectCreationDisplay;
     @FXML private MFXTextField txfProjectName;
-    //@FXML private TextArea txaProjectDescription;
     @FXML private MFXDatePicker dpProjectStartDate;
     @FXML private MFXDatePicker dpProjectEndDate;
     @FXML private MFXTextField txfSponsorId;

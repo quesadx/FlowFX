@@ -75,44 +75,19 @@ public class ProjectObservationsController extends Controller implements Initial
     private static final Logger LOGGER = Logger.getLogger(ProjectObservationsController.class.getName());
 
     // FXML injected components
-    @FXML
-    private MFXDatePicker dpObservationDate;
-
-    @FXML
-    private Label lblPercentage; // Shows the current value of the slider
-
-    @FXML
-    private AnchorPane root;
-
-    @FXML
-    private MFXSlider sliderObservationPercentage;
-
-    @FXML
-    private TableColumn<ProjectTrackingViewModel, String> tbvObservationDate;
-
-    @FXML
-    private TableColumn<ProjectTrackingViewModel, String> tbvObservationPercentage;
-
-    @FXML
-    private TableColumn<ProjectTrackingViewModel, String> tbvObservationTitle;
-
-    @FXML
-    private TableColumn<ProjectTrackingViewModel, String> tbvObservationCreatedBy;
-
-    @FXML
-    private TableView<ProjectTrackingViewModel> tbvObservations;
-
-    @FXML
-    private TextArea txaObservationDescription;
-
-    @FXML
-    private MFXTextField txfObservationName;
-
-    @FXML
-    private VBox vbCover;
-
-    @FXML
-    private VBox vbObservationCreationPopUp;
+    @FXML private MFXDatePicker dpObservationDate;
+    @FXML private Label lblPercentage; // Shows the current value of the slider
+    @FXML private AnchorPane root;
+    @FXML private MFXSlider sliderObservationPercentage;
+    @FXML private TableColumn<ProjectTrackingViewModel, String> tbvObservationDate;
+    @FXML private TableColumn<ProjectTrackingViewModel, String> tbvObservationPercentage;
+    @FXML private TableColumn<ProjectTrackingViewModel, String> tbvObservationTitle;
+    @FXML private TableColumn<ProjectTrackingViewModel, String> tbvObservationCreatedBy;
+    @FXML private TableView<ProjectTrackingViewModel> tbvObservations;
+    @FXML private TextArea txaObservationDescription;
+    @FXML private MFXTextField txfObservationName;
+    @FXML private VBox vbCover;
+    @FXML private VBox vbObservationCreationPopUp;
 
     // State management fields
     private final ObservableList<ProjectTrackingViewModel> observations = FXCollections.observableArrayList();

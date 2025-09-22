@@ -42,32 +42,15 @@ public class PersonSelectionController
         PersonSelectionController.class.getName()
     );
 
-    @FXML
-    private MFXTextField txfSearchBar;
-
-    @FXML
-    private MFXButton btnSearch;
-
-    @FXML
-    private TableView<PersonDTO> tvPersons;
-
-    @FXML
-    private TableColumn<PersonDTO, String> tbcPersonName;
-
-    @FXML
-    private TableColumn<PersonDTO, String> tbcPersonLastName;
-
-    @FXML
-    private TableColumn<PersonDTO, Long> tbcPersonId;
-
-    @FXML
-    private AnchorPane root;
-
-    @FXML
-    private HBox hbLateralHandlebar;
-
-    @FXML
-    private MFXButton btnClose;
+    @FXML private MFXTextField txfSearchBar;
+    @FXML private MFXButton btnSearch;
+    @FXML private TableView<PersonDTO> tvPersons;
+    @FXML private TableColumn<PersonDTO, String> tbcPersonName;
+    @FXML private TableColumn<PersonDTO, String> tbcPersonLastName;
+    @FXML private TableColumn<PersonDTO, Long> tbcPersonId;
+    @FXML private AnchorPane root;
+    @FXML private HBox hbLateralHandlebar;
+    @FXML private MFXButton btnClose;
 
     private ObservableList<PersonDTO> masterData =
         FXCollections.observableArrayList();

@@ -13,20 +13,11 @@ import javafx.stage.Stage;
 
 public class PrincipalController extends Controller implements Initializable {
 
-    @FXML
-    private BorderPane root;
-
-    @FXML
-    private MFXButton btnClose;
-
-    @FXML
-    private MFXButton btnMaximize;
-
-    @FXML
-    private MFXButton btnMinimize;
-
-    @FXML
-    private HBox hbLateralHandlebar, hboxHorizontalDockBarReference;
+    @FXML private BorderPane root;
+    @FXML private MFXButton btnClose;
+    @FXML private MFXButton btnMaximize;
+    @FXML private MFXButton btnMinimize;
+    @FXML private HBox hbLateralHandlebar, hboxHorizontalDockBarReference;
 
     private static final int RESIZE_MARGIN = 8;
     private boolean resizingLeft;

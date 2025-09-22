@@ -27,20 +27,11 @@ public class Board extends Pane implements Initializable {
         Board.class.getName()
     );
 
-    @FXML
-    private VBox vbBoard;
-
-    @FXML
-    private MFXButton btnExpandProject, btnDeleteProject;
-
-    @FXML
-    private Label lblTitle;
-
-    @FXML
-    private Label lblDescription;
-
-    @FXML
-    private Label lblStatus;
+    @FXML private VBox vbBoard;
+    @FXML private MFXButton btnExpandProject, btnDeleteProject;
+    @FXML private Label lblTitle;
+    @FXML private Label lblDescription;
+    @FXML private Label lblStatus;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

@@ -21,12 +21,9 @@ import javafx.stage.Stage;
  */
 public class AboutController extends Controller implements Initializable {
 
-    @FXML
-    private AnchorPane root;
-    @FXML
-    private HBox hbLateralHandlebar;
-    @FXML
-    private MFXButton btnClose;
+    @FXML private AnchorPane root;
+    @FXML private HBox hbLateralHandlebar;
+    @FXML private MFXButton btnClose;
 
     /**
      * Initializes the controller class.
