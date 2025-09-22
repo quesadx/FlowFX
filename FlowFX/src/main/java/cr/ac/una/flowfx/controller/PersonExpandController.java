@@ -45,7 +45,7 @@ public class PersonExpandController
     private VBox vbCover;
 
     @FXML
-    private MFXButton btnReturnPersonSignUp;
+    private MFXButton btnReturnPersonSignUp, btnDeletePerson;
 
     @FXML
     private MFXTextField txfPersonName;
@@ -158,6 +158,13 @@ public class PersonExpandController
                 btnCancelChanges.setManaged(false);
             }
             
+            // Hide delete button in view-only mode
+            if (btnDeletePerson != null) {
+                btnDeletePerson.setVisible(false);
+                btnDeletePerson.setManaged(false);
+                LOGGER.info("btnDeletePerson hidden in view-only mode");
+            }
+            
             LOGGER.fine("PersonExpandController configured for view-only mode");
         } else {
             // Ensure fields are editable in edit mode
@@ -184,6 +191,15 @@ public class PersonExpandController
                 LOGGER.info("btnCancelChanges set to visible and managed");
             } else {
                 LOGGER.warning("btnCancelChanges is null in edit mode");
+            }
+            
+            // Show delete button in edit mode
+            if (btnDeletePerson != null) {
+                btnDeletePerson.setVisible(true);
+                btnDeletePerson.setManaged(true);
+                LOGGER.info("btnDeletePerson set to visible and managed in edit mode");
+            } else {
+                LOGGER.warning("btnDeletePerson is null in edit mode");
             }
             
             LOGGER.fine("PersonExpandController configured for edit mode");
@@ -385,6 +401,139 @@ public class PersonExpandController
     private void onActionConfirmUpdates(ActionEvent event) {
         LOGGER.fine("Confirming person updates");
         savePersonChanges();
+    }
+
+    @FXML
+    private void onActionBtnDeletePerson(ActionEvent event) {
+        if (vm.getId() == 0L) {
+            new Mensaje().showModal(
+                javafx.scene.control.Alert.AlertType.WARNING,
+                "Eliminar Persona",
+                root.getScene().getWindow(),
+                "No se puede eliminar una persona sin identificador válido."
+            );
+            return;
+        }
+
+        // Show confirmation dialog
+        javafx.scene.control.Alert confirmation = new javafx.scene.control.Alert(
+            javafx.scene.control.Alert.AlertType.CONFIRMATION
+        );
+        confirmation.setTitle("Confirmar Eliminación");
+        confirmation.setHeaderText("¿Está seguro de que desea eliminar esta persona?");
+        confirmation.setContentText(
+            "Esta acción no se puede deshacer.\n\n" +
+            "Persona: " + vm.getFirstName() + " " + vm.getLastName() + "\n" +
+            "Usuario: " + vm.getUsername()
+        );
+
+        // Configure confirmation buttons
+        confirmation.getButtonTypes().setAll(
+            javafx.scene.control.ButtonType.YES,
+            javafx.scene.control.ButtonType.NO
+        );
+
+        // Show dialog and wait for user response
+        java.util.Optional<javafx.scene.control.ButtonType> result = confirmation.showAndWait();
+        
+        if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.YES) {
+            performPersonDeletion();
+        } else {
+            LOGGER.fine("Person deletion cancelled by user");
+        }
+    }
+
+    /**
+     * Performs the actual deletion of the person after confirmation.
+     */
+    private void performPersonDeletion() {
+        try {
+            PersonService service = new PersonService();
+            Long personId = vm.getId();
+            
+            LOGGER.fine("Deleting person with ID: " + personId);
+            cr.ac.una.flowfx.util.Respuesta response = service.delete(personId);
+            
+            if (Boolean.TRUE.equals(response.getEstado())) {
+                LOGGER.info("Person deleted successfully");
+                
+                // Show success message
+                new cr.ac.una.flowfx.util.Mensaje().showModal(
+                    javafx.scene.control.Alert.AlertType.INFORMATION,
+                    "Eliminación Exitosa",
+                    root.getScene().getWindow(),
+                    "La persona ha sido eliminada correctamente."
+                );
+                
+                // Check if we deleted the current user
+                Object currentUser = AppContext.getInstance().get("user");
+                if (currentUser instanceof cr.ac.una.flowfx.model.PersonDTO user && 
+                    user.getId() != null && user.getId().equals(personId)) {
+                    // If we deleted the current user, clear the session and return to login
+                    AppContext.getInstance().delete("user");
+                    LOGGER.warning("Current user was deleted - clearing session");
+                    FlowController.getInstance().goMain();
+                    return;
+                }
+                
+                // Notify PersonSignUpView to refresh its list
+                notifyPersonListUpdate();
+                
+                // Navigate back to the appropriate view
+                navigateAfterDeletion();
+                
+            } else {
+                LOGGER.warning("Person deletion failed: " + 
+                    (response != null ? response.getMensaje() : "null response"));
+                new cr.ac.una.flowfx.util.Mensaje().showModal(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "Error de Eliminación",
+                    root.getScene().getWindow(),
+                    "Error al eliminar la persona: " + 
+                        (response != null ? response.getMensaje() : "Error desconocido")
+                );
+            }
+        } catch (Exception ex) {
+            LOGGER.warning("Exception during person deletion: " + ex.getMessage());
+            new cr.ac.una.flowfx.util.Mensaje().showModal(
+                javafx.scene.control.Alert.AlertType.ERROR,
+                "Error de Eliminación",
+                root.getScene().getWindow(),
+                "Error al eliminar la persona: " + ex.getMessage()
+            );
+        }
+    }
+
+    /**
+     * Handles navigation after successful person deletion.
+     */
+    private void navigateAfterDeletion() {
+        // Check if we should return to a specific view
+        String returnView = (String) AppContext.getInstance().get("personExpand.returnView");
+        Object returnProject = AppContext.getInstance().get("personExpand.returnProject");
+        
+        LOGGER.info("Post-deletion navigation: returnView=" + returnView + ", returnProject=" + 
+            (returnProject != null ? "present" : "null"));
+        
+        if ("ProjectExpandView".equals(returnView) && returnProject instanceof ProjectDTO) {
+            // Return to ProjectExpandView
+            AppContext.getInstance().set("currentProject", returnProject);
+            FlowController.getInstance().goView("ProjectExpandView");
+            LOGGER.info("Returning to ProjectExpandView after deletion");
+        } else {
+            // Default return to PersonSignUpView
+            FlowController.getInstance().goView("PersonSignUpView");
+            Object nav = AppContext.getInstance().get("navigationBar");
+            if (nav instanceof VBox) ((VBox) nav).setDisable(false);
+            LOGGER.info("Returning to PersonSignUpView after deletion (default)");
+        }
+        
+        // Clean up context after navigation
+        AppContext.getInstance().delete("personExpand.returnProject");
+        AppContext.getInstance().delete("personExpand.returnView");
+        AppContext.getInstance().delete("personExpand.viewOnly");
+        AppContext.getInstance().delete("personExpand.roleLabel");
+        AppContext.getInstance().delete("selectedPerson");
     }
 
     /**

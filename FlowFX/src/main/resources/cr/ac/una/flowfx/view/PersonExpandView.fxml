@@ -26,7 +26,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT">
                            <children>
-                              <HBox alignment="CENTER_LEFT" minHeight="-Infinity" styleClass="container-sub" HBox.hgrow="ALWAYS">
+                              <HBox alignment="CENTER_LEFT" minHeight="-Infinity" spacing="8.0" styleClass="container-sub" HBox.hgrow="ALWAYS">
                                  <children>
                      <MFXButton fx:id="btnReturnPersonSignUp" maxWidth="1.7976931348623157E308" onAction="#onActionReturnPersonSignUp" text="Volver" HBox.hgrow="ALWAYS">
                                        <graphic>
@@ -34,6 +34,18 @@
                                              <image>
                                                 <Image url="@../resources/icons/lucide--arrow-left.png" />
                                              </image></ImageView>
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip text="Retornar a vista de proyectos" />
+                                       </tooltip>
+                                    </MFXButton>
+                                    <MFXButton fx:id="btnDeletePerson" maxWidth="1.7976931348623157E308" onAction="#onActionBtnDeletePerson" text="Eliminar persona" HBox.hgrow="ALWAYS">
+                                       <graphic>
+                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../resources/icons/lucide--x.png" />
+                                             </image>
+                                          </ImageView>
                                        </graphic>
                                        <tooltip>
                                           <Tooltip text="Retornar a vista de proyectos" />
