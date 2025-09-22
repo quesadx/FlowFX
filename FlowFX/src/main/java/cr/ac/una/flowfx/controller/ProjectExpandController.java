@@ -19,6 +19,7 @@ import cr.ac.una.flowfx.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import io.github.palexdev.materialfx.controls.MFXProgressBar;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -27,6 +28,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -113,6 +115,8 @@ public class ProjectExpandController extends Controller implements Initializable
     @FXML private TextArea txaDescriptionCreation;
     @FXML private MFXDatePicker dpPlannedStartDateCreation;
     @FXML private MFXDatePicker dpPlannedEndDateCreation;
+    @FXML private MFXProgressBar pgProjectProgress;
+    @FXML private Label lblProjectProgressPercentage;
 
     // State management fields
     private final ProjectViewModel vm = new ProjectViewModel();

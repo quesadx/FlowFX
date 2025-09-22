@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXCircleToggleNode?>
 <?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressBar?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -120,15 +121,15 @@
                                                 <Label styleClass="jfx-label" text="Patrocinador del proyecto" />
                                                 <HBox alignment="CENTER" spacing="4.0">
                                                    <children>
-                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub" HBox.hgrow="ALWAYS">
                                                          <children>
                                                             <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
                                                                <image>
                                                                   <Image url="@../resources/icons/lucide--heart.png" />
                                                                </image>
                                                             </ImageView>
-                                                            <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" onAction="#onActionTxfSponsorId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                            <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionSponsorDetails" prefWidth="102.0" styleClass="jfx-button" text="Datos" HBox.hgrow="ALWAYS">
+                                                            <MFXTextField fx:id="txfSponsorId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" onAction="#onActionTxfSponsorId" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionSponsorDetails" prefWidth="102.0" styleClass="jfx-button" text="Info" HBox.hgrow="ALWAYS">
                                                                <tooltip>
                                                                   <Tooltip text="Crear nueva actividad" />
                                                                </tooltip>
@@ -140,7 +141,7 @@
                                                                   </ImageView>
                                                                </graphic>
                                                             </MFXButton>
-                                                            <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Cambiar" HBox.hgrow="ALWAYS">
+                                                            <MFXButton onAction="#onActionBtnSelectSponsor" styleClass="jfx-button" text="Cambiar" HBox.hgrow="ALWAYS">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
                                                                </tooltip>
@@ -163,15 +164,15 @@
                                                 <Label styleClass="jfx-label" text="Lider usuario asignado" />
                                                 <HBox alignment="CENTER" spacing="4.0">
                                                    <children>
-                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub" HBox.hgrow="ALWAYS">
                                                          <children>
                                                             <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
                                                                <image>
                                                                   <Image url="@../resources/icons/lucide--shield-user.png" />
                                                                </image>
                                                             </ImageView>
-                                                            <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" onAction="#onActionTxfLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                            <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionLeaderDetails" prefWidth="102.0" styleClass="jfx-button" text="Datos" HBox.hgrow="ALWAYS">
+                                                            <MFXTextField fx:id="txfLeaderId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" onAction="#onActionTxfLeaderId" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionLeaderDetails" prefWidth="102.0" styleClass="jfx-button" text="Info" HBox.hgrow="ALWAYS">
                                                                <tooltip>
                                                                   <Tooltip text="Crear nueva actividad" />
                                                                </tooltip>
@@ -183,7 +184,7 @@
                                                                   </ImageView>
                                                                </graphic>
                                                             </MFXButton>
-                                                            <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Cambiar" HBox.hgrow="ALWAYS">
+                                                            <MFXButton onAction="#onActionBtnSelectLeader" styleClass="jfx-button" text="Cambiar" HBox.hgrow="ALWAYS">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
                                                                </tooltip>
@@ -206,15 +207,15 @@
                                                 <Label styleClass="jfx-label" text="Lider técnico asignado" />
                                                 <HBox alignment="CENTER" spacing="4.0">
                                                    <children>
-                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
+                                                      <HBox alignment="CENTER" spacing="8.0" styleClass="container-sub" HBox.hgrow="ALWAYS">
                                                          <children>
                                                             <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
                                                                <image>
                                                                   <Image url="@../resources/icons/lucide--graduation-cap.png" />
                                                                </image>
                                                             </ImageView>
-                                                            <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" onAction="#onActionTechLeaderId" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                            <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionTechLeaderDetails" prefWidth="102.0" styleClass="jfx-button" text="Datos" HBox.hgrow="ALWAYS">
+                                                            <MFXTextField fx:id="txfTechLeaderId" floatMode="DISABLED" maxWidth="1.7976931348623157E308" onAction="#onActionTechLeaderId" HBox.hgrow="ALWAYS" />
+                                                            <MFXButton onAction="#onActionTechLeaderDetails" prefWidth="102.0" styleClass="jfx-button" text="Info" HBox.hgrow="ALWAYS">
                                                                <tooltip>
                                                                   <Tooltip text="Crear nueva actividad" />
                                                                </tooltip>
@@ -226,7 +227,7 @@
                                                                   </ImageView>
                                                                </graphic>
                                                             </MFXButton>
-                                                            <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Cambiar" HBox.hgrow="ALWAYS">
+                                                            <MFXButton onAction="#onActionBtnSelectTechLeader" styleClass="jfx-button" text="Cambiar" HBox.hgrow="ALWAYS">
                                                                <tooltip>
                                                                   <Tooltip text="Abrir selector de persona" />
                                                                </tooltip>
@@ -261,12 +262,32 @@
                                        <padding>
                                           <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                                        </padding></Separator>
-                                    <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <VBox maxWidth="1.7976931348623157E308" spacing="8.0" HBox.hgrow="ALWAYS">
                                        <children>
                                           <VBox>
                                              <children>
                                                 <VBox>
                                                    <children>
+                                                      <VBox>
+                                                         <children>
+                                                            <Label styleClass="jfx-label" text="Porcentaje de avance" />
+                                                            <VBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
+                                                               <children>
+                                                                  <HBox alignment="CENTER" spacing="8.0">
+                                                                     <children>
+                                                                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                                           <image>
+                                                                              <Image url="@../resources/icons/lucide--chart-spline.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                        <MFXProgressBar fx:id="pgProjectProgress" maxWidth="1.7976931348623157E308" prefHeight="14.0" progress="0.0" HBox.hgrow="ALWAYS" />
+                                                                        <Label fx:id="lblProjectProgressPercentage" text="5%" />
+                                                                     </children>
+                                                                  </HBox>
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </VBox>
                                                       <Label styleClass="jfx-label" text="Estado" />
                                                       <VBox alignment="CENTER" prefHeight="100.0" styleClass="container-sub">
                                                          <children>
@@ -286,9 +307,9 @@
                                                       </VBox>
                                                    </children>
                                                 </VBox>
-                                                <Label styleClass="jfx-label" text="Actividades" />
                                              </children>
                                           </VBox>
+                                          <Label styleClass="jfx-label" text="Actividades" />
                                           <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionCreateActivity" styleClass="jfx-button" text="Nueva actividad">
                                              <tooltip>
                                                 <Tooltip text="Crear nueva actividad" />

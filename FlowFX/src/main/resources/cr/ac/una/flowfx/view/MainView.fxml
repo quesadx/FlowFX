@@ -138,7 +138,7 @@
                      </children>
                   </VBox>
                </children></VBox>
-            <VBox fx:id="vbLogInDisplay" alignment="CENTER" fillWidth="false" maxHeight="375.0" maxWidth="325.0" spacing="8.0" styleClass="filler-rounded">
+            <VBox fx:id="vbLogInDisplay" alignment="CENTER" fillWidth="false" maxHeight="375.0" maxWidth="325.0" spacing="8.0" styleClass="filler-rounded" visible="false">
                <children>
                   <Label styleClass="jfx-title" text="FLOWFX" />
                   <Separator maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" />
