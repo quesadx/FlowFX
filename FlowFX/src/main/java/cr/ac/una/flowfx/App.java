@@ -44,7 +44,7 @@ public class App extends Application {
             );
         }
 
-        stage.initStyle(StageStyle.UNDECORATED);
+        //stage.initStyle(StageStyle.UNDECORATED);
         FlowController.getInstance().InitializeFlow(stage, null);
         FlowController.getInstance().goMain();
         FlowController.getInstance().goView("MainView");

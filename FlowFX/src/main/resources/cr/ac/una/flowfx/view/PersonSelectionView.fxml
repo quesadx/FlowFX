@@ -17,7 +17,7 @@
    <children>
       <VBox alignment="TOP_CENTER" layoutX="9.0" layoutY="9.0" spacing="4.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox fx:id="hbLateralHandlebar" alignment="CENTER_RIGHT" spacing="8.0" styleClass="accordion">
+            <HBox fx:id="hbLateralHandlebar" alignment="CENTER_RIGHT" spacing="8.0" styleClass="container">
                <children>
                   <MFXButton fx:id="btnClose" maxWidth="1.7976931348623157E308" onAction="#onActionBtnClose" styleClass="jfx-close" text="Salir" HBox.hgrow="ALWAYS">
                      <graphic>
@@ -38,7 +38,7 @@
                               <Insets left="4.0" />
                            </VBox.margin>
                         </Label>
-                        <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="4.0" styleClass="container-sub">
+                        <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="8.0" styleClass="container-sub">
                            <children>
                               <VBox alignment="CENTER" />
                               <MFXTextField fx:id="txfSearchBar" floatMode="DISABLED" maxWidth="1.7976931348623157E308" promptText="Nombre, Apellido, ID..." HBox.hgrow="ALWAYS" />

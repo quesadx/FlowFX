@@ -1354,8 +1354,8 @@
 }
 
 .toggle-button:hover { -fx-background-color: derive(-fx-btn-base, -10%); -fx-background-radius: 8; }
-.toggle-button:pressed { -fx-background-color: -fx-btn-base-pressed; -fx-background-radius: 8; }
-.toggle-button:selected { -fx-background-color: -fx-primary; -fx-text-fill: -fx-text-inverse; -fx-background-radius: 8; }
+.toggle-button:pressed { -fx-background-color: -fx-btn-base-pressed; -fx-background-radius: 8; -fx-text-fill: white; }
+.toggle-button:selected { -fx-background-color: -fx-primary; -fx-text-fill: -fx-text-inverse; -fx-background-radius: 8; -fx-text-fill: white; }
 
 /* ========================================
    JAVAFX STANDARD CONTROLS — TABS & PANELS

@@ -16,9 +16,9 @@
    <children>
       <VBox alignment="TOP_CENTER" layoutX="19.0" layoutY="19.0" prefWidth="683.0" spacing="4.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox fx:id="hbLateralHandlebar" alignment="CENTER_RIGHT" spacing="8.0" styleClass="accordion">
+            <HBox fx:id="hbLateralHandlebar" alignment="CENTER_RIGHT" spacing="8.0" styleClass="container">
                <children>
-                  <MFXButton fx:id="btnClose" onAction="#onActionBtnClose" styleClass="jfx-close" text="Salir">
+                  <MFXButton fx:id="btnClose" maxWidth="1.7976931348623157E308" onAction="#onActionBtnClose" styleClass="jfx-close" text="Salir" HBox.hgrow="ALWAYS">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>

@@ -27,7 +27,7 @@
          <children>
             <VBox fx:id="vbCover" alignment="CENTER">
                <children>
-                  <VBox alignment="TOP_CENTER" spacing="4.0" VBox.vgrow="ALWAYS">
+                  <VBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox alignment="CENTER_LEFT">
                            <children>
@@ -348,12 +348,12 @@
                   </VBox>
                </children>
             </VBox>
-            <VBox fx:id="vbDisplayActivityExpand" alignment="CENTER" maxHeight="450.0" maxWidth="600.0" spacing="12.0" styleClass="filler-rounded" visible="false">
+            <VBox fx:id="vbDisplayActivityExpand" alignment="CENTER" maxHeight="450.0" maxWidth="600.0" spacing="8.0" styleClass="filler-rounded" visible="false">
                <children>
                   <Separator maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="325.0" visible="false" />
                   <HBox alignment="TOP_CENTER">
                      <children>
-                        <VBox alignment="TOP_CENTER" spacing="12.0" HBox.hgrow="ALWAYS">
+                        <VBox alignment="TOP_CENTER" spacing="8.0" HBox.hgrow="ALWAYS">
                            <children>
                               <VBox>
                                  <children>
@@ -407,7 +407,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXDatePicker fx:id="dpLastUpdate" prefWidth="200.0" />
+                                          <MFXDatePicker fx:id="dpLastUpdate" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -440,7 +440,7 @@
                            <padding>
                               <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                            </padding></Separator>
-                        <VBox alignment="CENTER" spacing="12.0" HBox.hgrow="ALWAYS">
+                        <VBox alignment="CENTER" spacing="8.0" HBox.hgrow="ALWAYS">
                            <children>
                               <VBox>
                                  <children>
@@ -456,7 +456,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXDatePicker fx:id="dpCreationDate" prefWidth="200.0" />
+                                          <MFXDatePicker fx:id="dpCreationDate" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -475,7 +475,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXDatePicker fx:id="dpPlannedStartDate" prefWidth="200.0" />
+                                          <MFXDatePicker fx:id="dpPlannedStartDate" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -494,7 +494,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXDatePicker fx:id="dpActualStartDate" prefWidth="200.0" />
+                                          <MFXDatePicker fx:id="dpActualStartDate" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -513,7 +513,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXDatePicker fx:id="dpPlannedEndDate" prefWidth="200.0" />
+                                          <MFXDatePicker fx:id="dpPlannedEndDate" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -532,7 +532,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXDatePicker fx:id="dpActualEndDate" prefWidth="200.0" />
+                                          <MFXDatePicker fx:id="dpActualEndDate" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>

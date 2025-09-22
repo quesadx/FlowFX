@@ -22,7 +22,7 @@
          <children>
             <VBox fx:id="vbCover" alignment="CENTER">
                <children>
-                  <VBox alignment="TOP_CENTER" spacing="4.0" VBox.vgrow="ALWAYS">
+                  <VBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox alignment="CENTER_LEFT">
                            <children>
@@ -43,7 +43,7 @@
                               </HBox>
                            </children>
                            </HBox>
-                        <Separator prefWidth="200.0" visible="false">
+                        <Separator visible="false">
                            <padding>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </padding>

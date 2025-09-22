@@ -3,9 +3,11 @@ package cr.ac.una.flowfx.controller;
 import cr.ac.una.flowfx.model.PersonDTO;
 import cr.ac.una.flowfx.model.ProjectActivityDTO;
 import cr.ac.una.flowfx.model.ProjectDTO;
+import cr.ac.una.flowfx.model.ProjectTrackingDTO;
 import cr.ac.una.flowfx.service.PersonService;
 import cr.ac.una.flowfx.service.ProjectActivityService;
 import cr.ac.una.flowfx.service.ProjectService;
+import cr.ac.una.flowfx.service.ProjectTrackingService;
 import cr.ac.una.flowfx.util.AnimationManager;
 import cr.ac.una.flowfx.util.AppContext;
 import cr.ac.una.flowfx.util.FlowController;
@@ -46,71 +48,57 @@ public class MainController extends Controller implements Initializable {
     private static final java.util.logging.Logger LOGGER =
         java.util.logging.Logger.getLogger(MainController.class.getName());
 
-    @FXML
-    private AnchorPane root;
-
-    @FXML
-    private VBox vbCover;
-
-    @FXML
-    private VBox vbLogInDisplay;
-
-    @FXML
-    private VBox vbSignUpDisplay;
-
-    @FXML
-    private MFXTextField txfUsername;
-
-    @FXML
-    private MFXPasswordField psfUserPassword;
-
-    @FXML
-    private MFXButton btnLogIn;
-
-    @FXML
-    private MFXTextField txfPersonId;
-
-    @FXML
-    private MFXTextField txfPersonFirstName;
-
-    @FXML
-    private MFXTextField txfPersonLastName;
-
-    @FXML
-    private MFXTextField txfPersonEmail;
-
-    @FXML
-    private MFXTextField txfPersonUsername;
-
-    @FXML
-    private MFXPasswordField pswPersonPassword;
-
-    @FXML
-    private MFXCheckbox cbIsAdmin;
-
-    @FXML
-    private MFXCheckbox cbIsActive;
-
-    @FXML
-    private PieChart pcPersonActivities;
+    @FXML private AnchorPane root;
+    @FXML private VBox vbCover;
+    @FXML private VBox vbLogInDisplay;
+    @FXML private VBox vbSignUpDisplay;
+    @FXML private MFXTextField txfUsername;
+    @FXML private MFXPasswordField psfUserPassword;
+    @FXML private MFXButton btnLogIn;
+    @FXML private MFXTextField txfPersonId;
+    @FXML private MFXTextField txfPersonFirstName;
+    @FXML private MFXTextField txfPersonLastName;
+    @FXML private MFXTextField txfPersonEmail;
+    @FXML private MFXTextField txfPersonUsername;
+    @FXML private MFXPasswordField pswPersonPassword;
+    @FXML private MFXCheckbox cbIsAdmin;
+    @FXML private MFXCheckbox cbIsActive;
+    @FXML private PieChart pcPersonActivities;
+    @FXML private StackedBarChart<?, ?> sbcActivitiesPerProjects;
+    @FXML private TableView<ProjectDTO> tvProjects;
+    @FXML private TableColumn<ProjectDTO, String> tbcProjectName;
+    @FXML private TableColumn<ProjectDTO, String> tbcProjectStatus, tbcProjectPercentage, tbcLastObservation;
+    @FXML private ListView<String> lvActivities;
 
     private boolean userLoggedIn = false;
     private PersonDTO user;
+    
+    // Cache for project tracking data to improve performance
+    private final java.util.Map<Long, ProjectTrackingData> projectTrackingCache = new java.util.concurrent.ConcurrentHashMap<>();
+    
+    /**
+     * Data class to hold cached project tracking information.
+     */
+    private static class ProjectTrackingData {
+        private final String percentage;
+        private final String observation;
+        private final long cacheTime;
+        
+        public ProjectTrackingData(String percentage, String observation) {
+            this.percentage = percentage;
+            this.observation = observation;
+            this.cacheTime = System.currentTimeMillis();
+        }
+        
+        public String getPercentage() { return percentage; }
+        public String getObservation() { return observation; }
+        
+        public boolean isExpired() {
+            // Cache expires after 5 minutes
+            return System.currentTimeMillis() - cacheTime > 300_000;
+        }
+    }
 
-    @FXML
-    private StackedBarChart<?, ?> sbcActivitiesPerProjects;
-
-    @FXML
-    private TableView<ProjectDTO> tvProjects;
-
-    @FXML
-    private TableColumn<ProjectDTO, String> tbcProjectName;
-
-    @FXML
-    private TableColumn<ProjectDTO, String> tbcProjectStatus;
-
-    @FXML
-    private ListView<String> lvActivities;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -149,6 +137,30 @@ public class MainController extends Controller implements Initializable {
             return new javafx.beans.property.SimpleStringProperty(
                 mapStatusToSpanish(st)
             );
+        });
+        
+        // Project percentage based on latest tracking observation
+        tbcProjectPercentage.setCellValueFactory(data -> {
+            ProjectDTO project = data.getValue();
+            if (project.getId() == null) {
+                return new javafx.beans.property.SimpleStringProperty("-");
+            }
+            
+            // Get latest tracking data for percentage
+            String percentage = getLatestProjectPercentage(project.getId());
+            return new javafx.beans.property.SimpleStringProperty(percentage);
+        });
+        
+        // Last observation text from latest tracking
+        tbcLastObservation.setCellValueFactory(data -> {
+            ProjectDTO project = data.getValue();
+            if (project.getId() == null) {
+                return new javafx.beans.property.SimpleStringProperty("-");
+            }
+            
+            // Get latest observation text
+            String observation = getLatestProjectObservation(project.getId());
+            return new javafx.beans.property.SimpleStringProperty(observation);
         });
 
         tvProjects.setRowFactory(tv -> {
@@ -198,6 +210,9 @@ public class MainController extends Controller implements Initializable {
         userLoggedIn = false;
         user = null;
         AppContext.getInstance().set("user", null);
+        
+        // Clear tracking cache on logout
+        projectTrackingCache.clear();
 
         Object nav = AppContext.getInstance().get("navigationBar");
         if (nav instanceof VBox) ((VBox) nav).setDisable(true);
@@ -344,6 +359,9 @@ public class MainController extends Controller implements Initializable {
     }
 
     private void refreshDashboard() {
+        // Clear tracking cache on refresh to ensure fresh data
+        projectTrackingCache.clear();
+        
         // Require logged user
         Object u = AppContext.getInstance().get("user");
         if (!(u instanceof PersonDTO)) {
@@ -365,6 +383,10 @@ public class MainController extends Controller implements Initializable {
             List<ProjectDTO> pr = (List<ProjectDTO>) r.getResultado("Projects");
             if (pr != null) projects.addAll(pr);
         }
+        
+        // Pre-load tracking data for all projects asynchronously for better performance
+        preloadProjectTrackingData(projects);
+        
         tvProjects.setItems(FXCollections.observableArrayList(projects));
 
         // Activities list: latest N activities for user with project names
@@ -726,5 +748,158 @@ public class MainController extends Controller implements Initializable {
             case "C" -> "Finalizada";
             default -> code.trim();
         };
+    }
+    
+    /**
+     * Gets the latest project progress percentage from tracking observations.
+     * Returns formatted percentage string (e.g., "75%") or "-" if no data.
+     * Uses caching for performance optimization.
+     */
+    private String getLatestProjectPercentage(Long projectId) {
+        if (projectId == null || projectId <= 0) {
+            return "-";
+        }
+        
+        // Check cache first
+        ProjectTrackingData cachedData = projectTrackingCache.get(projectId);
+        if (cachedData != null && !cachedData.isExpired()) {
+            return cachedData.getPercentage();
+        }
+        
+        // Fetch from service if not cached or expired
+        try {
+            ProjectTrackingService trackingService = new ProjectTrackingService();
+            Respuesta response = trackingService.findByProject(projectId);
+            
+            if (Boolean.TRUE.equals(response.getEstado())) {
+                @SuppressWarnings("unchecked")
+                List<ProjectTrackingDTO> trackings = (List<ProjectTrackingDTO>) response.getResultado("ProjectTrackings");
+                
+                if (trackings != null && !trackings.isEmpty()) {
+                    // Find the latest tracking by date
+                    ProjectTrackingDTO latestTracking = trackings.stream()
+                        .filter(t -> t.getTrackingDate() != null)
+                        .max((t1, t2) -> t1.getTrackingDate().compareTo(t2.getTrackingDate()))
+                        .orElse(null);
+                    
+                    String percentage = "-";
+                    String observation = "-";
+                    
+                    if (latestTracking != null) {
+                        if (latestTracking.getProgressPercentage() != null) {
+                            percentage = latestTracking.getProgressPercentage() + "%";
+                        }
+                        if (latestTracking.getObservations() != null) {
+                            String obs = latestTracking.getObservations().trim();
+                            observation = obs.length() > 50 ? obs.substring(0, 47) + "..." : obs;
+                        }
+                    }
+                    
+                    // Cache the result
+                    projectTrackingCache.put(projectId, new ProjectTrackingData(percentage, observation));
+                    return percentage;
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.warning("Error fetching project percentage for ID " + projectId + ": " + ex.getMessage());
+        }
+        
+        // Cache empty result to avoid repeated failed calls
+        projectTrackingCache.put(projectId, new ProjectTrackingData("-", "-"));
+        return "-";
+    }
+    
+    /**
+     * Gets the latest project observation text from tracking observations.
+     * Returns truncated observation text or "-" if no data.
+     * Uses caching for performance optimization.
+     */
+    private String getLatestProjectObservation(Long projectId) {
+        if (projectId == null || projectId <= 0) {
+            return "-";
+        }
+        
+        // Check cache first
+        ProjectTrackingData cachedData = projectTrackingCache.get(projectId);
+        if (cachedData != null && !cachedData.isExpired()) {
+            return cachedData.getObservation();
+        }
+        
+        // If not cached, getLatestProjectPercentage will fetch and cache both values
+        getLatestProjectPercentage(projectId);
+        
+        // Now get from cache
+        cachedData = projectTrackingCache.get(projectId);
+        return cachedData != null ? cachedData.getObservation() : "-";
+    }
+    
+    /**
+     * Pre-loads project tracking data asynchronously for better table performance.
+     * This method loads tracking data for all projects in the background to avoid
+     * multiple service calls when the table is initially displayed.
+     */
+    private void preloadProjectTrackingData(List<ProjectDTO> projects) {
+        if (projects == null || projects.isEmpty()) {
+            return;
+        }
+        
+        // Run preloading in background thread to avoid blocking UI
+        Thread preloadThread = new Thread(() -> {
+            ProjectTrackingService trackingService = new ProjectTrackingService();
+            
+            for (ProjectDTO project : projects) {
+                if (project.getId() != null && project.getId() > 0) {
+                    try {
+                        Respuesta response = trackingService.findByProject(project.getId());
+                        
+                        if (Boolean.TRUE.equals(response.getEstado())) {
+                            @SuppressWarnings("unchecked")
+                            List<ProjectTrackingDTO> trackings = (List<ProjectTrackingDTO>) response.getResultado("ProjectTrackings");
+                            
+                            String percentage = "-";
+                            String observation = "-";
+                            
+                            if (trackings != null && !trackings.isEmpty()) {
+                                // Find the latest tracking by date
+                                ProjectTrackingDTO latestTracking = trackings.stream()
+                                    .filter(t -> t.getTrackingDate() != null)
+                                    .max((t1, t2) -> t1.getTrackingDate().compareTo(t2.getTrackingDate()))
+                                    .orElse(null);
+                                
+                                if (latestTracking != null) {
+                                    if (latestTracking.getProgressPercentage() != null) {
+                                        percentage = latestTracking.getProgressPercentage() + "%";
+                                    }
+                                    if (latestTracking.getObservations() != null) {
+                                        String obs = latestTracking.getObservations().trim();
+                                        observation = obs.length() > 50 ? obs.substring(0, 47) + "..." : obs;
+                                    }
+                                }
+                            }
+                            
+                            // Cache the result
+                            projectTrackingCache.put(project.getId(), new ProjectTrackingData(percentage, observation));
+                            
+                        } else {
+                            // Cache empty result to avoid repeated failed calls
+                            projectTrackingCache.put(project.getId(), new ProjectTrackingData("-", "-"));
+                        }
+                    } catch (Exception ex) {
+                        LOGGER.warning("Error preloading tracking data for project ID " + project.getId() + ": " + ex.getMessage());
+                        // Cache empty result on error
+                        projectTrackingCache.put(project.getId(), new ProjectTrackingData("-", "-"));
+                    }
+                }
+            }
+            
+            // Trigger table refresh on UI thread after preloading
+            javafx.application.Platform.runLater(() -> {
+                tvProjects.refresh();
+                LOGGER.fine("Preloaded tracking data for " + projects.size() + " projects");
+            });
+        }, "project-tracking-preloader");
+        
+        preloadThread.setDaemon(true);
+        preloadThread.start();
     }
 }

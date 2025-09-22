@@ -22,9 +22,9 @@
          <children>
             <VBox alignment="CENTER">
                <children>
-                  <VBox alignment="TOP_CENTER" spacing="4.0" VBox.vgrow="ALWAYS">
+                  <VBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" spacing="4.0" styleClass="container-sub">
+                        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" spacing="8.0" styleClass="container-sub">
                            <children>
                               <MFXButton maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionCleanCanvas" styleClass="jfx-delete-button" text="Limpiar sketch" HBox.hgrow="ALWAYS">
                                  <graphic>

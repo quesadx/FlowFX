@@ -13,7 +13,7 @@
 
 <AnchorPane id="AnchorPane" fx:id="root" prefHeight="470.0" prefWidth="411.0" styleClass="filler" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.flowfx.controller.SearchResultsController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="9.0" layoutY="9.0" spacing="4.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="9.0" layoutY="9.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox fx:id="hbLateralHandlebar" alignment="CENTER_RIGHT" spacing="8.0" styleClass="container-sub">
                <children>

@@ -65,7 +65,7 @@ public class ProjectManagementController
     @FXML private VBox vbCover;
     @FXML private VBox vbProjectCreationDisplay;
     @FXML private MFXTextField txfProjectName;
-    @FXML private TextArea txaProjectDescription;
+    //@FXML private TextArea txaProjectDescription;
     @FXML private MFXDatePicker dpProjectStartDate;
     @FXML private MFXDatePicker dpProjectEndDate;
     @FXML private MFXTextField txfSponsorId;
@@ -166,7 +166,7 @@ public class ProjectManagementController
                 return projectResults.stream();
             })
             .distinct()
-            .limit(50) // Limit results for performance
+            .limit(50) // Si no lo limito tira un mega error
             .collect(Collectors.toList());
     }
     
@@ -365,7 +365,7 @@ public class ProjectManagementController
 
     private void clearForm() {
         txfProjectName.clear();
-        txaProjectDescription.clear();
+        //txaProjectDescription.clear();
         dpProjectStartDate.setValue(null);
         dpProjectEndDate.setValue(null);
         txfSponsorId.clear();

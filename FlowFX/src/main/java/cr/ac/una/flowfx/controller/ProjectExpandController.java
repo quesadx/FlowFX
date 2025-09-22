@@ -15,6 +15,7 @@ import cr.ac.una.flowfx.util.BindingUtils;
 import cr.ac.una.flowfx.util.FlowController;
 import cr.ac.una.flowfx.util.PersonLabelUtil;
 import cr.ac.una.flowfx.util.ProjectExcelExportUtil;
+import cr.ac.una.flowfx.util.ProjectProgressUtil;
 import cr.ac.una.flowfx.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
@@ -249,6 +250,7 @@ public class ProjectExpandController extends Controller implements Initializable
         loadActivitiesForProject();
         loadPersonNamesImmediately();
         refreshProjectFromServer();
+        loadProjectProgress();
 
         // Bind activity change buttons to change detection
         if (btnConfirmActivityChanges != null) {
@@ -995,6 +997,36 @@ public class ProjectExpandController extends Controller implements Initializable
     }
 
     /**
+     * Loads and displays project progress based on latest tracking observation.
+     */
+    private void loadProjectProgress() {
+        long projectId = vm.getId();
+        if (projectId <= 0) {
+            LOGGER.warning("Cannot load project progress - invalid project ID: " + projectId);
+            return;
+        }
+        
+        LOGGER.fine("Loading project progress for project ID: " + projectId);
+        ProjectProgressUtil.updateProjectProgress(projectId, pgProjectProgress, lblProjectProgressPercentage);
+    }
+    
+    /**
+     * Refreshes project progress display by reloading from server.
+     * Called when returning from observations view or when progress might have changed.
+     * Also used after refreshing project data from server to ensure latest progress is shown.
+     */
+    private void refreshProjectProgress() {
+        long projectId = vm.getId();
+        if (projectId <= 0) {
+            LOGGER.warning("Cannot refresh project progress - invalid project ID: " + projectId);
+            return;
+        }
+        
+        LOGGER.info("Refreshing project progress for project ID: " + projectId);
+        ProjectProgressUtil.refreshProjectProgress(projectId, pgProjectProgress, lblProjectProgressPercentage);
+    }
+    
+    /**
      * Updates view model and UI with server data.
      * Pre-caches person names to prevent ID display during updates.
      */
@@ -1007,6 +1039,9 @@ public class ProjectExpandController extends Controller implements Initializable
         updateViewModelFromProject(project);
         selectToggleForStatus(project.getStatus());
         refreshPersonLabels();
+        
+        // Refresh project progress after updating from server data
+        refreshProjectProgress();
     }
 
     /**
