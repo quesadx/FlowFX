@@ -57,11 +57,11 @@ public class ProjectTrackingService {
             if (port instanceof BindingProvider) {
                 ((BindingProvider) port).getRequestContext().put(
                     BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                    "http://localhost:8080/FlowFXWS/FlowFXWS"
+                    "http://localhost:8080/FlowFXWS/FlowFXWS" // Se debe ajustar si es necesario, @Negro
                 );
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Error initializing FlowFXWS port", e);
+            LOG.log(Level.SEVERE, "Error inicializando el puerto de FlowFXWS", e);
         }
     }
 

@@ -68,7 +68,7 @@
                            <children>
                               <HBox alignment="CENTER" styleClass="filler-rounded" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <VBox alignment="CENTER" spacing="8.0" HBox.hgrow="NEVER">
+                                    <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="8.0" HBox.hgrow="ALWAYS">
                                        <children>
                                           <VBox maxWidth="1.7976931348623157E308">
                                              <children>
@@ -244,7 +244,7 @@
                                                 </HBox>
                                              </children>
                                           </VBox>
-                                          <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionExpandObservations" styleClass="jfx-button" text="Observaciones">
+                                          <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionExpandObservations" styleClass="jfx-button" text="Observaciones" VBox.vgrow="NEVER">
                                              <tooltip>
                                                 <Tooltip text="Crear nueva actividad" />
                                              </tooltip>
@@ -270,7 +270,7 @@
                                                       <Label styleClass="jfx-label" text="Estado" />
                                                       <VBox alignment="CENTER" prefHeight="100.0" styleClass="container-sub">
                                                          <children>
-                                                            <HBox alignment="CENTER" spacing="12.0">
+                                                            <HBox alignment="CENTER" spacing="8.0">
                                                                <children>
                                                                   <MFXCircleToggleNode fx:id="tgProjectStatusPending" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgProjectStatusPending" prefWidth="37.0" size="16.0" text="Pendiente" HBox.hgrow="ALWAYS">
                                                                      <toggleGroup>
@@ -327,7 +327,7 @@
                   </VBox>
                </children>
             </VBox>
-            <VBox fx:id="vbDisplayActivityExpand" alignment="CENTER" fillWidth="false" maxHeight="450.0" maxWidth="600.0" spacing="12.0" styleClass="filler-rounded" visible="false">
+            <VBox fx:id="vbDisplayActivityExpand" alignment="CENTER" maxHeight="450.0" maxWidth="600.0" spacing="12.0" styleClass="filler-rounded" visible="false">
                <children>
                   <Separator maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="325.0" visible="false" />
                   <HBox alignment="TOP_CENTER">
@@ -415,9 +415,9 @@
                               </VBox>
                            </children>
                         </VBox>
-                        <Separator orientation="VERTICAL" prefHeight="200.0">
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false">
                            <padding>
-                              <Insets left="4.0" right="4.0" />
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                            </padding></Separator>
                         <VBox alignment="CENTER" spacing="12.0" HBox.hgrow="ALWAYS">
                            <children>
@@ -524,7 +524,7 @@
                         <Label styleClass="jfx-label" text="Estado para la actividad" />
                         <VBox alignment="CENTER" prefHeight="100.0" styleClass="container-sub">
                            <children>
-                              <HBox alignment="CENTER" spacing="12.0">
+                              <HBox alignment="CENTER" spacing="8.0">
                                  <children>
                                     <MFXCircleToggleNode fx:id="tgActivityDetailStatusSuspended" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onActionTgActivityDetailStatusSuspended" prefHeight="50.0" prefWidth="50.0" size="16.0" text="Detenida" textPosition="TOP" HBox.hgrow="ALWAYS">
                                        <toggleGroup>
@@ -540,9 +540,9 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <HBox alignment="CENTER" spacing="12.0">
+                  <HBox alignment="CENTER" spacing="8.0">
                      <children>
-                        <MFXButton fx:id="btnCancelActivityChanges" onAction="#onActionBtnReturnActivityExpand" prefHeight="50.0" prefWidth="150.0" styleClass="jfx-button" text="Cancelar">
+                        <MFXButton fx:id="btnCancelActivityChanges" maxWidth="1.7976931348623157E308" onAction="#onActionBtnReturnActivityExpand" styleClass="jfx-button" text="Cancelar" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
@@ -557,7 +557,7 @@
                               <Tooltip text="Cancelar cambios en la actividad" />
                            </tooltip>
                         </MFXButton>
-                        <MFXButton fx:id="btnConfirmActivityChanges" onAction="#onActionConfirmUpdates" prefHeight="50.0" prefWidth="150.0" styleClass="jfx-button" text="Guardar">
+                        <MFXButton fx:id="btnConfirmActivityChanges" maxWidth="1.7976931348623157E308" onAction="#onActionConfirmUpdates" styleClass="jfx-button" text="Guardar" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
@@ -576,9 +576,9 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox fx:id="vbDisplayActivityCreation" alignment="CENTER" fillWidth="false" maxHeight="475.0" maxWidth="725.0" spacing="12.0" styleClass="filler-rounded" visible="false">
+            <VBox fx:id="vbDisplayActivityCreation" alignment="CENTER" maxHeight="475.0" maxWidth="725.0" spacing="12.0" styleClass="filler-rounded" visible="false">
                <children>
-                  <HBox alignment="TOP_CENTER">
+                  <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <VBox alignment="TOP_CENTER" spacing="12.0" HBox.hgrow="ALWAYS">
                            <children>
@@ -589,17 +589,13 @@
                                           <Label styleClass="jfx-label" text="Responsable" />
                                           <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub">
                                              <children>
-                                                <VBox alignment="CENTER">
-                                                   <children>
-                                                      <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
-                                                         <image>
-                                                            <Image url="@../resources/icons/lucide--user.png" />
-                                                         </image>
-                                                      </ImageView>
-                                                   </children>
-                                                </VBox>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true">
+                                                   <image>
+                                                      <Image url="@../resources/icons/lucide--user.png" />
+                                                   </image>
+                                                </ImageView>
                                                 <MFXTextField fx:id="txfResponsableCreation" floatMode="DISABLED" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                <MFXButton onAction="#onActionBtnSelectActivityResponsible" styleClass="jfx-button" text="Cambiar">
+                                                <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionBtnSelectActivityResponsible" styleClass="jfx-button" text="Cambiar" HBox.hgrow="ALWAYS">
                                                    <tooltip>
                                                       <Tooltip text="Abrir selector de persona" />
                                                    </tooltip>
@@ -630,16 +626,16 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </padding>
                                           </VBox>
-                                          <TextArea fx:id="txaDescriptionCreation" prefHeight="200.0" prefWidth="200.0" />
+                                          <TextArea fx:id="txaDescriptionCreation" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
                                        </children>
                                     </HBox>
                                  </children>
                               </VBox>
                            </children>
                         </VBox>
-                        <Separator orientation="VERTICAL" prefHeight="200.0">
+                        <Separator orientation="VERTICAL" prefHeight="200.0" visible="false">
                            <padding>
-                              <Insets left="4.0" right="4.0" />
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                            </padding>
                         </Separator>
                         <VBox alignment="TOP_CENTER" spacing="12.0" HBox.hgrow="ALWAYS">
@@ -658,7 +654,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXDatePicker fx:id="dpPlannedStartDateCreation" prefWidth="200.0" />
+                                          <MFXDatePicker fx:id="dpPlannedStartDateCreation" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -677,7 +673,7 @@
                                                 </ImageView>
                                              </children>
                                           </VBox>
-                                          <MFXDatePicker fx:id="dpPlannedEndDateCreation" prefWidth="200.0" />
+                                          <MFXDatePicker fx:id="dpPlannedEndDateCreation" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -685,7 +681,7 @@
                               <VBox>
                                  <children>
                                     <Label styleClass="jfx-label" text="Estado para la actividad" />
-                                    <VBox alignment="CENTER" prefHeight="100.0" styleClass="container-sub">
+                                    <VBox alignment="CENTER" spacing="8.0" styleClass="container-sub">
                                        <children>
                                           <HBox alignment="CENTER" spacing="12.0">
                                              <children>
@@ -711,9 +707,9 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" spacing="12.0">
+                  <HBox alignment="CENTER" spacing="8.0">
                      <children>
-                        <MFXButton onAction="#onActionCancelCreateActivity" prefHeight="50.0" prefWidth="150.0" styleClass="jfx-button" text="Cancelar">
+                        <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionCancelCreateActivity" styleClass="jfx-button" text="Cancelar" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
@@ -728,7 +724,7 @@
                               </ImageView>
                            </graphic>
                         </MFXButton>
-                        <MFXButton onAction="#onActionConfirmCreateActivity" prefHeight="50.0" prefWidth="150.0" styleClass="jfx-button" text="Crear actividad">
+                        <MFXButton maxWidth="1.7976931348623157E308" onAction="#onActionConfirmCreateActivity" styleClass="jfx-button" text="Crear actividad" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
