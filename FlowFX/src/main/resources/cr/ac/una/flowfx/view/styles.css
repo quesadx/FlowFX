@@ -1573,3 +1573,57 @@
 
 /* Tooltip: subtle depth to float above content */
 .tooltip { -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.3, 0, 2); }
+
+/* ========================================
+   MFX TYPE SELECTOR SUPPORT (Slider & ProgressBar)
+   -----------------------------------------------
+   Ensure MaterialFX controls are styled even if the
+   default 'mfx-*' style classes are not present.
+   Mirrors the existing .mfx-slider and .mfx-progress-bar rules.
+   ======================================== */
+
+/* ProgressBar */
+.mfx-progress-bar, MFXProgressBar {
+    -fx-background-radius: 8;
+    background-color: -fx-border-default; /* compatibility */
+    -fx-background-color: -fx-border-default;
+}
+.mfx-progress-bar .track, MFXProgressBar .track {
+    background-color: -fx-border-default; /* compatibility */
+    -fx-background-color: -fx-border-default;
+    -fx-background-radius: 8;
+}
+.mfx-progress-bar .bar, MFXProgressBar .bar {
+    background-color: -fx-border-focus; /* compatibility */
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+}
+
+/* Slider */
+.mfx-slider .track, MFXSlider .track {
+    background-color: -fx-border-default; /* compatibility */
+    -fx-background-color: -fx-border-default;
+    -fx-background-radius: 8;
+}
+.mfx-slider .thumb, MFXSlider .thumb {
+    background-color: -fx-border-focus; /* compatibility */
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 8;
+}
+.mfx-slider .colored-track, MFXSlider .colored-track {
+    background-color: -fx-border-focus; /* compatibility */
+    -fx-background-color: -fx-border-focus;
+    -fx-background-radius: 8;
+}
+.mfx-slider:disabled .track, MFXSlider:disabled .track {
+    background-color: -fx-surface-variant; /* compatibility */
+    -fx-background-color: -fx-surface-variant;
+}
+.mfx-slider:disabled .thumb, MFXSlider:disabled .thumb {
+    background-color: -fx-text-secondary; /* compatibility */
+    -fx-background-color: -fx-text-secondary;
+}
+.mfx-slider .thumb:hover, MFXSlider .thumb:hover {
+    -fx-effect: dropshadow(gaussian, -fx-focus-halo-blue, 8, 0.45, 0, 0);
+}

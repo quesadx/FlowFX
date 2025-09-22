@@ -205,7 +205,7 @@
                                                       </ImageView>
                                                    </children>
                                                 </VBox>
-                                                <MFXCheckbox fx:id="cbIsAdmin" maxWidth="1.7976931348623157E308" text="ADMIN" HBox.hgrow="NEVER" />
+                                                <MFXCheckbox fx:id="cbIsAdmin" maxWidth="1.7976931348623157E308" text="ADMIN" HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" spacing="4.0" styleClass="container-sub" HBox.hgrow="ALWAYS">
