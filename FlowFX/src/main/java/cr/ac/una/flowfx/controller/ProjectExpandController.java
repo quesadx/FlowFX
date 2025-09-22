@@ -1294,7 +1294,7 @@ public class ProjectExpandController extends Controller implements Initializable
     }
 
     /**
-     * Handles successful activity creation response.
+     * Handles successful activity creation response and sends notification.
      */
     private void handleSuccessfulActivityCreation(Respuesta response) {
         Object createdData = response.getResultado("ProjectActivity");
@@ -1311,6 +1311,36 @@ public class ProjectExpandController extends Controller implements Initializable
             activities.add(activityVm);
             renumberExecutionOrder();
             ActivityTableUtil.refreshTable(tbvActivities);
+            
+            // Send activity creation notification
+            sendActivityCreationNotification(createdDto.getId());
+        }
+    }
+    
+    /**
+     * Sends notification when an activity is created.
+     */
+    private void sendActivityCreationNotification(Long activityId) {
+        if (activityId == null) return;
+        
+        try {
+            cr.ac.una.flowfx.service.NotificationIntegrationService notificationService = 
+                new cr.ac.una.flowfx.service.NotificationIntegrationService();
+            
+            notificationService.notifyActivityCreatedAsync(activityId)
+                .thenAccept(response -> {
+                    if (Boolean.TRUE.equals(response.getEstado())) {
+                        LOGGER.log(Level.INFO, "Activity creation notification sent successfully for activity {0}", activityId);
+                    } else {
+                        LOGGER.log(Level.WARNING, "Failed to send activity creation notification: {0}", response.getMensaje());
+                    }
+                })
+                .exceptionally(throwable -> {
+                    LOGGER.log(Level.SEVERE, "Error sending activity creation notification", throwable);
+                    return null;
+                });
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Error sending activity creation notification for activity " + activityId, ex);
         }
     }
 
@@ -1514,18 +1544,69 @@ public class ProjectExpandController extends Controller implements Initializable
     }
 
     /**
-     * Placeholder for sending status change notifications to the backend notification system.
-     * Integrate with NOTIFICATION and NOTIFICATION_RECIPIENT tables via a NotificationService when available.
+     * Sends status change notifications to the backend notification system.
+     * Uses the comprehensive notification integration service to persist notifications to the database
+     * and trigger email delivery automatically.
      */
     private void enqueueStatusChangeNotification(String entityType, long entityId, String newStatus) {
         try {
-            LOGGER.fine("[Notification] Entity=" + entityType + ", ID=" + entityId + ", status=" + newStatus);
-            // TODO: Integrate with NotificationService once available, e.g.:
-            // NotificationService svc = new NotificationService();
-            // svc.createStatusChange(entityType, entityId, newStatus);
-        } catch (Exception ignored) {
-            // Best-effort: do not block main flow
+            cr.ac.una.flowfx.service.NotificationIntegrationService notificationService = 
+                new cr.ac.una.flowfx.service.NotificationIntegrationService();
+            
+            if ("PROJECT".equals(entityType)) {
+                // Get the old status for comparison - we need to determine it from the current state
+                String oldStatus = determinePreviousStatus(entityType, entityId, newStatus);
+                
+                // Send project status change notification asynchronously
+                notificationService.notifyProjectStatusChangedAsync(entityId, newStatus, oldStatus)
+                    .thenAccept(response -> {
+                        if (Boolean.TRUE.equals(response.getEstado())) {
+                            LOGGER.log(Level.INFO, "Project status change notification sent successfully for project {0}", entityId);
+                        } else {
+                            LOGGER.log(Level.WARNING, "Failed to send project status change notification: {0}", response.getMensaje());
+                        }
+                    })
+                    .exceptionally(throwable -> {
+                        LOGGER.log(Level.SEVERE, "Error sending project status change notification", throwable);
+                        return null;
+                    });
+                    
+            } else if ("ACTIVITY".equals(entityType)) {
+                // Get the old status for comparison
+                String oldStatus = determinePreviousStatus(entityType, entityId, newStatus);
+                
+                // Send activity status change notification asynchronously
+                notificationService.notifyActivityStatusChangedAsync(entityId, newStatus, oldStatus)
+                    .thenAccept(response -> {
+                        if (Boolean.TRUE.equals(response.getEstado())) {
+                            LOGGER.log(Level.INFO, "Activity status change notification sent successfully for activity {0}", entityId);
+                        } else {
+                            LOGGER.log(Level.WARNING, "Failed to send activity status change notification: {0}", response.getMensaje());
+                        }
+                    })
+                    .exceptionally(throwable -> {
+                        LOGGER.log(Level.SEVERE, "Error sending activity status change notification", throwable);
+                        return null;
+                    });
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Error enqueuing notification for " + entityType + " " + entityId, ex);
         }
+    }
+    
+    /**
+     * Determines the previous status for notification purposes.
+     * This is a simple heuristic since we don't maintain status history in the current implementation.
+     */
+    private String determinePreviousStatus(String entityType, long entityId, String newStatus) {
+        // Simple heuristic: assume the most common transition patterns
+        // In a complete implementation, this would query a status history table
+        return switch (newStatus) {
+            case "R" -> "P"; // Running usually comes from Planned
+            case "S" -> "R"; // Suspended usually comes from Running
+            case "C" -> "R"; // Completed usually comes from Running
+            default -> "P"; // Default to Planned as previous status
+        };
     }
     
     // Utility methods

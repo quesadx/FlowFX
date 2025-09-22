@@ -106,15 +106,16 @@ public class NotificationService {
                 );
             }
 
+            // TODO: Implement once web service stubs are regenerated
             LOG.log(
                 Level.FINE,
-                "Notification.find called for id={0} - remote invocation not implemented",
+                "Notification.find called for id={0} - SOAP operations not yet available",
                 id
             );
             return new Respuesta(
                 false,
-                "Operation not implemented in client. Implement the WS call in NotificationService.find.",
-                "find.not.implemented"
+                "Notification operations require web service stub regeneration.",
+                "find.ws.stub.missing"
             );
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Error executing find for Notification", ex);
@@ -153,15 +154,16 @@ public class NotificationService {
                 );
             }
 
+            // TODO: Implement once web service stubs are regenerated
             LOG.log(
                 Level.FINE,
-                "Notification.findByProject called for projectId={0} - remote invocation not implemented",
+                "Notification.findByProject called for projectId={0} - SOAP operations not yet available",
                 projectId
             );
             return new Respuesta(
                 false,
-                "Operation not implemented in client. Implement the WS call in NotificationService.findByProject.",
-                "findByProject.not.implemented"
+                "Notification operations require web service stub regeneration.",
+                "findByProject.ws.stub.missing"
             );
         } catch (Exception ex) {
             LOG.log(
@@ -196,14 +198,15 @@ public class NotificationService {
                 );
             }
 
+            // TODO: Implement once web service stubs are regenerated
             LOG.log(
                 Level.FINE,
-                "Notification.findAll called - remote invocation not implemented"
+                "Notification.findAll called - SOAP operations not yet available"
             );
             return new Respuesta(
                 false,
-                "Operation not implemented in client. Implement the WS call in NotificationService.findAll.",
-                "findAll.not.implemented"
+                "Notification operations require web service stub regeneration.",
+                "findAll.ws.stub.missing"
             );
         } catch (Exception ex) {
             LOG.log(
@@ -246,14 +249,15 @@ public class NotificationService {
                 );
             }
 
+            // TODO: Implement once web service stubs are regenerated
             LOG.log(
                 Level.FINE,
-                "Notification.create called - remote invocation not implemented"
+                "Notification.create called - SOAP operations not yet available"
             );
             return new Respuesta(
                 false,
-                "Operation not implemented in client. Implement the WS call in NotificationService.create.",
-                "create.not.implemented"
+                "Notification operations require web service stub regeneration.",
+                "create.ws.stub.missing"
             );
         } catch (Exception ex) {
             LOG.log(
@@ -296,15 +300,16 @@ public class NotificationService {
                 );
             }
 
+            // TODO: Implement once web service stubs are regenerated
             LOG.log(
                 Level.FINE,
-                "Notification.update called for id={0} - remote invocation not implemented",
+                "Notification.update called for id={0} - SOAP operations not yet available",
                 notification.getId()
             );
             return new Respuesta(
                 false,
-                "Operation not implemented in client. Implement the WS call in NotificationService.update.",
-                "update.not.implemented"
+                "Notification operations require web service stub regeneration.",
+                "update.ws.stub.missing"
             );
         } catch (Exception ex) {
             LOG.log(
@@ -347,15 +352,16 @@ public class NotificationService {
                 );
             }
 
+            // TODO: Implement once web service stubs are regenerated
             LOG.log(
                 Level.FINE,
-                "Notification.delete called for id={0} - remote invocation not implemented",
+                "Notification.delete called for id={0} - SOAP operations not yet available",
                 id
             );
             return new Respuesta(
                 false,
-                "Operation not implemented in client. Implement the WS call in NotificationService.delete.",
-                "delete.not.implemented"
+                "Notification operations require web service stub regeneration.",
+                "delete.ws.stub.missing"
             );
         } catch (Exception ex) {
             LOG.log(
@@ -392,6 +398,28 @@ public class NotificationService {
             ws.getMensaje(),
             ws.getMensajeInterno()
         );
+    }
+
+    /**
+     * Maps a client NotificationDTO to the web service NotificationDTO.
+     *
+     * @param dto the client DTO
+     * @return the web service DTO
+     */
+    private cr.ac.una.flowfx.model.NotificationDTO mapToWsDto(NotificationDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        cr.ac.una.flowfx.model.NotificationDTO wsDto = new cr.ac.una.flowfx.model.NotificationDTO();
+        wsDto.setId(dto.getId());
+        wsDto.setProjectId(dto.getProjectId());
+        wsDto.setActivityId(dto.getActivityId());
+        wsDto.setSubject(dto.getSubject());
+        wsDto.setMessage(dto.getMessage());
+        wsDto.setStatus(dto.getStatus());
+        wsDto.setEventType(dto.getEventType());
+        wsDto.setSentAt(dto.getSentAt());
+        return wsDto;
     }
 
     /**

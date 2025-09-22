@@ -282,6 +282,9 @@ public class ProjectManagementController
         ProjectService service = new ProjectService();
         Respuesta response = service.create(dto, leaderId, techId, sponsorId);
         if (Boolean.TRUE.equals(response.getEstado())) {
+            // Send project creation notification
+            sendProjectCreationNotification(response);
+            
             new Mensaje().showModal(
                 javafx.scene.control.Alert.AlertType.INFORMATION,
                 "Proyecto",
@@ -593,5 +596,33 @@ public class ProjectManagementController
     @FXML
     private void onActionDeleteMode(ActionEvent event) {
         toggleDeleteMode();
+    }
+    
+    /**
+     * Sends notification when a project is created.
+     */
+    private void sendProjectCreationNotification(Respuesta response) {
+        try {
+            Object projectData = response.getResultado("Project");
+            if (projectData instanceof cr.ac.una.flowfx.model.ProjectDTO projectDto && projectDto.getId() != null) {
+                cr.ac.una.flowfx.service.NotificationIntegrationService notificationService = 
+                    new cr.ac.una.flowfx.service.NotificationIntegrationService();
+                
+                notificationService.notifyProjectCreatedAsync(projectDto.getId())
+                    .thenAccept(notificationResponse -> {
+                        if (Boolean.TRUE.equals(notificationResponse.getEstado())) {
+                            LOGGER.log(Level.INFO, "Project creation notification sent successfully for project {0}", projectDto.getId());
+                        } else {
+                            LOGGER.log(Level.WARNING, "Failed to send project creation notification: {0}", notificationResponse.getMensaje());
+                        }
+                    })
+                    .exceptionally(throwable -> {
+                        LOGGER.log(Level.SEVERE, "Error sending project creation notification", throwable);
+                        return null;
+                    });
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Error sending project creation notification", ex);
+        }
     }
 }

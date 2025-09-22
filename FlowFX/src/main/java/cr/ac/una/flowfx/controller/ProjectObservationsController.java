@@ -528,12 +528,15 @@ public class ProjectObservationsController extends Controller implements Initial
     }
 
     /**
-     * Handles the response from observation creation.
+     * Handles the response from observation creation and sends notification.
      */
     private void handleObservationCreationResponse(Respuesta response) {
         Platform.runLater(() -> {
             if (Boolean.TRUE.equals(response.getEstado())) {
                 LOGGER.info("Observation created successfully");
+                
+                // Send tracking creation notification
+                sendTrackingCreationNotification(response);
                 
                 // Hide popup and clear form
                 hideObservationCreationPopup();
@@ -549,6 +552,34 @@ public class ProjectObservationsController extends Controller implements Initial
                 new Mensaje().show(AlertType.ERROR, "Error", "Error al crear la observación: " + errorMsg);
             }
         });
+    }
+    
+    /**
+     * Sends notification when a tracking/observation is created.
+     */
+    private void sendTrackingCreationNotification(Respuesta response) {
+        try {
+            Object trackingData = response.getResultado("ProjectTracking");
+            if (trackingData instanceof cr.ac.una.flowfx.model.ProjectTrackingDTO trackingDto && trackingDto.getId() != null) {
+                cr.ac.una.flowfx.service.NotificationIntegrationService notificationService = 
+                    new cr.ac.una.flowfx.service.NotificationIntegrationService();
+                
+                notificationService.notifyTrackingCreatedAsync(trackingDto.getId())
+                    .thenAccept(notificationResponse -> {
+                        if (Boolean.TRUE.equals(notificationResponse.getEstado())) {
+                            LOGGER.log(Level.INFO, "Tracking creation notification sent successfully for tracking {0}", trackingDto.getId());
+                        } else {
+                            LOGGER.log(Level.WARNING, "Failed to send tracking creation notification: {0}", notificationResponse.getMensaje());
+                        }
+                    })
+                    .exceptionally(throwable -> {
+                        LOGGER.log(Level.SEVERE, "Error sending tracking creation notification", throwable);
+                        return null;
+                    });
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Error sending tracking creation notification", ex);
+        }
     }
 
     /**
